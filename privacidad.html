@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Política de privacidad — Faro</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root{
+  --ink:#0E1A26; --ink-2:#132433; --foam:#EDE8DD; --foam-dim:#9FB0B8;
+  --signal:#E3A542; --line:rgba(237,232,221,0.12);
+  --font-head:'Fraunces', serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ink);color:var(--foam);font-family:var(--font-body);line-height:1.65;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+a{color:var(--signal);}
+nav{border-bottom:1px solid var(--line);padding:18px 0;}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;}
+.brand{font-family:var(--font-head);font-weight:600;font-size:1.15rem;text-decoration:none;color:var(--foam);}
+nav a.back{font-family:var(--font-mono);font-size:0.8rem;color:var(--foam-dim);text-decoration:none;}
+main{padding:56px 0 80px;}
+.eyebrow{font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);margin:0 0 14px;}
+h1{font-family:var(--font-head);font-size:2.1rem;font-weight:600;margin:0 0 8px;letter-spacing:-0.01em;}
+.updated{color:var(--foam-dim);font-size:0.85rem;margin:0 0 40px;}
+h2{font-family:var(--font-head);font-size:1.25rem;font-weight:600;margin:44px 0 12px;}
+p{color:var(--foam-dim);margin:0 0 14px;font-size:0.96rem;}
+li{color:var(--foam-dim);font-size:0.96rem;margin-bottom:8px;}
+strong{color:var(--foam);}
+.callout{background:var(--ink-2);border:1px solid rgba(227,165,66,0.3);border-radius:12px;padding:18px 20px;margin:0 0 40px;}
+.callout p{margin:0;color:var(--foam);font-size:0.9rem;}
+.placeholder{color:var(--signal);font-family:var(--font-mono);font-size:0.9em;}
+footer{border-top:1px solid var(--line);padding:24px 0;text-align:center;}
+footer p{font-size:0.78rem;color:var(--foam-dim);opacity:0.7;margin:0;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="index.html">Faro</a>
+    <a class="back" href="index.html">← Volver a Faro</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <p class="eyebrow">Documento legal</p>
+  <h1>Política de privacidad</h1>
+  <p class="updated">Última actualización: [fecha]</p>
+
+  <div class="callout">
+    <p><strong>Antes de publicar esto:</strong> es una plantilla de partida, no un documento validado por un abogado. Rellena todos los campos entre corchetes y haz que un especialista en protección de datos lo revise antes de aceptar usuarios reales — especialmente porque Faro trata datos financieros.</p>
+  </div>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <p><span class="placeholder">[Nombre legal de la empresa]</span>, con NIF <span class="placeholder">[NIF]</span> y domicilio en <span class="placeholder">[dirección]</span>, es la responsable del tratamiento de tus datos. Puedes contactarnos en <span class="placeholder">[email de contacto]</span>.</p>
+
+  <h2>2. Qué datos recogemos</h2>
+  <ul>
+    <li><strong>Datos de cuenta:</strong> nombre y email, al registrarte.</li>
+    <li><strong>Datos de las vigilancias que añades:</strong> capital pendiente y tipo de tu hipoteca, lo que pagas en cada categoría, y cualquier otro dato que introduzcas voluntariamente para que Faro pueda compararlo con el mercado.</li>
+    <li><strong>Datos de pago:</strong> gestionados directamente por Stripe. Faro no almacena ni ve el número de tu tarjeta en ningún momento.</li>
+  </ul>
+  <p>No accedemos a tu cuenta bancaria ni pedimos credenciales de ningún tipo. Todo lo que Faro sabe es lo que tú escribes.</p>
+
+  <h2>3. Para qué usamos tus datos</h2>
+  <ul>
+    <li>Para prestar el servicio: calcular si compensa cambiar de proveedor en cada categoría y mostrarte el resumen.</li>
+    <li>Para enviarte avisos por email cuando actives esa opción.</li>
+    <li>Para gestionar tu suscripción y el cobro, a través de Stripe.</li>
+  </ul>
+  <p>No usamos tus datos para entrenar modelos de terceros, no los vendemos, y no los compartimos con nadie fuera de los proveedores estrictamente necesarios para operar (ver sección 5).</p>
+
+  <h2>4. Base legal</h2>
+  <p>Tratamos tus datos porque son necesarios para ejecutar el contrato de suscripción que aceptas al registrarte (art. 6.1.b RGPD). Para las comunicaciones de email opcionales, la base es tu consentimiento expreso, que puedes retirar cuando quieras desde tu cuenta.</p>
+
+  <h2>5. Con quién compartimos tus datos</h2>
+  <ul>
+    <li><strong>Stripe</strong>, para procesar el pago de tu suscripción.</li>
+    <li><span class="placeholder">[Tu proveedor de hosting/base de datos]</span>, que aloja la infraestructura técnica.</li>
+  </ul>
+  <p>No cedemos tus datos a bancos, aseguradoras ni brókers sin tu acción explícita — si en el futuro activas una derivación a un colaborador registrado, te lo diremos claramente en el momento, no antes.</p>
+
+  <h2>6. Cuánto tiempo los conservamos</h2>
+  <p>Mientras tu cuenta esté activa, y hasta <span class="placeholder">[plazo, ej. 12 meses]</span> después de que la canceles, salvo que la ley nos obligue a conservarlos más tiempo (por ejemplo, por motivos fiscales).</p>
+
+  <h2>7. Tus derechos</h2>
+  <p>Puedes pedirnos acceder a tus datos, corregirlos, borrarlos, limitarlos, oponerte a su tratamiento o pedir que te los entreguemos en un formato portable. Escríbenos a <span class="placeholder">[email de contacto]</span> y te responderemos en el plazo legal. También puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es) si consideras que no hemos tratado tus datos correctamente.</p>
+
+  <h2>8. Seguridad</h2>
+  <p>Aplicamos medidas de seguridad razonables para proteger tus datos, incluido el cifrado en tránsito y en reposo de la información financiera. Ningún sistema es invulnerable al 100%, pero nos tomamos esto en serio dado lo sensible de los datos que manejamos.</p>
+
+  <h2>9. Menores de edad</h2>
+  <p>Faro no está dirigido a menores de 18 años y no recogemos conscientemente datos de menores.</p>
+
+  <h2>10. Cambios en esta política</h2>
+  <p>Si cambiamos algo relevante, te avisaremos por email o mediante un aviso visible en la web antes de que entre en vigor.</p>
+</main>
+
+<footer>
+  <div class="wrap"><p>Faro · Este documento es una plantilla informativa, no asesoramiento legal.</p></div>
+</footer>
+
+</body>
+</html>

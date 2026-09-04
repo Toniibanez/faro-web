@@ -1,0 +1,2856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faro — Vigilancia hipotecaria</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --ink:#0E1A26;
+  --ink-2:#132433;
+  --ink-3:#1A2E3F;
+  --foam:#EDE8DD;
+  --foam-dim:#9FB0B8;
+  --signal:#E3A542;
+  --signal-soft:rgba(227,165,66,0.18);
+  --tide:#3E6070;
+  --coral:#C1666B;
+  --line:rgba(237,232,221,0.12);
+  --radius:16px;
+  --font-display:'Fraunces', serif;
+  --font-body:'IBM Plex Sans', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--foam);
+  font-family:var(--font-body);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+.is-hidden{display:none !important;}
+
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
+
+.dashboard-header{
+  position:sticky;top:0;z-index:20;
+  background:rgba(14,26,38,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+.dashboard-header__inner{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;}
+.dashboard-header__right{display:flex;align-items:center;gap:16px;font-size:0.9rem;color:var(--foam-dim);}
+.dashboard-main{padding:48px 28px 100px;}
+
+.dash-subnav{
+  display:flex;gap:6px;padding:0 28px 14px;overflow-x:auto;
+  scrollbar-width:none;
+}
+.dash-subnav::-webkit-scrollbar{display:none;}
+.dash-subnav__link{
+  flex:none;font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.02em;
+  color:var(--foam-dim);text-decoration:none;padding:7px 14px;border-radius:100px;
+  border:1px solid transparent;white-space:nowrap;transition:all .15s ease;
+}
+.dash-subnav__link:hover{color:var(--foam);border-color:var(--line);}
+.dash-subnav__link.is-active{color:var(--signal);background:var(--signal-soft);border-color:rgba(227,165,66,0.3);}
+
+.dash-section{scroll-margin-top:130px;margin-top:70px;}
+.dash-section:first-of-type{margin-top:0;}
+
+.resumen-card .summary-strip{margin:0 0 20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+
+/* ---------- NAV ---------- */
+.nav{
+  position:sticky;top:0;z-index:20;
+  background:rgba(14,26,38,0.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav__inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 28px;max-width:1120px;margin:0 auto;
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:1.3rem;font-weight:600;letter-spacing:0.02em;}
+.brand__mark{width:22px;height:22px;flex:none;}
+.nav__links{display:flex;gap:28px;font-size:0.92rem;color:var(--foam-dim);}
+.nav__links a{text-decoration:none;transition:color .15s ease;}
+.nav__links a:hover{color:var(--foam);}
+.nav__cta{
+  font-family:var(--font-mono);font-size:0.8rem;letter-spacing:0.04em;
+  background:var(--signal);color:var(--ink);padding:9px 16px;border-radius:100px;
+  text-decoration:none;font-weight:600;
+}
+@media (max-width:720px){ .nav__links{display:none;} }
+
+/* ---------- HERO ---------- */
+.hero{padding:72px 0 40px;}
+.eyebrow{
+  font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--signal);margin:0 0 18px;
+}
+.hero h1{
+  font-family:var(--font-display);font-weight:600;
+  font-size:clamp(2.1rem, 4.6vw, 3.4rem);
+  line-height:1.08;margin:0 0 22px;max-width:15ch;
+  letter-spacing:-0.01em;
+}
+.hero h1 em{color:var(--signal);font-style:normal;}
+.hero__sub{
+  font-size:1.08rem;color:var(--foam-dim);max-width:52ch;margin:0 0 8px;
+}
+
+.reveal{animation:fadeUp .7s ease both;}
+.reveal--1{animation-delay:.05s;}
+.reveal--2{animation-delay:.15s;}
+.reveal--3{animation-delay:.25s;}
+@keyframes fadeUp{ from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+@media (prefers-reduced-motion:reduce){ .reveal{animation:none;} html{scroll-behavior:auto;} }
+
+.hero__cta{
+  display:inline-block;font-family:var(--font-mono);font-weight:600;font-size:0.92rem;letter-spacing:0.02em;
+  background:var(--signal);color:var(--ink);padding:14px 26px;border-radius:100px;
+  text-decoration:none;margin-top:8px;transition:transform .15s ease;
+}
+.hero__cta:hover{transform:translateY(-1px);}
+
+.hero__preview{display:flex;gap:10px;flex-wrap:wrap;margin-top:36px;}
+.preview-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--ink-2);border:1px solid var(--line);border-radius:100px;
+  padding:8px 16px;font-family:var(--font-mono);font-size:0.8rem;color:var(--foam-dim);
+}
+
+/* ---------- ROADMAP ---------- */
+.roadmap{padding:90px 0;}
+
+/* ---------- CATEGORÍAS ---------- */
+.categorias{padding:20px 0 90px;}
+.categorias__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+@media (max-width:860px){ .categorias__grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:600px){ .categorias__grid{grid-template-columns:1fr;} }
+.categoria-card{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:26px;}
+.categoria-card__num{font-family:var(--font-mono);font-size:0.8rem;color:var(--signal);letter-spacing:0.04em;}
+.categoria-card h3{font-family:var(--font-display);font-size:1.15rem;font-weight:600;margin:10px 0 8px;}
+.categoria-card p{color:var(--foam-dim);font-size:0.9rem;margin:0;}
+
+/* ---------- VISTA PREVIA ---------- */
+.preview{padding:20px 0 90px;}
+.preview-mock{
+  position:relative;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  padding:32px;max-width:52rem;
+}
+.preview-mock__tag{
+  position:absolute;top:-13px;left:28px;background:var(--signal);color:var(--ink);
+  font-family:var(--font-mono);font-size:0.7rem;font-weight:600;letter-spacing:0.03em;
+  padding:5px 12px;border-radius:100px;
+}
+.preview-mock__totals{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:20px;
+}
+@media (max-width:600px){ .preview-mock__totals{grid-template-columns:1fr;} }
+.preview-mock__totals > div{display:flex;flex-direction:column;gap:4px;}
+.preview-mock__recs{display:flex;flex-direction:column;gap:16px;}
+
+/* ---------- FAQ ---------- */
+.faq{padding:20px 0 90px;}
+.faq__list{display:flex;flex-direction:column;gap:10px;max-width:52rem;}
+.faq__item{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:14px;
+  padding:18px 22px;
+}
+.faq__item summary{
+  cursor:pointer;font-family:var(--font-display);font-size:1.02rem;font-weight:600;color:var(--foam);
+  list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.faq__item summary::-webkit-details-marker{display:none;}
+.faq__item summary::after{
+  content:'+';font-family:var(--font-mono);font-size:1.3rem;color:var(--signal);flex:none;
+  transition:transform .2s ease;
+}
+.faq__item[open] summary::after{transform:rotate(45deg);}
+.faq__item p{color:var(--foam-dim);font-size:0.92rem;margin:14px 0 0;line-height:1.6;}
+.roadmap__grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+@media (max-width:860px){ .roadmap__grid{grid-template-columns:1fr;} }
+.roadmap__item{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:28px;}
+.roadmap__tag{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);}
+.roadmap__item h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:12px 0 8px;}
+.roadmap__item p{color:var(--foam-dim);font-size:0.92rem;margin:0;}
+
+/* ---------- INSTRUMENT ---------- */
+.instrument{
+  margin-top:48px;
+  background:linear-gradient(180deg, var(--ink-2), var(--ink-3));
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:32px;
+  display:grid;
+  grid-template-columns:1fr 1.15fr;
+  gap:36px;
+  box-shadow:0 40px 80px -40px rgba(0,0,0,0.6);
+}
+@media (max-width:860px){ .instrument{grid-template-columns:1fr;} }
+
+.instrument__label{
+  font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--foam-dim);margin:0 0 18px;
+}
+
+.field{margin-bottom:16px;}
+.field label{
+  display:block;font-size:0.82rem;color:var(--foam-dim);margin-bottom:6px;
+}
+.field .hint{font-size:0.74rem;color:var(--foam-dim);opacity:0.65;margin-top:4px;}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:4px;}
+.checkbox-grid label{
+  display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--foam-dim);cursor:pointer;
+}
+.checkbox-grid input[type=checkbox]{accent-color:var(--signal);width:15px;height:15px;flex:none;}
+.watch-card__plan{font-family:var(--font-mono);font-size:0.76rem;color:var(--foam-dim);margin:0 0 4px;opacity:0.85;}
+.field__control{
+  position:relative;display:flex;align-items:center;
+  border:1px solid var(--line);border-radius:10px;
+  background:rgba(237,232,221,0.03);
+  transition:border-color .15s ease;
+}
+.field__control:focus-within{border-color:var(--signal);}
+.field__control input{
+  width:100%;background:transparent;border:0;color:var(--foam);
+  font-family:var(--font-mono);font-size:1rem;padding:11px 12px;
+}
+.field__control input:focus{outline:none;}
+.field__control .unit{padding-right:12px;color:var(--foam-dim);font-family:var(--font-mono);font-size:0.85rem;}
+
+.instrument__right{display:flex;flex-direction:column;align-items:center;}
+
+.gauge{width:100%;max-width:340px;}
+.gauge text{font-family:var(--font-mono);fill:var(--foam-dim);font-size:10px;}
+.gauge .tick{stroke:var(--foam-dim);opacity:0.5;}
+.gauge .track{fill:none;stroke:var(--ink);stroke-width:14;}
+.gauge .track-grad{fill:none;stroke-width:14;stroke-linecap:round;opacity:0.9;}
+.gauge .needle{stroke:var(--foam);stroke-width:3;stroke-linecap:round;transition:all .5s cubic-bezier(.4,1.4,.4,1);}
+.gauge .pivot{fill:var(--foam);}
+.gauge .marker{fill:var(--ink);stroke:var(--coral);stroke-width:3;transition:all .5s cubic-bezier(.4,1.4,.4,1);}
+@media (prefers-reduced-motion:reduce){ .gauge .needle, .gauge .marker{transition:none;} }
+
+.status-row{display:flex;align-items:center;gap:10px;margin-top:6px;}
+.lamp{width:11px;height:11px;border-radius:50%;background:var(--tide);flex:none;transition:background .3s ease;}
+.lamp.is-watch{background:var(--foam-dim);}
+.lamp.is-signal{background:var(--signal);box-shadow:0 0 0 0 var(--signal-soft);animation:pulse 1.8s infinite;}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(227,165,66,0.5);}
+  70%{box-shadow:0 0 0 12px rgba(227,165,66,0);}
+  100%{box-shadow:0 0 0 0 rgba(227,165,66,0);}
+}
+@media (prefers-reduced-motion:reduce){ .lamp.is-signal{animation:none;} }
+.status-label{font-family:var(--font-mono);font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;}
+
+.readout{width:100%;margin-top:22px;padding-top:20px;border-top:1px solid var(--line);}
+.readout__big{font-family:var(--font-mono);font-size:2.1rem;font-weight:600;line-height:1;}
+.readout__big.is-positive{color:var(--signal);}
+.readout__caption{font-size:0.82rem;color:var(--foam-dim);margin-top:6px;}
+.readout__grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;}
+.readout__grid div{font-size:0.78rem;color:var(--foam-dim);}
+.readout__grid strong{display:block;font-family:var(--font-mono);font-size:1.02rem;color:var(--foam);margin-top:3px;font-weight:500;}
+
+.simulador{
+  margin-top:36px;background:linear-gradient(180deg, var(--ink-2), var(--ink-3));
+  border:1px solid var(--line);border-radius:24px;padding:32px;
+}
+.simulador__grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;margin-top:8px;}
+@media (max-width:860px){ .simulador__grid{grid-template-columns:1fr;} }
+.simulador__resultado{background:var(--ink);border:1px solid var(--line);border-radius:16px;padding:22px;min-height:180px;}
+.simulador__resultado .readout__big{font-size:1.6rem;}
+.simulador__resultado .readout__caption{margin-bottom:0;}
+.simulador__stat{margin-bottom:16px;}
+.simulador__stat:last-child{margin-bottom:0;}
+.simulador__stat .num{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--signal);}
+.simulador__stat .label{font-size:0.8rem;color:var(--foam-dim);margin-top:2px;}
+
+.referral-card{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:26px;
+}
+.referral-link{
+  display:flex;align-items:center;gap:10px;background:var(--ink);border:1px solid var(--line);
+  border-radius:10px;padding:12px 14px;margin-bottom:14px;
+}
+.referral-link span{flex:1;font-family:var(--font-mono);font-size:0.92rem;color:var(--foam);}
+.referral-link button{
+  font-family:var(--font-mono);font-size:0.76rem;font-weight:600;background:var(--signal);color:var(--ink);
+  border:0;border-radius:100px;padding:8px 14px;cursor:pointer;flex:none;
+}
+.referral-count{font-size:0.86rem;color:var(--foam-dim);margin:0;}
+.referral-count strong{color:var(--signal);font-family:var(--font-mono);}
+
+.compartir-form{display:flex;gap:10px;margin-bottom:12px;}
+.compartir-form input{
+  flex:1;min-width:0;background:rgba(237,232,221,0.04);border:1px solid var(--line);border-radius:10px;
+  padding:11px 14px;color:var(--foam);font-family:var(--font-body);font-size:0.9rem;
+}
+.compartir-form input:focus{outline:none;border-color:var(--signal);}
+.compartir-form button{
+  font-family:var(--font-mono);font-weight:600;font-size:0.82rem;background:var(--signal);color:var(--ink);
+  border:0;border-radius:10px;padding:0 18px;cursor:pointer;flex:none;
+}
+.compartido-lista{display:flex;flex-direction:column;gap:6px;}
+.compartido-item{font-size:0.84rem;color:var(--foam-dim);display:flex;align-items:center;gap:8px;}
+.compartido-item .lamp{width:8px;height:8px;background:var(--signal);}
+
+/* ---------- PANEL DE VIGILANCIA ---------- */
+.panel{padding:90px 0;}
+.summary-strip{display:flex;gap:14px;flex-wrap:wrap;margin:32px 0 40px;}
+.summary-strip__item{
+  display:flex;align-items:baseline;gap:8px;
+  background:var(--ink-2);border:1px solid var(--line);border-radius:100px;
+  padding:10px 18px;
+}
+.summary-strip__num{font-family:var(--font-mono);font-size:1.3rem;font-weight:600;}
+.summary-strip__label{font-size:0.82rem;color:var(--foam-dim);}
+.summary-strip__item.is-signal .summary-strip__num{color:var(--signal);}
+
+.resumen-card{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  padding:28px;margin-bottom:40px;
+}
+.resumen-card__totals{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:18px;
+}
+@media (max-width:600px){ .resumen-card__totals{grid-template-columns:1fr;} }
+.resumen-card__total{display:flex;flex-direction:column;gap:4px;}
+.resumen-card__label{font-size:0.82rem;color:var(--foam-dim);}
+.resumen-card__num{font-family:var(--font-mono);font-size:1.8rem;font-weight:600;color:var(--signal);}
+.resumen-card__num--neutral{color:var(--foam);}
+.resumen-card__sub{font-family:var(--font-mono);font-size:0.86rem;color:var(--foam-dim);}
+
+.resumen-card__footer{
+  margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;
+}
+@media (max-width:700px){ .resumen-card__footer{grid-template-columns:1fr;} }
+.resumen-card__num--small{font-size:1.3rem;}
+.acumulado-control{
+  display:flex;align-items:center;gap:8px;margin-top:10px;
+  font-size:0.8rem;color:var(--foam-dim);flex-wrap:wrap;
+}
+.acumulado-control input[type=range]{accent-color:var(--signal);flex:1;min-width:100px;max-width:160px;}
+.acumulado-control #mesesSimuladosLabel{color:var(--foam);font-family:var(--font-mono);}
+.download-btn{
+  font-family:var(--font-mono);font-weight:600;font-size:0.82rem;letter-spacing:0.02em;
+  background:transparent;color:var(--signal);border:1px solid var(--signal);border-radius:100px;
+  padding:12px 20px;cursor:pointer;white-space:nowrap;transition:background .15s ease;
+}
+.download-btn:hover{background:var(--signal-soft);}
+
+.resumen-card__acciones{display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+@media (max-width:700px){ .resumen-card__acciones{align-items:flex-start;} }
+.toggle-row{display:flex;align-items:center;gap:10px;}
+.toggle-switch{
+  position:relative;width:38px;height:22px;border-radius:100px;border:0;cursor:pointer;
+  background-color:var(--ink-3);padding:0;flex:none;transition:background-color .2s ease;
+}
+.toggle-switch__knob{
+  position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+  background:var(--foam-dim);transition:transform .2s ease,background .2s ease;
+}
+.toggle-switch[aria-checked="true"]{background-color:var(--signal);}
+.toggle-switch[aria-checked="true"] .toggle-switch__knob{transform:translateX(16px);background:var(--ink);}
+#boletinLabel{font-size:0.8rem;color:var(--foam-dim);max-width:220px;text-align:right;}
+@media (max-width:700px){ #boletinLabel{text-align:left;} }
+
+/* ---------- INFORME IMPRIMIBLE ---------- */
+#informePrint{display:none;}
+@media print{
+  body *{visibility:hidden;}
+  #informePrint, #informePrint *{visibility:visible;}
+  #informePrint{display:block;position:absolute;top:0;left:0;width:100%;padding:24px;color:#111;background:#fff;}
+  #informePrint h1{font-family:Georgia,serif;font-size:22px;margin:0 0 4px;}
+  #informePrint .informe-fecha{color:#555;font-size:12px;margin:0 0 24px;}
+  #informePrint .informe-stat{margin-bottom:18px;}
+  #informePrint .informe-stat .num{font-size:20px;font-weight:700;}
+  #informePrint .informe-stat .label{font-size:11px;color:#555;}
+  #informePrint .informe-rec{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #ddd;}
+  #informePrint .informe-rec strong{display:block;font-size:13px;}
+  #informePrint .informe-rec p{margin:2px 0 0;font-size:12px;color:#333;}
+}
+.resumen-card__recs{display:flex;flex-direction:column;gap:14px;}
+.resumen-rec{display:flex;gap:12px;align-items:flex-start;}
+.resumen-rec .lamp{margin-top:4px;}
+.resumen-rec strong{display:block;font-size:0.92rem;margin-bottom:2px;}
+.resumen-rec p{margin:0;font-size:0.86rem;color:var(--foam-dim);}
+.resumen-card__empty{color:var(--foam-dim);font-size:0.9rem;margin:0;}
+.pasos-list{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;}
+.pasos-list li{font-size:0.84rem;color:var(--foam-dim);}
+
+.opciones-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.opcion{background:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;}
+.opcion strong{display:block;font-family:var(--font-mono);font-size:0.76rem;letter-spacing:0.03em;color:var(--signal);margin-bottom:3px;}
+.opcion p{margin:0;font-size:0.82rem;color:var(--foam-dim);}
+.opcion--broker{border-color:rgba(227,165,66,0.35);background:rgba(227,165,66,0.05);}
+.opcion-broker-link{
+  display:inline-block;margin-top:8px;font-family:var(--font-mono);font-size:0.78rem;font-weight:600;
+  color:var(--signal);text-decoration:none;border-bottom:1px solid var(--signal);
+}
+
+.confirmar-uso{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.confirmar-uso-btn{
+  font-family:var(--font-mono);font-size:0.78rem;font-weight:600;border-radius:100px;
+  padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--foam-dim);
+  transition:all .15s ease;
+}
+.confirmar-uso-btn--si{border-color:var(--signal);color:var(--signal);}
+.confirmar-uso-btn--si:hover{background:var(--signal-soft);}
+.confirmar-uso-btn--no:hover{border-color:var(--coral);color:var(--coral);}
+.resumen-card__subtotal{
+  margin-top:16px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:0.86rem;color:var(--foam-dim);
+}
+.resumen-card__subtotal strong{color:var(--foam);font-family:var(--font-mono);}
+
+.estacion-info{
+  margin-top:10px;padding:12px 14px;background:rgba(227,165,66,0.06);
+  border:1px solid rgba(227,165,66,0.25);border-radius:10px;
+}
+.estacion-info strong{display:block;font-size:0.88rem;color:var(--foam);margin-bottom:2px;}
+.estacion-info p{margin:0 0 8px;font-size:0.82rem;color:var(--foam-dim);}
+.estacion-info a{
+  font-family:var(--font-mono);font-size:0.78rem;font-weight:600;color:var(--signal);
+  text-decoration:none;border-bottom:1px solid var(--signal);
+}
+.resumen-card__gas-note{font-size:0.78rem;color:var(--foam-dim);opacity:0.75;margin:16px 0 0;display:none;}
+.resumen-card__gas-note.is-visible{display:block;}
+
+/* Estados clicables: en el instrumento y en cada tarjeta de vigilancia */
+.state-trigger{cursor:pointer;background:none;border:0;padding:0;font:inherit;color:inherit;display:inline-flex;align-items:center;gap:6px;}
+.info-hint{opacity:0.55;font-size:0.9em;}
+.status-row.state-trigger{gap:10px;}
+
+/* ---------- MODAL DE ESTADOS ---------- */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(6,12,18,0.7);backdrop-filter:blur(3px);
+  z-index:100;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.is-visible{display:flex;}
+.modal{
+  background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:32px;
+  max-width:440px;width:100%;position:relative;box-shadow:0 40px 80px -30px rgba(0,0,0,0.7);
+}
+.modal h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;margin:0 0 20px;}
+.modal__close{
+  position:absolute;top:18px;right:18px;background:none;border:0;color:var(--foam-dim);
+  font-size:1.3rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px;
+}
+.modal__close:hover{color:var(--foam);}
+.modal__state{display:flex;gap:12px;padding:12px;border-radius:12px;margin-bottom:8px;transition:background .2s ease;}
+.modal__state .lamp{margin-top:4px;}
+.modal__state strong{display:block;font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.06em;margin-bottom:4px;}
+.modal__state p{margin:0;font-size:0.88rem;color:var(--foam-dim);}
+.modal__state.is-highlighted{background:rgba(227,165,66,0.08);}
+.modal__note{font-size:0.8rem;color:var(--foam-dim);margin:16px 0 0;padding-top:16px;border-top:1px solid var(--line);}
+
+/* ---------- WIDGET DE AYUDA ---------- */
+.help-fab{
+  position:fixed;bottom:24px;right:24px;z-index:90;
+  width:54px;height:54px;border-radius:50%;
+  background:var(--signal);color:var(--ink);border:0;cursor:pointer;
+  font-family:var(--font-display);font-size:1.3rem;font-weight:600;
+  box-shadow:0 12px 30px -8px rgba(0,0,0,0.6);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s ease;
+}
+.help-fab:hover{transform:scale(1.06);}
+
+.help-panel{
+  position:fixed;bottom:90px;right:24px;z-index:90;
+  width:360px;max-width:calc(100vw - 32px);
+  height:480px;max-height:calc(100vh - 140px);
+  background:var(--ink-2);border:1px solid var(--line);border-radius:20px;
+  display:none;flex-direction:column;overflow:hidden;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.75);
+}
+.help-panel.is-open{display:flex;}
+.help-panel__header{
+  padding:16px 18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--font-display);font-weight:600;
+}
+.help-panel__header button{background:none;border:0;color:var(--foam-dim);font-size:1.2rem;line-height:1;cursor:pointer;}
+.help-panel__messages{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+.help-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:0.86rem;line-height:1.45;}
+.help-msg--bot{background:var(--ink-3);align-self:flex-start;border-bottom-left-radius:4px;}
+.help-msg--user{background:var(--signal);color:var(--ink);align-self:flex-end;border-bottom-right-radius:4px;}
+.help-msg--escalate{background:rgba(193,102,107,0.12);border:1px solid rgba(193,102,107,0.3);align-self:flex-start;border-bottom-left-radius:4px;max-width:92%;}
+.help-msg a.help-mailto{
+  display:inline-block;margin-top:8px;font-family:var(--font-mono);font-size:0.78rem;font-weight:600;
+  color:var(--signal);text-decoration:none;border-bottom:1px solid var(--signal);
+}
+.help-panel__quick{padding:0 18px 12px;display:flex;flex-wrap:wrap;gap:6px;}
+.help-quick-btn{
+  font-family:var(--font-mono);font-size:0.7rem;background:none;border:1px solid var(--line);
+  color:var(--foam-dim);padding:6px 10px;border-radius:100px;cursor:pointer;text-align:left;
+}
+.help-quick-btn:hover{border-color:var(--signal);color:var(--foam);}
+.help-panel__input{display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--line);}
+.help-panel__input input{
+  flex:1;min-width:0;background:rgba(237,232,221,0.04);border:1px solid var(--line);border-radius:100px;
+  padding:10px 14px;color:var(--foam);font-family:var(--font-body);font-size:0.86rem;
+}
+.help-panel__input input:focus{outline:none;border-color:var(--signal);}
+.help-panel__input button{
+  background:var(--signal);color:var(--ink);border:0;border-radius:100px;padding:0 16px;
+  font-family:var(--font-mono);font-weight:600;font-size:0.8rem;cursor:pointer;flex:none;
+}
+
+.panel__grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;}
+@media (max-width:860px){ .panel__grid{grid-template-columns:1fr;} }
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+.tab{
+  font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.03em;
+  background:transparent;border:1px solid var(--line);color:var(--foam-dim);
+  padding:8px 14px;border-radius:100px;cursor:pointer;transition:all .15s ease;
+}
+.tab.is-active{background:var(--signal);border-color:var(--signal);color:var(--ink);font-weight:600;}
+.tab:hover:not(.is-active){border-color:var(--foam-dim);color:var(--foam);}
+
+.cat-fields select{
+  width:100%;background:transparent;border:0;color:var(--foam);
+  font-family:var(--font-mono);font-size:1rem;padding:11px 12px;appearance:none;
+}
+.cat-fields select option{background:var(--ink-2);color:var(--foam);}
+
+.add-btn{
+  width:100%;font-family:var(--font-mono);font-weight:600;font-size:0.86rem;letter-spacing:0.04em;
+  background:var(--signal);color:var(--ink);border:0;border-radius:10px;padding:14px 16px;cursor:pointer;
+  margin-top:8px;transition:transform .15s ease;
+}
+.add-btn:hover{transform:translateY(-1px);}
+
+.watch-list{display:flex;flex-direction:column;gap:12px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.watch-empty{color:var(--foam-dim);font-size:0.9rem;padding:8px 0;}
+.watch-card{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:16px;
+}
+.watch-card .lamp{margin-top:5px;}
+.watch-card__body{flex:1;min-width:0;}
+.watch-card__name{font-weight:600;margin:0 0 4px;font-size:0.96rem;}
+.watch-card__meta{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.04em;color:var(--foam-dim);text-transform:uppercase;margin:0 0 6px;}
+.watch-card__detail{font-size:0.86rem;color:var(--foam-dim);margin:0;}
+.watch-card__remove{
+  background:transparent;border:0;color:var(--foam-dim);font-size:1.2rem;line-height:1;cursor:pointer;
+  padding:2px 6px;border-radius:6px;flex:none;
+}
+.watch-card__remove:hover{color:var(--coral);background:rgba(193,102,107,0.1);}
+
+/* ---------- STEPS ---------- */
+.steps{padding:90px 0 20px;}
+.section-head{max-width:46ch;margin-bottom:44px;}
+.section-head h2{font-family:var(--font-display);font-size:clamp(1.7rem,3vw,2.2rem);font-weight:600;margin:0 0 12px;letter-spacing:-0.01em;}
+.section-head p{color:var(--foam-dim);margin:0;font-size:1rem;}
+
+.steps__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
+@media (max-width:860px){ .steps__grid{grid-template-columns:1fr;} }
+.step{border-top:1px solid var(--line);padding-top:18px;}
+.step__num{font-family:var(--font-mono);color:var(--signal);font-size:0.85rem;letter-spacing:0.06em;}
+.step h3{font-family:var(--font-display);font-size:1.2rem;font-weight:600;margin:10px 0 8px;}
+.step p{color:var(--foam-dim);font-size:0.94rem;margin:0;}
+
+/* ---------- PROBLEM ---------- */
+.problem{padding:90px 0;}
+.problem__grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+@media (max-width:860px){ .problem__grid{grid-template-columns:1fr;} }
+.problem blockquote{
+  font-family:var(--font-display);font-size:1.5rem;line-height:1.35;margin:0;font-weight:500;
+  border-left:2px solid var(--signal);padding-left:22px;
+}
+.problem__notes p{color:var(--foam-dim);font-size:0.98rem;margin:0 0 18px;}
+
+/* ---------- SIGNUP ---------- */
+.signup{padding:60px 0 100px;}
+.signup__panel{
+  background:linear-gradient(135deg, var(--ink-3), var(--ink-2));
+  border:1px solid var(--line);border-radius:24px;padding:48px;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;
+}
+@media (max-width:860px){ .signup__panel{grid-template-columns:1fr;padding:32px;} }
+.signup h2{font-family:var(--font-display);font-size:1.9rem;font-weight:600;margin:0 0 12px;letter-spacing:-0.01em;}
+.signup p{color:var(--foam-dim);margin:0;max-width:44ch;}
+.signup form{display:flex;flex-direction:column;gap:12px;}
+.signup input[type=email],.signup input[type=text]{
+  width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);
+  background:rgba(237,232,221,0.04);color:var(--foam);font-family:var(--font-body);font-size:0.96rem;
+}
+.signup input[type=email]:focus,.signup input[type=text]:focus{outline:none;border-color:var(--signal);}
+.signup button{
+  font-family:var(--font-mono);font-weight:600;font-size:0.86rem;letter-spacing:0.04em;
+  background:var(--signal);color:var(--ink);border:0;border-radius:10px;padding:13px 16px;cursor:pointer;
+  transition:transform .15s ease;
+}
+.signup button:hover{transform:translateY(-1px);}
+.signup__note{font-size:0.76rem;color:var(--foam-dim);opacity:0.75;}
+.signup__confirm{display:none;font-size:0.9rem;color:var(--foam-dim);}
+.signup__confirm strong{color:var(--signal);font-family:var(--font-mono);font-size:0.85rem;letter-spacing:0.04em;}
+.signup__confirm p{margin:0 0 10px;}
+.signup__confirm.is-visible{display:block;}
+.signup form.is-hidden{display:none;}
+
+.plan-card{background:var(--ink);border:1px solid var(--line);border-radius:16px;padding:28px;}
+.plan-card__price{font-family:var(--font-mono);font-size:2.4rem;font-weight:600;margin:10px 0 22px;}
+.plan-card__price span{font-size:1rem;color:var(--foam-dim);font-weight:400;}
+.plan-card__top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;}
+.plan-toggle{margin:0;}
+.plan-card__ahorro{font-size:0.82rem;color:var(--signal);margin:-14px 0 18px;}
+.plan-card__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;}
+.plan-card__list li{font-size:0.88rem;color:var(--foam-dim);padding-left:22px;position:relative;}
+.plan-card__list li::before{content:'✓';position:absolute;left:0;color:var(--signal);font-family:var(--font-mono);}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line);padding:32px 0 60px;}
+.footer__legal{font-size:0.78rem;color:var(--foam-dim);opacity:0.7;max-width:70ch;line-height:1.6;}
+.footer__links{margin-top:14px;font-family:var(--font-mono);font-size:0.78rem;}
+.footer__links a{color:var(--foam-dim);text-decoration:none;}
+.footer__links a:hover{color:var(--signal);}
+.footer__brand{font-family:var(--font-mono);font-size:0.78rem;color:var(--foam-dim);margin-bottom:14px;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <div class="brand">
+      <svg class="brand__mark" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2 L15 9 H9 Z" fill="var(--signal)"/>
+        <rect x="10" y="9" width="4" height="10" fill="var(--foam)"/>
+        <rect x="8" y="19" width="8" height="3" fill="var(--foam)"/>
+      </svg>
+      Faro
+    </div>
+    <div class="nav__links">
+      <a href="#categorias">Qué vigilamos</a>
+      <a href="#vista-previa">Cómo se ve</a>
+      <a href="#faq">Preguntas</a>
+      <a href="#crear-cuenta">Crear cuenta</a>
+    </div>
+    <a class="nav__cta" href="#crear-cuenta">Crear cuenta</a>
+  </div>
+</nav>
+
+<main class="wrap" id="publicView">
+
+  <section class="hero" id="inicio">
+    <p class="eyebrow reveal reveal--1">Vigilancia continua de lo que pagas cada mes</p>
+    <h1 class="reveal reveal--2">Lo contrataste una vez. El mercado no ha dejado de moverse <em>desde entonces</em>.</h1>
+    <p class="hero__sub reveal reveal--3">Faro vigila tu hipoteca, tus seguros, la luz, la gasolina, la fibra y las suscripciones que se te olvida revisar — y enciende la señal solo cuando cambiar de verdad compensa.</p>
+
+    <a href="#crear-cuenta" class="hero__cta reveal reveal--3">Crear cuenta gratis</a>
+
+    <div class="hero__preview reveal reveal--3">
+      <span class="preview-chip"><span class="lamp"></span> Hipoteca</span>
+      <span class="preview-chip"><span class="lamp is-signal"></span> Gasolina</span>
+      <span class="preview-chip"><span class="lamp"></span> Luz</span>
+      <span class="preview-chip"><span class="lamp is-watch"></span> Seguros</span>
+      <span class="preview-chip"><span class="lamp"></span> Telco</span>
+      <span class="preview-chip"><span class="lamp"></span> Comisiones</span>
+      <span class="preview-chip"><span class="lamp is-watch"></span> Suscripciones</span>
+    </div>
+  </section>
+
+  <section class="categorias" id="categorias">
+    <div class="section-head">
+      <h2>Todo lo que Faro vigila</h2>
+      <p>Siete categorías, un mismo criterio: la señal solo se enciende cuando compensa de verdad.</p>
+    </div>
+    <div class="categorias__grid">
+      <div class="categoria-card">
+        <span class="categoria-card__num">01</span>
+        <h3>Hipoteca</h3>
+        <p>Conectado en directo al euríbor oficial del Banco de España. Te dice si compensa cambiar, con el coste del cambio ya descontado.</p>
+      </div>
+      <div class="categoria-card">
+        <span class="categoria-card__num">02</span>
+        <h3>Gasolina</h3>
+        <p>Precios oficiales del Ministerio, filtrados por distancia real a tu código postal — no la más barata a una hora de casa.</p>
+      </div>
+      <div class="categoria-card">
+        <span class="categoria-card__num">03</span>
+        <h3>Luz</h3>
+        <p>Compara lo que pagas con el precio regulado (PVPC) de Red Eléctrica de España, actualizado hora a hora.</p>
+      </div>
+      <div class="categoria-card">
+        <span class="categoria-card__num">04</span>
+        <h3>Seguros</h3>
+        <p>Coche, hogar, vida o salud. Detecta si pagas por coberturas que no usas — no solo si hay algo más barato.</p>
+      </div>
+      <div class="categoria-card">
+        <span class="categoria-card__num">05</span>
+        <h3>Telefonía y fibra</h3>
+        <p>Vigila la fecha de permanencia y compara ofertas, con el mismo aviso de extras que pagas sin usar.</p>
+      </div>
+      <div class="categoria-card">
+        <span class="categoria-card__num">06</span>
+        <h3>Comisiones bancarias</h3>
+        <p>Recuerda revisar las condiciones de bonificación de tu cuenta antes de que te cobren de más.</p>
+      </div>
+      <div class="categoria-card">
+        <span class="categoria-card__num">07</span>
+        <h3>Suscripciones</h3>
+        <p>Avisa cuando llevas tiempo sin revisarlas, para que nada se quede pagando solo y sin usarse.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps" id="como-funciona">
+    <div class="section-head">
+      <h2>Cómo vigila Faro cada cosa</h2>
+      <p>Tres pasos, en ese orden, para la hipoteca y para cada categoría que añadas abajo. No te avisamos hasta que llega el tercero.</p>
+    </div>
+    <div class="steps__grid">
+      <div class="step">
+        <span class="step__num">01</span>
+        <h3>Nos cuentas qué vigilar</h3>
+        <p>La hipoteca, la gasolina, un seguro, la tarifa de fibra... cada una con sus propios datos. Dos minutos por categoría, sin conectar tu banco.</p>
+      </div>
+      <div class="step">
+        <span class="step__num">02</span>
+        <h3>Vigilamos con las reglas de cada una</h3>
+        <p>Datos oficiales cuando existen (hipoteca, gasolina), fechas de renovación cuando aplican (seguros, telco), recordatorios cuando no hay otra forma (comisiones, suscripciones).</p>
+      </div>
+      <div class="step">
+        <span class="step__num">03</span>
+        <h3>Encendemos la señal solo cuando compensa</h3>
+        <p>El mismo criterio en las siete categorías: nada de avisos por una diferencia mínima. Solo cuando el ahorro, o la urgencia de una fecha, es real.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview" id="vista-previa">
+    <div class="section-head">
+      <h2>Así es tu panel</h2>
+      <p>Esto es exactamente lo que verías al registrarte — con datos de ejemplo, para que veas por lo que vas a pagar.</p>
+    </div>
+    <div class="preview-mock">
+      <span class="preview-mock__tag">Ejemplo ilustrativo, no tus datos reales</span>
+      <div class="preview-mock__totals">
+        <div>
+          <span class="resumen-card__label">Pagas ahora en total</span>
+          <span class="resumen-card__num resumen-card__num--neutral">1.013 €/mes</span>
+        </div>
+        <div>
+          <span class="resumen-card__label">Ahorro estimado, señales activas</span>
+          <span class="resumen-card__num">90 €/mes</span>
+          <span class="resumen-card__sub">1.078 €/año</span>
+        </div>
+      </div>
+      <div class="preview-mock__recs">
+        <div class="resumen-rec">
+          <span class="lamp is-signal"></span>
+          <div><strong>Tu hipoteca</strong><p>Cambiar de hipoteca ahorraría 68 €/mes — pide una oferta de novación citando el tipo de mercado actual (2,9%).</p></div>
+        </div>
+        <div class="resumen-rec">
+          <span class="lamp is-signal"></span>
+          <div><strong>Fibra Movistar</strong><p>Hay una alternativa que ahorraría unos 25 €/mes. Ojo: comprueba que incluye lo mismo que de verdad usas.</p></div>
+        </div>
+        <div class="resumen-rec">
+          <span class="lamp is-watch"></span>
+          <div><strong>Seguro coche Mapfre</strong><p>Hay una pequeña diferencia, pero no suele compensar cambiar por tan poco todavía.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="roadmap" id="proximamente">
+    <div class="section-head">
+      <h2>Esto es solo el principio</h2>
+      <p>Hoy Faro avisa. La idea es que, con tu permiso, mañana también actúe.</p>
+    </div>
+    <div class="roadmap__grid">
+      <div class="roadmap__item">
+        <span class="roadmap__tag">Próximamente</span>
+        <h3>No solo te avisa — lo resuelve</h3>
+        <p>Cancelar una suscripción que no usas, cambiar de compañía de luz cuando aparezca una tarifa mejor, iniciar el cambio de seguro... sin que tengas que hacer tú la llamada.</p>
+      </div>
+      <div class="roadmap__item">
+        <span class="roadmap__tag">Con tu autorización</span>
+        <h3>Tú decides qué puede hacer solo</h3>
+        <p>Nada se ejecuta sin que lo actives categoría por categoría. Y en lo regulado —hipotecas, seguros— actuar significa gestionarlo junto a un intermediario autorizado, no saltárselo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="problem">
+    <div class="problem__grid">
+      <blockquote>"La mejor hipoteca fija no es necesariamente la que firmaste hace tres años."</blockquote>
+      <div class="problem__notes">
+        <p>Tu hipoteca se firmó un día concreto, a un tipo concreto. Desde entonces el mercado ha subido y bajado muchas veces, y nadie te ha avisado de ello.</p>
+        <p>Tu banco no tiene ningún incentivo en decirte que hoy podrías conseguir mejores condiciones en otro sitio.</p>
+        <p>Y revisarlo tú mismo cada mes —comparando ofertas y calculando si compensa una vez pagado el cambio— es exactamente el tipo de tarea tediosa que casi nadie hace, aunque sepa que debería.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="section-head">
+      <h2>Antes de que te registres</h2>
+      <p>Las preguntas que casi todo el mundo hace.</p>
+    </div>
+    <div class="faq__list">
+      <details class="faq__item">
+        <summary>¿Necesito dar acceso a mi banco?</summary>
+        <p>No. Faro no se conecta a tu cuenta bancaria ni pide credenciales de ningún tipo. Solo usa los datos que tú escribes a mano — lo que pagas, con quién — para hacer la comparación.</p>
+      </details>
+      <details class="faq__item">
+        <summary>¿De dónde salen los datos de mercado?</summary>
+        <p>De fuentes oficiales y públicas: el Banco de España (euríbor), Red Eléctrica de España (precio de la luz) y el Ministerio para la Transición Ecológica (precio de la gasolina). No son estimaciones ni datos de terceros sin verificar.</p>
+      </details>
+      <details class="faq__item">
+        <summary>¿Cómo gana dinero Faro?</summary>
+        <p>Con tu suscripción de 12€/mes, nada más. No cobramos comisión sobre lo que ahorres ni vendemos tus datos a terceros — así no tenemos ningún incentivo en decirte que cambies de algo si no compensa de verdad.</p>
+      </details>
+      <details class="faq__item">
+        <summary>¿Puedo cancelar cuando quiera?</summary>
+        <p>Sí, sin permanencia. Se cancela en un clic desde tu cuenta, sin llamadas ni justificaciones.</p>
+      </details>
+      <details class="faq__item">
+        <summary>¿Faro cambia las cosas por mí automáticamente?</summary>
+        <p>Todavía no. Hoy te avisa y te da los pasos concretos a seguir — la parte de actuar en tu nombre, con tu autorización, es la que contamos en "Esto es solo el principio" más arriba.</p>
+      </details>
+      <details class="faq__item">
+        <summary>¿Y si no encuentra nada mejor?</summary>
+        <p>Entonces no te molesta. El silencio también es información: significa que, ahora mismo, ya tienes lo mejor que hay para ti.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="signup" id="activar">
+    <div class="section-head">
+      <h2>Crea tu cuenta</h2>
+      <p>Un único plan, las siete categorías incluidas. Sin permanencia.</p>
+    </div>
+    <div class="signup__panel">
+      <div class="plan-card">
+        <div class="plan-card__top">
+          <p class="instrument__label" style="margin:0;">Plan Faro</p>
+          <div class="tabs plan-toggle" id="planToggle">
+            <button class="tab is-active" data-plan="mensual" type="button">Mensual</button>
+            <button class="tab" data-plan="anual" type="button">Anual</button>
+          </div>
+        </div>
+        <p class="plan-card__price" id="planPrecio">12€<span>/mes</span></p>
+        <p class="plan-card__ahorro" id="planAhorro" style="display:none;">Pagas 119,99€ una vez al año — 24€ menos que pagando mes a mes.</p>
+        <ul class="plan-card__list">
+          <li>Hipoteca, gasolina, luz, seguros, telco, comisiones y suscripciones</li>
+          <li>Resumen mensual con lo que te habría costado no revisarlo</li>
+          <li>Avisos por email solo cuando hay señal activa</li>
+          <li>Cancela cuando quieras, sin permanencia</li>
+        </ul>
+      </div>
+      <div>
+        <form id="signupForm">
+          <div class="field">
+            <label for="nameInput">Nombre</label>
+            <div class="field__control" style="border:1px solid var(--line);border-radius:10px;padding:0;">
+              <input type="text" id="nameInput" placeholder="Tu nombre" required style="padding:11px 14px;">
+            </div>
+          </div>
+          <input type="email" id="emailInput" placeholder="tu@email.com" required>
+          <button type="submit" id="signupSubmitBtn">Crear cuenta y suscribirme — 12€/mes</button>
+          <span class="signup__note">Prototipo de demostración: no se procesa ningún pago real. En producción este botón llevaría a Stripe Checkout — Faro nunca ve ni guarda el número de tarjeta, eso lo gestiona Stripe directamente. Aquí, simplemente, te lleva a tu panel.</span>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="dashboard is-hidden" id="dashboardView">
+  <div class="dashboard-header">
+    <div class="wrap dashboard-header__inner">
+      <div class="brand">
+        <svg class="brand__mark" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2 L15 9 H9 Z" fill="var(--signal)"/>
+          <rect x="10" y="9" width="4" height="10" fill="var(--foam)"/>
+          <rect x="8" y="19" width="8" height="3" fill="var(--foam)"/>
+        </svg>
+        Faro
+      </div>
+      <div class="dashboard-header__right">
+        <span id="dashboardGreeting">Hola</span>
+        <button class="nav__cta" id="logoutBtn" type="button">Cerrar sesión</button>
+      </div>
+    </div>
+    <nav class="dash-subnav wrap" id="dashSubnav">
+      <a href="#resumen" class="dash-subnav__link is-active">Resumen</a>
+      <a href="#hipoteca" class="dash-subnav__link">Hipoteca</a>
+      <a href="#vigilancias" class="dash-subnav__link">Vigilancias</a>
+      <a href="#herramientas" class="dash-subnav__link">Herramientas</a>
+      <a href="#cuenta" class="dash-subnav__link">Cuenta</a>
+    </nav>
+  </div>
+
+  <main class="wrap dashboard-main">
+    <section id="resumen" class="dash-section">
+    <div class="section-head">
+      <h2>Tu panel</h2>
+      <p>Todo lo que Faro vigila para ti, en un único sitio.</p>
+    </div>
+
+    <div class="resumen-card">
+      <div class="summary-strip">
+        <div class="summary-strip__item">
+          <span class="summary-strip__num" id="summaryTotal">1</span>
+          <span class="summary-strip__label">vigilando</span>
+        </div>
+        <div class="summary-strip__item is-signal">
+          <span class="summary-strip__num" id="summarySenal">0</span>
+          <span class="summary-strip__label">en señal activa</span>
+        </div>
+        <div class="summary-strip__item">
+          <span class="summary-strip__num" id="summaryObs">0</span>
+          <span class="summary-strip__label">en observación</span>
+        </div>
+      </div>
+      <div class="resumen-card__totals">
+        <div class="resumen-card__total">
+          <span class="resumen-card__label">Pagas ahora en total</span>
+          <span class="resumen-card__num resumen-card__num--neutral" id="resumenPagadoTotal">0 €/mes</span>
+        </div>
+        <div class="resumen-card__total">
+          <span class="resumen-card__label">Ahorro estimado, señales activas</span>
+          <span class="resumen-card__num" id="resumenAhorroTotal">0 €/mes</span>
+          <span class="resumen-card__sub" id="resumenAhorroAnual">0 €/año</span>
+        </div>
+      </div>
+      <div class="resumen-card__recs" id="resumenRecs"></div>
+      <p class="resumen-card__subtotal" id="resumenSuscripcionesTotal" style="display:none;"></p>
+
+      <div class="resumen-card__footer">
+        <div class="resumen-card__acumulado">
+          <span class="resumen-card__label">Ahorro acumulado desde que usas Faro</span>
+          <span class="resumen-card__num resumen-card__num--small" id="resumenAcumulado">0 €</span>
+          <div class="acumulado-control">
+            <label for="mesesSimulados">Simulando</label>
+            <input type="range" id="mesesSimulados" min="1" max="36" value="6">
+            <span id="mesesSimuladosLabel">6 meses</span> como cliente
+          </div>
+          <p class="hint">Cifra ilustrativa para esta demo — en producción se acumularía sola, mes a mes, desde tu alta.</p>
+        </div>
+        <div class="resumen-card__acciones">
+          <button class="download-btn" id="descargarInformeBtn" type="button">Descargar informe de este mes</button>
+          <div class="toggle-row">
+            <button class="toggle-switch" id="boletinToggle" type="button" role="switch" aria-checked="false">
+              <span class="toggle-switch__knob"></span>
+            </button>
+            <span id="boletinLabel">Enviarme este informe cada mes por email — desactivado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section id="hipoteca" class="dash-section">
+    <div class="section-head">
+      <h2>Tu hipoteca</h2>
+      <p>Vigilada en directo contra el mercado. La calculadora reacciona al momento.</p>
+    </div>
+
+    <div class="instrument">
+      <div class="instrument__left">
+        <p class="instrument__label">Tu hipoteca, ahora mismo</p>
+
+        <div class="field">
+          <label for="capital">Capital pendiente</label>
+          <div class="field__control">
+            <input type="number" id="capital" placeholder="150000" min="0" step="1000" inputmode="numeric">
+            <span class="unit">€</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="tipoActual">Tipo actual (TIN)</label>
+          <div class="field__control">
+            <input type="number" id="tipoActual" placeholder="3.8" min="0" max="12" step="0.05">
+            <span class="unit">%</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="anios">Años restantes</label>
+          <div class="field__control">
+            <input type="number" id="anios" placeholder="20" min="1" max="40" step="1">
+            <span class="unit">años</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="costeCambio">Coste estimado del cambio</label>
+          <div class="field__control">
+            <input type="number" id="costeCambio" placeholder="1200" min="0" step="50">
+            <span class="unit">€</span>
+          </div>
+          <p class="hint">Notaría, gestoría y comisión, si la hay.</p>
+        </div>
+
+        <div class="field">
+          <label for="tipoMercado">Tipo de mercado hoy</label>
+          <div class="field__control">
+            <input type="number" id="tipoMercado" value="2.9" min="0" max="12" step="0.05">
+            <span class="unit">%</span>
+          </div>
+          <p class="hint">Referencia: mejores hipotecas fijas, verano 2026. Ajusta con tu oferta real.</p>
+        </div>
+      </div>
+
+      <div class="instrument__right">
+        <p class="instrument__label" style="align-self:flex-start;">Lectura del instrumento</p>
+        <svg class="gauge" viewBox="0 0 320 190" id="gaugeSvg">
+          <defs>
+            <linearGradient id="tempGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="var(--tide)"/>
+              <stop offset="100%" stop-color="var(--coral)"/>
+            </linearGradient>
+          </defs>
+          <path class="track" d="M 40 160 A 120 120 0 0 1 280 160"></path>
+          <path class="track-grad" stroke="url(#tempGrad)" d="M 40 160 A 120 120 0 0 1 280 160"></path>
+          <g id="ticks"></g>
+          <line id="needle" class="needle" x1="160" y1="160" x2="160" y2="60"></line>
+          <circle id="marker" class="marker" cx="160" cy="40" r="6"></circle>
+          <circle class="pivot" cx="160" cy="160" r="7"></circle>
+        </svg>
+
+        <div class="status-row state-trigger" id="mortgageStatusTrigger" type="button">
+          <span class="lamp" id="lamp"></span>
+          <span class="status-label" id="statusLabel">EN CALMA</span>
+          <span class="info-hint">ⓘ</span>
+        </div>
+
+        <div class="readout">
+          <div class="readout__big" id="ahorroMensualOut">0 €/mes</div>
+          <p class="readout__caption" id="statusCaption">Tu tipo actual ya es competitivo frente al mercado.</p>
+
+          <div class="readout__grid">
+            <div>Cuota actual<strong id="cuotaActualOut">—</strong></div>
+            <div>Cuota con el nuevo tipo<strong id="cuotaNuevaOut">—</strong></div>
+            <div>Recuperas el coste del cambio en<strong id="breakevenOut">—</strong></div>
+            <div>Ahorro total estimado<strong id="ahorroTotalOut">—</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section id="vigilancias" class="dash-section">
+    <div class="section-head">
+      <h2>Añade el resto</h2>
+      <p>La hipoteca de arriba ya cuenta en el resumen. Añade lo demás aquí.</p>
+    </div>
+
+    <div class="panel__grid">
+      <div class="panel__form">
+        <p class="instrument__label">Añadir una vigilancia</p>
+        <div class="tabs" id="categoryTabs">
+          <button class="tab is-active" data-cat="gasolina" type="button">Gasolina</button>
+          <button class="tab" data-cat="luz" type="button">Luz</button>
+          <button class="tab" data-cat="seguros" type="button">Seguros</button>
+          <button class="tab" data-cat="telco" type="button">Telco</button>
+          <button class="tab" data-cat="comisiones_bancarias" type="button">Comisiones</button>
+          <button class="tab" data-cat="suscripciones" type="button">Suscripciones</button>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="gasolina">
+          <div class="field">
+            <label for="gCosteActual">Lo que pagas ahora</label>
+            <div class="field__control">
+              <input type="number" id="gCosteActual" step="0.001" placeholder="1,45">
+              <span class="unit">€/L</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="gTipoCombustible">Combustible</label>
+            <div class="field__control">
+              <select id="gTipoCombustible">
+                <option value="gasoleo_a">Diésel (Gasoleo A)</option>
+                <option value="gasolina_95_e5">Gasolina 95</option>
+                <option value="gasolina_98_e5">Gasolina 98</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="gLitrosMes">Litros que repostas al mes (aprox.)</label>
+            <div class="field__control">
+              <input type="number" id="gLitrosMes" value="60" min="0" step="5">
+              <span class="unit">L</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="gCodigoPostal">Tu código postal</label>
+            <div class="field__control">
+              <input type="text" id="gCodigoPostal" placeholder="28001" maxlength="5" inputmode="numeric">
+            </div>
+            <p class="hint">Buscamos en directo, en la API oficial del Gobierno, la gasolinera más barata a menos de 15 km de tu código postal — no en toda la provincia.</p>
+          </div>
+          <div class="field" id="gManualFallback" style="display:none;">
+            <label for="gAlternativaManual">No hemos podido consultarlo en directo desde aquí — ¿conoces un precio más barato cerca?</label>
+            <div class="field__control">
+              <input type="number" id="gAlternativaManual" step="0.001" placeholder="1,38">
+              <span class="unit">€/L</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="luz" style="display:none;">
+          <div class="field">
+            <label for="lCosteActual">Lo que pagas de media</label>
+            <div class="field__control">
+              <input type="number" id="lCosteActual" step="0.001" placeholder="0,18">
+              <span class="unit">€/kWh</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="lConsumo">Tu consumo mensual estimado</label>
+            <div class="field__control">
+              <input type="number" id="lConsumo" value="300" step="10">
+              <span class="unit">kWh</span>
+            </div>
+            <p class="hint">Buscamos en directo el precio medio de hoy de la tarifa regulada (PVPC), publicado por Red Eléctrica de España.</p>
+          </div>
+          <div class="field" id="lManualFallback" style="display:none;">
+            <label for="lAlternativaManual">No hemos podido consultarlo en directo desde aquí — ¿sabes a cuánto está el PVPC hoy?</label>
+            <div class="field__control">
+              <input type="number" id="lAlternativaManual" step="0.001" placeholder="0,13">
+              <span class="unit">€/kWh</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="seguros" style="display:none;">
+          <div class="field">
+            <label for="sTipo">Tipo de seguro</label>
+            <div class="field__control">
+              <select id="sTipo">
+                <option value="seguro_coche">Coche</option>
+                <option value="seguro_hogar">Hogar</option>
+                <option value="seguro_vida">Vida</option>
+                <option value="seguro_salud">Salud</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="sNombre">Aseguradora y plan</label>
+            <div class="field__control">
+              <input type="text" id="sNombre" placeholder="Mapfre Seguro Coche a Todo Riesgo">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="sCoste">Lo que pagas ahora</label>
+              <div class="field__control"><input type="number" id="sCoste" step="1" placeholder="450"></div>
+            </div>
+            <div class="field">
+              <label for="sPeriodo">Periodo</label>
+              <div class="field__control">
+                <select id="sPeriodo">
+                  <option value="anual">al año</option>
+                  <option value="mensual">al mes</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Tu póliza incluye</label>
+            <div class="checkbox-grid" id="sExtrasIncluidos"></div>
+          </div>
+          <div class="field">
+            <label>De lo anterior, ¿qué NO usarías nunca?</label>
+            <div class="checkbox-grid" id="sExtrasNoUsados"></div>
+            <p class="hint">Solo cuenta lo que también hayas marcado como incluido arriba.</p>
+          </div>
+          <div class="field">
+            <label for="sFecha">Fecha de renovación (opcional)</label>
+            <div class="field__control"><input type="date" id="sFecha"></div>
+          </div>
+          <div class="field">
+            <label for="sAlternativa">Alternativa que conoces (opcional)</label>
+            <div class="field__control">
+              <input type="number" id="sAlternativa" step="1" placeholder="320">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="sAlternativaDetalle">Qué incluye esa alternativa (opcional)</label>
+            <div class="field__control"><input type="text" id="sAlternativaDetalle" placeholder="Todo riesgo, sin coche de sustitución"></div>
+          </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="telco" style="display:none;">
+          <div class="field">
+            <label for="tNombre">Operador y plan</label>
+            <div class="field__control">
+              <input type="text" id="tNombre" placeholder="Movistar Fusión">
+            </div>
+          </div>
+          <div class="field">
+            <label for="tCoste">Lo que pagas ahora</label>
+            <div class="field__control">
+              <input type="number" id="tCoste" step="1" placeholder="70">
+              <span class="unit">€/mes</span>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="tLineas">Líneas móviles</label>
+              <div class="field__control"><input type="number" id="tLineas" value="1" min="0" step="1"></div>
+            </div>
+            <div class="field">
+              <label for="tDatos">Datos por línea</label>
+              <div class="field__control"><input type="text" id="tDatos" placeholder="20GB o ilimitados"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="tFibra">Fibra</label>
+            <div class="field__control"><input type="text" id="tFibra" placeholder="600 Mbps (o &quot;sin fibra&quot;)"></div>
+          </div>
+          <div class="field">
+            <label>Tu tarifa incluye</label>
+            <div class="checkbox-grid" id="tExtrasIncluidos">
+              <label><input type="checkbox" value="TV"> TV</label>
+              <label><input type="checkbox" value="Fútbol/deportes"> Fútbol / deportes</label>
+              <label><input type="checkbox" value="Línea fija"> Línea fija</label>
+              <label><input type="checkbox" value="Roaming UE"> Roaming UE</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>De lo anterior, ¿qué NO usas de verdad?</label>
+            <div class="checkbox-grid" id="tExtrasNoUsados">
+              <label><input type="checkbox" value="TV"> TV</label>
+              <label><input type="checkbox" value="Fútbol/deportes"> Fútbol / deportes</label>
+              <label><input type="checkbox" value="Línea fija"> Línea fija</label>
+              <label><input type="checkbox" value="Roaming UE"> Roaming UE</label>
+            </div>
+            <p class="hint">Solo cuenta lo que también hayas marcado como incluido arriba.</p>
+          </div>
+          <div class="field">
+            <label for="tFecha">Fin de permanencia (opcional)</label>
+            <div class="field__control"><input type="date" id="tFecha"></div>
+          </div>
+          <div class="field">
+            <label for="tAlternativa">Alternativa que conoces (opcional)</label>
+            <div class="field__control">
+              <input type="number" id="tAlternativa" step="1" placeholder="45">
+              <span class="unit">€/mes</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="tAlternativaDetalle">Qué incluye esa alternativa (opcional)</label>
+            <div class="field__control"><input type="text" id="tAlternativaDetalle" placeholder="Misma fibra, sin fútbol"></div>
+          </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="gasto" style="display:none;">
+          <div class="field">
+            <label for="eNombre">Nombre</label>
+            <div class="field__control">
+              <input type="text" id="eNombre" placeholder="Seguro Mapfre coche">
+            </div>
+          </div>
+          <div class="field">
+            <label for="eCoste">Lo que pagas ahora</label>
+            <div class="field__control">
+              <input type="number" id="eCoste" step="1" placeholder="450">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="ePeriodo">Periodo</label>
+            <div class="field__control">
+              <select id="ePeriodo">
+                <option value="mensual">al mes</option>
+                <option value="anual">al año</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="eFecha">Fecha de renovación (opcional)</label>
+            <div class="field__control">
+              <input type="date" id="eFecha">
+            </div>
+          </div>
+          <div class="field">
+            <label for="eAlternativa">Alternativa que ya conoces (opcional)</label>
+            <div class="field__control">
+              <input type="number" id="eAlternativa" step="1" placeholder="320">
+              <span class="unit">€</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="add-btn" id="addWatchBtn" type="button">Añadir a mis vigilancias</button>
+      </div>
+
+      <div class="panel__list">
+        <p class="instrument__label">Mis vigilancias</p>
+        <div id="watchList" class="watch-list"></div>
+      </div>
+    </div>
+    </section>
+
+    <section id="herramientas" class="dash-section">
+    <div class="section-head">
+      <h2>Herramientas</h2>
+      <p>Para cuando te surge la duda por tu cuenta — no hace falta añadir nada para usarlas.</p>
+    </div>
+
+    <div class="simulador">
+      <p class="instrument__label">Simulador de amortización anticipada</p>
+      <p class="hint" style="margin-bottom:18px;">Si te llega una paga extra o una herencia, ¿mejor bajar la cuota o acortar el plazo?</p>
+      <div class="simulador__grid">
+        <div class="simulador__form">
+          <div class="field">
+            <label for="aportacionExtra">Aportación extra</label>
+            <div class="field__control">
+              <input type="number" id="aportacionExtra" value="10000" min="0" step="500">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="tabs" id="simuladorTabs">
+            <button class="tab is-active" data-modo="cuota" type="button">Reducir cuota</button>
+            <button class="tab" data-modo="plazo" type="button">Reducir plazo</button>
+          </div>
+        </div>
+        <div class="simulador__resultado" id="simuladorResultado"></div>
+      </div>
+    </div>
+
+    <div class="simulador" style="margin-top:24px;">
+      <p class="instrument__label">Consulta rápida: ¿me compensa la luz ahora mismo?</p>
+      <p class="hint" style="margin-bottom:18px;">Sin añadir nada a tus vigilancias — solo para salir de dudas cuando te lo preguntes.</p>
+      <div class="simulador__grid">
+        <div class="simulador__form">
+          <div class="field">
+            <label for="consultaLuzPrecio">Lo que pagas ahora</label>
+            <div class="field__control">
+              <input type="number" id="consultaLuzPrecio" step="0.001" placeholder="0,18">
+              <span class="unit">€/kWh</span>
+            </div>
+          </div>
+          <button class="add-btn" id="consultaLuzBtn" type="button">Consultar PVPC de hoy</button>
+        </div>
+        <div class="simulador__resultado" id="consultaLuzResultado">
+          <p class="hint">Escribe lo que pagas y pulsa consultar — miramos el precio medio de hoy en directo.</p>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <section id="cuenta" class="dash-section">
+    <div class="section-head">
+      <h2>Tu cuenta</h2>
+      <p>Invita a quien quieras, o comparte el panel con quien viva contigo.</p>
+    </div>
+
+    <div class="panel__grid">
+      <div class="referral-card">
+        <p class="instrument__label">Invita a un amigo</p>
+        <p class="hint" style="margin-bottom:16px;">Cuando se suscriba con tu enlace, ambos ganáis un mes gratis.</p>
+        <div class="referral-link">
+          <span id="referralLink">faro.app/r/AB3F9K</span>
+          <button type="button" id="copyReferralBtn">Copiar</button>
+        </div>
+        <p class="referral-count"><strong id="referralCount">0</strong> amigos invitados hasta ahora</p>
+      </div>
+
+      <div class="referral-card">
+        <p class="instrument__label">Compartir tu panel</p>
+        <p class="hint" style="margin-bottom:16px;">Para gastos del hogar como la hipoteca, la luz o el seguro, tiene sentido que lo veáis los dos.</p>
+        <form id="compartirForm" class="compartir-form">
+          <input type="email" id="compartirEmail" placeholder="email@de-tu-pareja.com" required>
+          <button type="submit">Invitar</button>
+        </form>
+        <div id="compartidoCon" class="compartido-lista"></div>
+      </div>
+    </div>
+    </section>
+  </main>
+</div>
+
+<div id="informePrint"></div>
+
+<div class="modal-overlay" id="stateModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="stateModalTitle">
+    <button class="modal__close" id="stateModalClose" type="button" aria-label="Cerrar">×</button>
+    <h3 id="stateModalTitle">Qué significa cada estado</h3>
+    <div class="modal__state" data-state="calma">
+      <span class="lamp"></span>
+      <div><strong>EN CALMA</strong><p>Todo está donde debería. No hace falta que hagas nada — Faro sigue vigilando por si cambia.</p></div>
+    </div>
+    <div class="modal__state" data-state="observacion">
+      <span class="lamp is-watch"></span>
+      <div><strong>EN OBSERVACIÓN</strong><p>Hay una diferencia, pero todavía no es lo bastante grande como para molestarte por ella.</p></div>
+    </div>
+    <div class="modal__state" data-state="senal">
+      <span class="lamp is-signal"></span>
+      <div><strong>SEÑAL ACTIVA</strong><p>Encontramos algo concreto — una diferencia de precio real, o una fecha importante muy cerca. Merece la pena que le eches un vistazo.</p></div>
+    </div>
+    <div class="modal__state" data-state="confirmar_uso">
+      <span class="lamp is-watch"></span>
+      <div><strong>¿LA USAS?</strong><p>Solo en suscripciones: cada 3 meses te preguntamos si la sigues usando de verdad, en vez de intentar adivinarlo — eso es algo que solo tú puedes saber.</p></div>
+    </div>
+    <p class="modal__note">A veces la señal viene de un precio, otras de una fecha de renovación, y en comisiones o suscripciones puede venir simplemente de que ha pasado mucho tiempo sin revisarlo.</p>
+  </div>
+</div>
+
+<button class="help-fab" id="helpFab" type="button" aria-label="Ayuda">?</button>
+<div class="help-panel" id="helpPanel">
+  <div class="help-panel__header">
+    <span>Ayuda de Faro</span>
+    <button type="button" id="helpClose" aria-label="Cerrar">×</button>
+  </div>
+  <div class="help-panel__messages" id="helpMessages"></div>
+  <div class="help-panel__quick" id="helpQuick">
+    <button class="help-quick-btn" type="button">¿Qué significan los estados?</button>
+    <button class="help-quick-btn" type="button">¿Cómo añado una vigilancia?</button>
+    <button class="help-quick-btn" type="button">¿Cuánto cuesta Faro?</button>
+    <button class="help-quick-btn" type="button">Pasos para mi hipoteca</button>
+  </div>
+  <form class="help-panel__input" id="helpForm">
+    <input type="text" id="helpInput" placeholder="Escribe tu duda…" autocomplete="off">
+    <button type="submit">Enviar</button>
+  </form>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p class="footer__brand">Faro</p>
+    <p class="footer__legal">Faro ofrece estimaciones informativas calculadas a partir de los datos que introduces. No constituye asesoramiento financiero, legal ni fiscal, y no sustituye la valoración de un profesional autorizado ni la información oficial de tu entidad bancaria. Antes de tomar cualquier decisión sobre tu hipoteca, contrasta las cifras con tu banco o con un asesor cualificado.</p>
+    <p class="footer__links"><a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos y condiciones</a> · <a href="aviso-legal.html">Aviso legal</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const MIN = 1.5, MAX = 4.5;
+  const CX = 160, CY = 160, R = 120;
+
+  const $ = (id) => document.getElementById(id);
+  const inputs = {
+    capital: $('capital'),
+    tipoActual: $('tipoActual'),
+    anios: $('anios'),
+    costeCambio: $('costeCambio'),
+    tipoMercado: $('tipoMercado')
+  };
+
+  const eur = new Intl.NumberFormat('es-ES', {style:'currency', currency:'EUR', maximumFractionDigits:0});
+
+  function valueToAngleDeg(v){
+    const clamped = Math.min(MAX, Math.max(MIN, v));
+    return 180 - ((clamped - MIN) / (MAX - MIN)) * 180;
+  }
+  function pointAt(angleDeg, radius){
+    const rad = angleDeg * Math.PI / 180;
+    return { x: CX + radius * Math.cos(rad), y: CY - radius * Math.sin(rad) };
+  }
+
+  function buildTicks(){
+    const g = $('ticks');
+    const values = [1.5, 2.25, 3.0, 3.75, 4.5];
+    values.forEach(v => {
+      const angle = valueToAngleDeg(v);
+      const outer = pointAt(angle, R + 6);
+      const inner = pointAt(angle, R - 10);
+      const labelPt = pointAt(angle, R + 22);
+
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('class','tick');
+      line.setAttribute('x1', inner.x); line.setAttribute('y1', inner.y);
+      line.setAttribute('x2', outer.x); line.setAttribute('y2', outer.y);
+      g.appendChild(line);
+
+      const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+      text.setAttribute('x', labelPt.x);
+      text.setAttribute('y', labelPt.y + 3);
+      let anchor = 'middle';
+      if (angle > 150) anchor = 'end';
+      else if (angle < 30) anchor = 'start';
+      text.setAttribute('text-anchor', anchor);
+      text.textContent = v.toFixed(2).replace('.00','') + '%';
+      g.appendChild(text);
+    });
+  }
+
+  function monthlyPayment(principal, annualRatePct, months){
+    const r = (annualRatePct/100)/12;
+    if (r === 0) return principal / months;
+    return principal * r * Math.pow(1+r, months) / (Math.pow(1+r, months) - 1);
+  }
+
+  // Sincroniza con el backend 800ms después de que el usuario deje de escribir
+  // (no en cada tecla), y solo si hay usuario y backend conectados.
+  let syncHipotecaTimer = null;
+  function sincronizarHipotecaConBackend(capital, tipoActual, anios, costeCambio){
+    if (typeof window.__apiPost !== 'function') return;
+    const userId = window.__getCurrentUserId && window.__getCurrentUserId();
+    if (!userId) return;
+    clearTimeout(syncHipotecaTimer);
+    syncHipotecaTimer = setTimeout(() => {
+      window.__apiPost('/api/mortgages', { userId, capital, tipoActual, aniosRestantes: anios, costeCambio });
+    }, 800);
+  }
+
+  function render(){
+    const capital = parseFloat(inputs.capital.value);
+    const tipoActual = parseFloat(inputs.tipoActual.value);
+    const anios = parseFloat(inputs.anios.value) || 20;
+    const costeCambio = parseFloat(inputs.costeCambio.value) || 0;
+    const tipoMercado = parseFloat(inputs.tipoMercado.value) || 0;
+    const months = Math.max(1, Math.round(anios * 12));
+
+    // Sin capital o sin tipo actual no hay nada que calcular todavía — mejor un
+    // estado neutro y honesto que un "0 €" o, peor, una señal falsa con datos vacíos.
+    if (isNaN(capital) || capital <= 0 || isNaN(tipoActual)){
+      $('lamp').className = 'lamp';
+      $('statusLabel').textContent = 'SIN DATOS';
+      $('ahorroMensualOut').textContent = '—';
+      $('statusCaption').textContent = 'Rellena tu hipoteca para ver tu situación real.';
+      $('cuotaActualOut').textContent = '—';
+      $('cuotaNuevaOut').textContent = '—';
+      $('breakevenOut').textContent = '—';
+      $('ahorroTotalOut').textContent = '—';
+      window.__hipotecaEstado = 'sin_datos';
+      window.__hipotecaAhorroMensual = 0;
+      window.__hipotecaCuotaActual = 0;
+      window.__hipotecaCapital = null;
+      window.__hipotecaTipoActual = null;
+      window.__hipotecaMesesRestantes = null;
+      window.__hipotecaPasos = [];
+      if (typeof window.__updateSummary === 'function') window.__updateSummary();
+      if (typeof window.__actualizarSimulador === 'function') window.__actualizarSimulador();
+      return;
+    }
+
+    const cuotaActual = monthlyPayment(capital, tipoActual, months);
+    const cuotaNueva = monthlyPayment(capital, tipoMercado, months);
+    const ahorroMensual = cuotaActual - cuotaNueva;
+    const ahorroTotalNeto = ahorroMensual * months - costeCambio;
+    const breakevenMeses = ahorroMensual > 0 ? costeCambio / ahorroMensual : Infinity;
+
+    let status = 'calma';
+    if (ahorroMensual > 0){
+      status = (breakevenMeses <= 24) ? 'senal' : 'observacion';
+    }
+
+    // Gauge needle -> tipo de mercado, marker -> tipo actual
+    const needleAngle = valueToAngleDeg(tipoMercado);
+    const needleTip = pointAt(needleAngle, R - 20);
+    $('needle').setAttribute('x2', needleTip.x);
+    $('needle').setAttribute('y2', needleTip.y);
+
+    const markerAngle = valueToAngleDeg(tipoActual);
+    const markerPt = pointAt(markerAngle, R);
+    $('marker').setAttribute('cx', markerPt.x);
+    $('marker').setAttribute('cy', markerPt.y);
+
+    const lamp = $('lamp');
+    const statusLabel = $('statusLabel');
+    const caption = $('statusCaption');
+    const big = $('ahorroMensualOut');
+
+    lamp.className = 'lamp';
+    if (status === 'senal'){
+      lamp.classList.add('is-signal');
+      statusLabel.textContent = 'SEÑAL ACTIVA';
+      caption.textContent = 'Cambiar de hipoteca compensa incluso pagando el coste del cambio.';
+      big.classList.add('is-positive');
+    } else if (status === 'observacion'){
+      lamp.classList.add('is-watch');
+      statusLabel.textContent = 'EN OBSERVACIÓN';
+      caption.textContent = 'Hay ahorro, pero tardarías más de dos años en recuperar el coste del cambio.';
+      big.classList.remove('is-positive');
+    } else {
+      statusLabel.textContent = 'EN CALMA';
+      caption.textContent = 'Tu tipo actual ya es competitivo frente al mercado.';
+      big.classList.remove('is-positive');
+    }
+
+    big.textContent = (ahorroMensual > 0 ? '+' : '') + eur.format(Math.round(ahorroMensual)) + '/mes';
+    $('cuotaActualOut').textContent = eur.format(Math.round(cuotaActual));
+    $('cuotaNuevaOut').textContent = eur.format(Math.round(cuotaNueva));
+    $('breakevenOut').textContent = isFinite(breakevenMeses) ? Math.ceil(breakevenMeses) + ' meses' : '—';
+    $('ahorroTotalOut').textContent = ahorroMensual > 0 ? eur.format(Math.round(ahorroTotalNeto)) : eur.format(0);
+
+    // La hipoteca cuenta como una vigilancia más en el resumen unificado de abajo.
+    window.__hipotecaEstado = status;
+    window.__hipotecaAhorroMensual = ahorroMensual;
+    window.__hipotecaCuotaActual = cuotaActual;
+    window.__hipotecaCapital = capital;
+    window.__hipotecaTipoActual = tipoActual;
+    window.__hipotecaMesesRestantes = months;
+    if (typeof window.__actualizarSimulador === 'function') window.__actualizarSimulador();
+    sincronizarHipotecaConBackend(capital, tipoActual, anios, costeCambio);
+    window.__hipotecaPasos = status === 'senal' ? [
+      `Pide a tu banco actual una oferta de novación citando el tipo de mercado de hoy (${tipoMercado}%).`,
+      'Si no la iguala, pide una simulación de subrogación a otro banco o a un bróker hipotecario.',
+      `Compara el coste total del cambio (~${eur.format(Math.round(costeCambio))}) frente al ahorro estimado (~${eur.format(Math.round(ahorroMensual))}/mes).`,
+      `Si compensa, firma la novación o subrogación — recuperas el coste del cambio en unos ${isFinite(breakevenMeses) ? Math.ceil(breakevenMeses) : '—'} meses.`,
+    ] : status === 'observacion' ? [
+      'Hay una pequeña diferencia de tipo, pero tardarías más de 2 años en recuperar el coste del cambio — de momento no compensa moverse.',
+    ] : [];
+    if (typeof window.__updateSummary === 'function') window.__updateSummary();
+  }
+
+  Object.values(inputs).forEach(el => el.addEventListener('input', render));
+
+  buildTicks();
+  render();
+
+  $('mortgageStatusTrigger').addEventListener('click', () => {
+    if (typeof window.openStateModal === 'function') window.openStateModal(window.__hipotecaEstado || 'calma');
+  });
+
+  // ----- Plan mensual / anual -----
+  const planToggle = $('planToggle');
+  if (planToggle){
+    planToggle.querySelectorAll('.tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        planToggle.querySelectorAll('.tab').forEach((t) => t.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        const esAnual = tab.dataset.plan === 'anual';
+        $('planPrecio').innerHTML = esAnual ? '119,99€<span>/año</span>' : '12€<span>/mes</span>';
+        $('planAhorro').style.display = esAnual ? 'block' : 'none';
+        $('signupSubmitBtn').textContent = esAnual
+          ? 'Crear cuenta y suscribirme — 119,99€/año'
+          : 'Crear cuenta y suscribirme — 12€/mes';
+      });
+    });
+  }
+
+  // Alta simulada -> revela el panel (esto es lo que en producción pasaría
+  // tras crear la cuenta y completar el pago en Stripe Checkout).
+  const form = $('signupForm');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const nombre = ($('nameInput') && $('nameInput').value.trim()) || '';
+    const email = ($('emailInput') && $('emailInput').value.trim()) || '';
+    $('publicView').classList.add('is-hidden');
+    $('dashboardView').classList.remove('is-hidden');
+    $('dashboardGreeting').textContent = nombre ? `Hola, ${nombre}` : 'Hola';
+    window.scrollTo(0, 0);
+    if (typeof window.__updateSummary === 'function') window.__updateSummary();
+    // No bloqueamos la transición al panel esperando la red — si el backend
+    // está conectado, el usuario se crea en segundo plano.
+    if (typeof window.__apiPost === 'function' && email){
+      window.__apiPost('/api/users', { email }).then((user) => {
+        if (user && user.id) window.__setCurrentUserId(user.id);
+      });
+    }
+    // Deja el formulario listo por si se vuelve a la página pública y se repite la demo.
+    form.reset();
+  });
+
+  const logoutBtn = $('logoutBtn');
+  if (logoutBtn){
+    logoutBtn.addEventListener('click', () => {
+      $('dashboardView').classList.add('is-hidden');
+      $('publicView').classList.remove('is-hidden');
+      window.scrollTo(0, 0);
+    });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  // Misma lógica que src/calculoGasolina.js y src/calculoGastos.js del backend,
+  // portada a JS de cliente para que este panel reaccione sin necesitar servidor.
+  const $ = (id) => document.getElementById(id);
+
+  // ============================================================
+  // CONEXIÓN CON EL BACKEND — APAGADA POR DEFECTO
+  // ============================================================
+  // Con API_BASE_URL vacío, como está ahora, Faro sigue funcionando exactamente
+  // igual que hasta hoy: todo en memoria del navegador, se pierde al recargar.
+  // En cuanto despliegues el backend (ver README dentro del zip de faro-backend)
+  // y pongas aquí su URL pública, el alta de usuario, la hipoteca y las seis
+  // categorías con forma de "gasto" (seguros, telco, comisiones, suscripciones)
+  // se guardan también ahí de verdad, además de en memoria.
+  //
+  // Dos huecos honestos, todavía SIN sincronizar, y por qué:
+  //  - Gasolina: el backend busca la estación más barata por idMunicipio; el
+  //    frontend ahora busca por código postal + radio real en kilómetros — son
+  //    dos métodos distintos. Conectarlo bien exige un resolutor de código
+  //    postal a idMunicipio que no existe todavía.
+  //  - Luz: el backend no tiene su propio endpoint de consulta al PVPC — solo
+  //    lo tiene el frontend (ver precioMedioLuzHoy más abajo).
+  // Añadir estas dos piezas es el siguiente paso natural del backend, no algo
+  // que esté simulado aquí fingiendo que funciona.
+  const API_BASE_URL = 'https://faro-backend-production-8eba.up.railway.app';
+  let currentUserId = null;
+
+  async function apiPost(path, body){
+    if (!API_BASE_URL) return null;
+    try {
+      const resp = await fetch(API_BASE_URL + path, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      return await resp.json();
+    } catch (err) {
+      console.warn(`Backend no disponible para ${path} — sigo en modo local.`, err.message);
+      return null;
+    }
+  }
+  window.__apiPost = apiPost;
+  window.__getCurrentUserId = () => currentUserId;
+  window.__setCurrentUserId = (id) => { currentUserId = id; };
+
+  function sincronizarGastoConBackend(categoria, datos){
+    const userId = currentUserId;
+    if (!userId) return;
+    apiPost('/api/gastos', { userId, categoria, ...datos });
+  }
+
+  const CAMPOS_COMBUSTIBLE = {
+    gasoleo_a: 'Precio Gasoleo A',
+    gasolina_95_e5: 'Precio Gasolina 95 E5',
+    gasolina_98_e5: 'Precio Gasolina 98 E5',
+  };
+
+  function encontrarMasBarataDemo(estaciones, claveCombustible){
+    const campo = CAMPOS_COMBUSTIBLE[claveCombustible];
+    let mejor = null;
+    for (const e of estaciones){
+      const str = e[campo];
+      if (!str) continue;
+      const precio = parseFloat(String(str).replace(',', '.'));
+      if (isNaN(precio)) continue;
+      if (!mejor || precio < mejor.precio){
+        const lat = parseFloat(String(e['Latitud'] || '').replace(',', '.'));
+        const lng = parseFloat(String(e['Longitud (WGS84)'] || '').replace(',', '.'));
+        mejor = {
+          precio, rotulo: e['Rótulo'], municipio: e['Municipio'], direccion: e['Dirección'],
+          lat: isNaN(lat) ? null : lat, lng: isNaN(lng) ? null : lng,
+        };
+      }
+    }
+    return mejor;
+  }
+
+  function enlaceMaps(estacion){
+    if (estacion.lat != null && estacion.lng != null){
+      return `https://www.google.com/maps/search/?api=1&query=${estacion.lat},${estacion.lng}`;
+    }
+    const texto = [estacion.direccion, estacion.municipio].filter(Boolean).join(', ');
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(texto)}`;
+  }
+
+  function renderEstacionInfo(estacion){
+    if (!estacion) return '';
+    const direccion = [estacion.direccion, estacion.municipio].filter(Boolean).join(', ');
+    return `<div class="estacion-info">` +
+      `<strong>${escapeHtml(estacion.rotulo || 'Gasolinera')}</strong>` +
+      (direccion ? `<p>${escapeHtml(direccion)}</p>` : '') +
+      `<a href="${enlaceMaps(estacion)}" target="_blank" rel="noopener">Cómo llegar →</a>` +
+    `</div>`;
+  }
+
+  function generarPasosGasolina(lectura, estacion, radioUsado){
+    if (lectura.estado !== 'senal') return [];
+    if (estacion){
+      const distanciaTxt = radioUsado ? ` (dentro de ${radioUsado} km de tu código postal)` : '';
+      return [
+        `La próxima vez que necesites repostar, prueba esa gasolinera${distanciaTxt}.`,
+        `Con un depósito de 50L, el ahorro sería de unos ${eurLocal.format(Math.round(lectura.ahorroDeposito || 0))}.`,
+      ];
+    }
+    return ['La próxima vez que repostes, prueba la opción más barata que conoces cerca.'];
+  }
+
+  // ============================================================
+  // COLABORACIONES CON BRÓKERS REGISTRADOS — APAGADO POR DEFECTO
+  // ============================================================
+  // No actives esto hasta tener CONFIRMADO por escrito: (1) que el acuerdo con
+  // el bróker está cerrado y (2) que un abogado ha validado el modelo de comisión.
+  // Usa SIEMPRE comisionTipo:'fija' — una comisión que dependa de si la hipoteca
+  // o la póliza se firma empieza a parecerse económicamente a intermediación
+  // financiera regulada (LCCI / DGSFP), que es justo lo que este diseño evita.
+  //
+  // Para activar una categoría, añade una entrada aquí. Con el objeto vacío,
+  // como está ahora, no cambia nada para el usuario — cero riesgo de mostrar
+  // algo que no existe todavía.
+  //
+  // Ejemplo de cómo rellenarlo cuando el acuerdo esté cerrado:
+  //   hipoteca: {
+  //     nombre: 'NombreDelBroker',
+  //     registroNumero: 'ICI-XXXX',        // Registro de Intermediarios de Crédito Inmobiliario, Banco de España
+  //     url: 'https://broker.example/derivacion',
+  //     comisionTipo: 'fija',              // nunca 'porcentaje' — ver nota legal arriba
+  //   },
+  const BROKER_PARTNERS = {};
+
+  function opcionBroker(categoria){
+    const partner = BROKER_PARTNERS[categoria];
+    if (!partner) return null;
+    return {
+      titulo: `Hablar con ${partner.nombre}`,
+      texto: `Bróker registrado (${partner.registroNumero}). Te ponemos en contacto — cobramos una comisión fija por la derivación, se cierre o no, nunca un % de tu operación.`,
+      esBroker: true,
+      categoria,
+      partner,
+    };
+  }
+
+  function generarOpcionesAlternativa(categoria){
+    const nombreCat = (CATEGORY_LABELS[categoria] || categoria).toLowerCase();
+    const opciones = [
+      { titulo: 'Negociar primero', texto: `Llama a tu proveedor actual de ${nombreCat} y cuéntale la alternativa que has encontrado. Muchas veces igualan el precio para no perderte, y te ahorras el trámite de cambiar.` },
+      { titulo: 'Cambiarte directamente', texto: 'Si no consigue igualarlo, inicia el cambio con la alternativa que encontraste.' },
+      { titulo: 'Seguir comparando', texto: 'Antes de decidir, mira una o dos opciones más — la primera alternativa que encuentras no siempre es la mejor del mercado.' },
+    ];
+    const broker = opcionBroker(categoria);
+    if (broker) opciones.push(broker);
+    return opciones;
+  }
+
+  function generarPasosGasto(categoria, motivo){
+    const nombreCat = (CATEGORY_LABELS[categoria] || categoria).toLowerCase();
+    if (motivo === 'renovacion_proxima'){
+      return [
+        'Pide una comparativa a 2-3 proveedores distintos antes de que se renueve solo.',
+        `Llama a tu proveedor actual de ${nombreCat} y pregunta si pueden igualar la mejor oferta que encuentres.`,
+        'Si no, cambia antes de la fecha de renovación.',
+      ];
+    }
+    if (motivo === 'renovacion_reciente'){
+      return [
+        'Revisa tu último recibo y compáralo con el de hace un año.',
+        'Si ha subido, llama a tu proveedor y pregunta el motivo — a veces basta con pedirlo para que lo bajen.',
+        'Si no, es buen momento para comparar alternativas.',
+      ];
+    }
+    if (categoria === 'suscripciones'){
+      return [
+        'Haz una lista de qué has usado realmente en el último mes de cada suscripción.',
+        'Cancela o pausa las que no hayas abierto en 30 días.',
+        'Si usas varias plataformas a la vez, revisa si un plan combinado sale más barato que pagarlas por separado.',
+      ];
+    }
+    if (categoria === 'comisiones_bancarias'){
+      return [
+        'Revisa las condiciones de bonificación de tu cuenta (nómina domiciliada, recibos, uso mínimo de tarjeta).',
+        'Si ya las cumples y aun así te cobran, reclama a tu banco citando esas condiciones.',
+        'Si no las cumples y no compensa cumplirlas, compara con cuentas sin comisiones de otros bancos.',
+      ];
+    }
+    return [];
+  }
+
+  // ----- Simulador de amortización anticipada -----
+  function cuotaMensualSim(P, tipoPct, n){
+    const r = tipoPct / 100 / 12;
+    if (n <= 0) return 0;
+    if (r === 0) return P / n;
+    return (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  }
+
+  function simularAmortizacion({ capital, tipoActual, mesesRestantes, aportacion, modo }){
+    const r = tipoActual / 100 / 12;
+    const cuotaActual = cuotaMensualSim(capital, tipoActual, mesesRestantes);
+    const nuevoCapital = Math.max(0, capital - aportacion);
+    const interesSinAmortizar = cuotaActual * mesesRestantes - capital;
+
+    if (modo === 'cuota'){
+      const nuevaCuota = cuotaMensualSim(nuevoCapital, tipoActual, mesesRestantes);
+      const alivioMensual = cuotaActual - nuevaCuota;
+      const interesConCuota = nuevaCuota * mesesRestantes - nuevoCapital;
+      return { modo, alivioMensual, ahorroIntereses: interesSinAmortizar - interesConCuota, nuevaCuota };
+    }
+    // modo === 'plazo': misma cuota, menos meses
+    const nPrime = -Math.log(1 - (r * nuevoCapital) / cuotaActual) / Math.log(1 + r);
+    const mesesAhorrados = mesesRestantes - nPrime;
+    const interesConPlazo = cuotaActual * nPrime - nuevoCapital;
+    return { modo, mesesAhorrados, ahorroIntereses: interesSinAmortizar - interesConPlazo, nuevoPlazoMeses: nPrime };
+  }
+
+  let modoSimulador = 'cuota';
+
+  function actualizarSimulador(){
+    const capital = window.__hipotecaCapital;
+    const tipoActual = window.__hipotecaTipoActual;
+    const mesesRestantes = window.__hipotecaMesesRestantes;
+    const resultadoEl = document.getElementById('simuladorResultado');
+    if (!resultadoEl) return;
+    if (capital == null){
+      resultadoEl.innerHTML = '<p class="hint">Rellena primero los datos de tu hipoteca, arriba, para poder simular.</p>';
+      return;
+    }
+
+    const aportacion = parseFloat(document.getElementById('aportacionExtra').value);
+    if (isNaN(aportacion) || aportacion <= 0 || aportacion >= capital){
+      resultadoEl.innerHTML = '<p class="hint">Escribe una aportación mayor que 0 y menor que el capital pendiente.</p>';
+      return;
+    }
+
+    const r = simularAmortizacion({ capital, tipoActual, mesesRestantes, aportacion, modo: modoSimulador });
+
+    if (r.modo === 'cuota'){
+      resultadoEl.innerHTML =
+        `<div class="simulador__stat"><div class="num">${eurLocal.format(Math.round(r.alivioMensual))}/mes</div><div class="label">Menos cuota a partir del mes que viene</div></div>` +
+        `<div class="simulador__stat"><div class="num">${eurLocal.format(Math.round(r.ahorroIntereses))}</div><div class="label">Intereses que te ahorras en total</div></div>`;
+    } else {
+      const anios = Math.floor(r.mesesAhorrados / 12);
+      const meses = Math.round(r.mesesAhorrados % 12);
+      resultadoEl.innerHTML =
+        `<div class="simulador__stat"><div class="num">${anios} años y ${meses} meses</div><div class="label">Antes terminas de pagar la hipoteca</div></div>` +
+        `<div class="simulador__stat"><div class="num">${eurLocal.format(Math.round(r.ahorroIntereses))}</div><div class="label">Intereses que te ahorras en total</div></div>`;
+    }
+  }
+  window.__actualizarSimulador = actualizarSimulador;
+
+  document.getElementById('aportacionExtra').addEventListener('input', actualizarSimulador);
+  document.querySelectorAll('#simuladorTabs .tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#simuladorTabs .tab').forEach((t) => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      modoSimulador = tab.dataset.modo;
+      actualizarSimulador();
+    });
+  });
+  // (la primera llamada a actualizarSimulador() se hace al final del script, una vez está todo definido)
+
+  function calcularEstadoGasolinaDemo(precioHabitual, precioAlternativo, litrosMes){
+    const litros = litrosMes || 0;
+    if (isNaN(precioHabitual) || isNaN(precioAlternativo)){
+      return { estado: 'sin_datos', detalle: 'Nos falta un precio para poder comparar.', pasos: [] };
+    }
+    const costeMensual = precioHabitual * litros;
+    const diferencia = precioHabitual - precioAlternativo;
+    const diferenciaCentimos = Math.round(diferencia * 1000) / 10;
+    const ahorroDeposito = Math.round(diferencia * 50 * 100) / 100;
+    const ahorroMensual = Math.round(diferencia * litros * 100) / 100;
+    if (diferencia <= 0) return { estado: 'calma', costeMensual, detalle: 'Ya estás en la opción más barata que conocemos.', pasos: [] };
+    if (diferenciaCentimos >= 4) return { estado: 'senal', costeMensual, ahorroMensual, ahorroDeposito, detalle: `Son unos ${ahorroDeposito.toFixed(2)} € por depósito de 50L.` };
+    return { estado: 'observacion', costeMensual, detalle: 'Hay una pequeña diferencia, pero no suele compensar desviarse por tan poco.', pasos: [] };
+  }
+
+  // ----- Telco: primero mira si pagas por extras que no usas (señal segura, no depende
+  // de encontrar una alternativa), y solo si no hay eso, cae en la misma lógica genérica
+  // de precio/fecha que el resto de categorías ligeras. -----
+  // ----- Categorías con "extras": primero mira si pagas por algo que no usas (señal
+  // segura, no depende de encontrar una alternativa), y solo si no hay eso, cae en la
+  // misma lógica genérica de precio/fecha que el resto de categorías ligeras.
+  // La usan telco y seguro de coche — mismo motor, distinto vocabulario. -----
+  function calcularEstadoConExtrasDemo({ categoria, costeActual, periodo, extrasIncluidos, extrasNoUsados, fechaReferencia, alternativaConocida, alternativaDetalle, verboLlamada }){
+    const sinUsar = extrasIncluidos.filter((ex) => extrasNoUsados.includes(ex));
+    if (sinUsar.length > 0){
+      const opciones = [
+        { titulo: 'Quitar el extra', texto: `${verboLlamada} y pide que te quiten: ${sinUsar.join(', ')}. Muchas veces esto baja el precio sin tener que cambiar de compañía ni perder antigüedad.` },
+        { titulo: 'Bajar de plan', texto: 'Pregunta si existe un plan más básico que no lo incluya desde el principio.' },
+        { titulo: 'Comparar de paso', texto: 'Ya que vas a llamar, aprovecha para pedir un precio si lo quitas del todo y compáralo con otras opciones del mercado.' },
+      ];
+      const broker = opcionBroker(categoria);
+      if (broker) opciones.push(broker);
+      return {
+        estado: 'senal', motivo: 'extras_sin_usar',
+        detalle: `Pagas por ${sinUsar.join(', ')} y dijiste que no lo usas de verdad.`,
+        opciones,
+      };
+    }
+
+    const base = calcularEstadoGastoDemo({ categoria, costeActual, periodo, fechaReferencia, alternativaConocida });
+    if (base.motivo === 'alternativa_mas_barata' && alternativaDetalle){
+      base.detalle += ` Ojo: comprueba que "${alternativaDetalle}" incluye lo mismo que de verdad usas — comparar solo por precio no basta si cambia la cobertura.`;
+    }
+    return base;
+  }
+
+  function calcularEstadoTelcoDemo({ costeActual, extrasIncluidos, extrasNoUsados, fechaReferencia, alternativaConocida, alternativaDetalle }){
+    return calcularEstadoConExtrasDemo({
+      categoria: 'telco', costeActual, periodo: 'mensual', extrasIncluidos, extrasNoUsados,
+      fechaReferencia, alternativaConocida, alternativaDetalle, verboLlamada: 'Llama a tu operador',
+    });
+  }
+
+  function calcularEstadoSeguroDemo({ tipoSeguro, costeActual, periodo, extrasIncluidos, extrasNoUsados, fechaReferencia, alternativaConocida, alternativaDetalle }){
+    return calcularEstadoConExtrasDemo({
+      categoria: tipoSeguro, costeActual, periodo, extrasIncluidos, extrasNoUsados,
+      fechaReferencia, alternativaConocida, alternativaDetalle, verboLlamada: 'Llama a tu aseguradora',
+    });
+  }
+
+  function calcularEstadoGastoDemo({ categoria, costeActual, periodo, fechaReferencia, alternativaConocida }){
+    const DIAS_AVISO_ANTES = 30, DIAS_AVISO_DESPUES = 14, UMBRAL_MIN = 3;
+    const aMensual = (c) => (c == null || isNaN(c)) ? null : (periodo === 'anual' ? c / 12 : c);
+    const costeMensual = aMensual(costeActual);
+    const altMensual = aMensual(alternativaConocida);
+
+    if (costeMensual != null && altMensual != null){
+      const diferencia = costeMensual - altMensual;
+      if (diferencia >= UMBRAL_MIN){
+        return {
+          estado: 'senal', motivo: 'alternativa_mas_barata', ahorroMensual: Math.round(diferencia * 100) / 100, costeMensual,
+          detalle: `Hay una alternativa que ahorraría unos ${diferencia.toFixed(0)} €/mes.`,
+          opciones: generarOpcionesAlternativa(categoria),
+        };
+      }
+    }
+    if (fechaReferencia){
+      const hoy = new Date();
+      const fecha = new Date(fechaReferencia + 'T00:00:00');
+      const dias = Math.round((fecha - hoy) / (1000*60*60*24));
+      if (dias >= 0 && dias <= DIAS_AVISO_ANTES){
+        return {
+          estado: 'senal', motivo: 'renovacion_proxima', costeMensual,
+          detalle: `Se renueva en ${dias} días — buen momento para revisarlo antes de que se renueve solo.`,
+          pasos: generarPasosGasto(categoria, 'renovacion_proxima'),
+        };
+      }
+      if (dias < 0 && dias >= -DIAS_AVISO_DESPUES){
+        return {
+          estado: 'senal', motivo: 'renovacion_reciente', costeMensual,
+          detalle: 'La fecha de renovación ya pasó — el precio puede haber subido sin avisarte.',
+          pasos: generarPasosGasto(categoria, 'renovacion_reciente'),
+        };
+      }
+    }
+    return { estado: 'calma', costeMensual, detalle: 'Todavía no hay nada que revisar. Faro seguirá vigilando por si cambia.', pasos: [] };
+  }
+
+  // ----- Suscripciones: en vez de intentar "adivinar" duplicados (algo que
+  // Faro no puede ver sin acceso a tu banco), pregunta directamente cada 3
+  // meses si la sigues usando. Un sí resetea el plazo; un no la marca como
+  // señal activa de verdad, con el ahorro completo de cancelarla. -----
+  const DIAS_CONFIRMAR_SUSCRIPCION = 90;
+
+  function calcularEstadoSuscripcionDemo({ costeActual, periodo, ultimaConfirmacion, hoy }){
+    const ahora = hoy || new Date();
+    const costeMensual = periodo === 'anual' ? costeActual / 12 : costeActual;
+    const fechaConf = new Date((ultimaConfirmacion || new Date().toISOString().slice(0, 10)) + 'T00:00:00');
+    const dias = Math.round((ahora - fechaConf) / (1000 * 60 * 60 * 24));
+
+    if (dias >= DIAS_CONFIRMAR_SUSCRIPCION){
+      return {
+        estado: 'confirmar_uso', costeMensual,
+        detalle: 'Han pasado 3 meses — ¿la sigues usando de verdad?',
+        pasos: [],
+      };
+    }
+    return { estado: 'calma', costeMensual, detalle: `Te preguntaremos de nuevo en unos meses si la sigues usando.`, pasos: [] };
+  }
+
+  // ----- Luz: precio medio de hoy del PVPC, vía la API abierta de preciodelaluz.org -----
+  // (envoltorio sin token sobre los datos oficiales de Red Eléctrica de España / ESIOS)
+  async function precioMedioLuzHoy(){
+    const resp = await fetch('https://api.preciodelaluz.org/v1/prices/all?zone=PCB');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    // La forma exacta de la respuesta puede variar; probamos varias rutas razonables
+    // antes de rendirnos, en vez de asumir un único formato.
+    const precios = Array.isArray(data) ? data
+      : Array.isArray(data.prices) ? data.prices
+      : Array.isArray(data.PVPC) ? data.PVPC
+      : null;
+    if (!precios || precios.length === 0) throw new Error('Formato de respuesta inesperado');
+
+    const valores = precios
+      .map((p) => (typeof p === 'number' ? p : p.price ?? p.value ?? p.PCB))
+      .map((v) => (typeof v === 'string' ? parseFloat(v.replace(',', '.')) : v))
+      .filter((v) => typeof v === 'number' && !isNaN(v) && v >= 0 && v < 2); // €/kWh en rango razonable
+
+    if (valores.length === 0) throw new Error('No se encontraron precios numéricos válidos');
+    const media = valores.reduce((a, b) => a + b, 0) / valores.length;
+    return Math.round(media * 1000) / 1000;
+  }
+
+  function calcularEstadoLuzDemo(precioHabitual, precioAlternativo, consumoMensual){
+    if (isNaN(precioHabitual) || isNaN(precioAlternativo)){
+      return { estado: 'sin_datos', detalle: 'Nos falta un precio para poder comparar.', pasos: [] };
+    }
+    const diferencia = precioHabitual - precioAlternativo; // €/kWh
+    const consumo = (consumoMensual && !isNaN(consumoMensual)) ? consumoMensual : 300;
+    const ahorroMensual = Math.round(diferencia * consumo * 100) / 100;
+    if (diferencia <= 0) return { estado: 'calma', costeMensual: precioHabitual * consumo, detalle: 'Tu precio medio ya es competitivo frente al PVPC de hoy.', pasos: [] };
+    if (ahorroMensual >= 5){
+      return {
+        estado: 'senal', ahorroMensual, costeMensual: precioHabitual * consumo,
+        detalle: `El PVPC de hoy está unos ${(diferencia*100).toFixed(1)} cént./kWh por debajo de lo que dices pagar — unos ${eurLocal.format(Math.round(ahorroMensual))}/mes con tu consumo.`,
+        pasos: [
+          'Compara tu factura actual con la tarifa regulada PVPC de tu comercializadora de referencia.',
+          'Si tu consumo es flexible (lavadora, coche eléctrico, etc.), cambiarte al PVPC puede compensar aunque el precio varíe cada hora.',
+          'Si prefieres precio fijo, usa este dato como referencia al comparar ofertas de mercado libre.',
+        ],
+      };
+    }
+    return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: 'Hay una pequeña diferencia con el PVPC de hoy, pero no suele compensar cambiar por tan poco.', pasos: [] };
+  }
+
+  const CATEGORY_LABELS = {
+    hipoteca: 'Hipoteca', gasolina: 'Gasolina', luz: 'Luz',
+    seguro_coche: 'Seguro de coche', seguro_hogar: 'Seguro de hogar', seguro_vida: 'Seguro de vida', seguro_salud: 'Seguro de salud',
+    telco: 'Telefonía / fibra', comisiones_bancarias: 'Comisiones bancarias', suscripciones: 'Suscripciones',
+  };
+  const EXTRAS_POR_TIPO_SEGURO = {
+    seguro_coche: ['Asistencia en carretera', 'Coche de sustitución', 'Lunas', 'Ocupantes'],
+    seguro_hogar: ['Asistencia en el hogar', 'Responsabilidad civil ampliada', 'Robo', 'Daños eléctricos'],
+    seguro_vida: ['Invalidez', 'Enfermedades graves', 'Doble indemnización por accidente'],
+    seguro_salud: ['Dental', 'Cuadro médico ampliado', 'Sin copago', 'Psicología'],
+  };
+  const STATUS_LABELS = { calma: 'EN CALMA', observacion: 'EN OBSERVACIÓN', senal: 'SEÑAL ACTIVA', sin_datos: 'SIN DATOS', confirmar_uso: '¿LA USAS?' };
+  const lampClass = (estado) => estado === 'senal' ? 'is-signal' : (estado === 'observacion' || estado === 'confirmar_uso' ? 'is-watch' : '');
+  const eurLocal = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+  // Ejemplos que cambian según la categoría activa, para que el placeholder
+  // siempre enseñe algo relevante — no solo en gasolina y seguro de coche.
+  const EJEMPLOS_GASTO = {
+    comisiones_bancarias: { nombre: 'Mantenimiento cuenta BBVA', coste: '8', periodo: 'mensual', alternativa: '' },
+    suscripciones: { nombre: 'Netflix + HBO + Disney', coste: '35', periodo: 'mensual', alternativa: '' },
+  };
+
+  // ----- Modal de estados: compartido por el instrumento de hipoteca y cada tarjeta de abajo -----
+  function openStateModal(state){
+    document.querySelectorAll('.modal__state').forEach((el) => el.classList.toggle('is-highlighted', el.dataset.state === state));
+    $('stateModalOverlay').classList.add('is-visible');
+  }
+  function closeStateModal(){
+    $('stateModalOverlay').classList.remove('is-visible');
+  }
+  window.openStateModal = openStateModal;
+  $('stateModalClose').addEventListener('click', closeStateModal);
+  $('stateModalOverlay').addEventListener('click', (e) => { if (e.target.id === 'stateModalOverlay') closeStateModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeStateModal(); });
+
+  let vigilancias = [];
+  let watchIdCounter = 0;
+  let activeCategory = 'gasolina';
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
+
+  function renderConfirmarUso(id){
+    return `<div class="confirmar-uso">` +
+      `<button class="confirmar-uso-btn confirmar-uso-btn--si" data-id="${id}" data-respuesta="si" type="button">Sí, la sigo usando</button>` +
+      `<button class="confirmar-uso-btn confirmar-uso-btn--no" data-id="${id}" data-respuesta="no" type="button">No, ya no la uso</button>` +
+    `</div>`;
+  }
+
+  function confirmarUsoSuscripcion(id, siLaUsa){
+    const entry = vigilancias.find((v) => v.id === id);
+    if (!entry) return;
+    if (siLaUsa){
+      entry.ultimaConfirmacion = new Date().toISOString().slice(0, 10);
+      const relectura = calcularEstadoSuscripcionDemo({ costeActual: entry.costeMensual, periodo: 'mensual', ultimaConfirmacion: entry.ultimaConfirmacion });
+      Object.assign(entry, relectura);
+    } else {
+      entry.estado = 'senal';
+      entry.ahorroMensual = entry.costeMensual;
+      entry.detalle = `Llevas 3 meses sin usarla — cancélala y ahorra ${eurLocal.format(Math.round(entry.costeMensual))}/mes.`;
+      entry.pasos = ['Cancélala hoy mismo: la mayoría se hace en dos minutos desde la app o la web del servicio.'];
+    }
+    renderWatchList();
+  }
+
+  function renderPasos(pasos){
+    if (!pasos || pasos.length === 0) return '';
+    return `<ol class="pasos-list">${pasos.map((p) => `<li>${escapeHtml(p)}</li>`).join('')}</ol>`;
+  }
+
+  // ----- Derivación a bróker: enlace con parámetros de seguimiento + registro del clic.
+  // BROKER_TRACKING_ENDPOINT está vacío a propósito — en cuanto tengas el backend
+  // desplegado, pon aquí su URL (ej. 'https://api.tudominio.com/api/broker-referrals')
+  // y esto empieza a registrar de verdad sin tocar nada más. -----
+  const BROKER_TRACKING_ENDPOINT = null;
+
+  function enlaceDerivacionBroker(partner, categoria){
+    try {
+      const url = new URL(partner.url);
+      url.searchParams.set('ref', 'faro');
+      url.searchParams.set('categoria', categoria);
+      return url.toString();
+    } catch (err) {
+      return partner.url || '#';
+    }
+  }
+
+  async function registrarClicBroker(categoria, brokerNombre){
+    const payload = { categoria, brokerNombre, timestamp: new Date().toISOString() };
+    if (!BROKER_TRACKING_ENDPOINT){
+      console.log('[broker-referral] backend no conectado todavía — clic registrado solo aquí:', payload);
+      return;
+    }
+    try {
+      await fetch(BROKER_TRACKING_ENDPOINT, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      console.warn('No se pudo registrar el clic de derivación:', err);
+    }
+  }
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.opcion-broker-link');
+    if (!link) return;
+    registrarClicBroker(link.dataset.categoria, link.dataset.broker);
+  });
+
+  function renderOpciones(opciones){
+    if (!opciones || opciones.length === 0) return '';
+    return `<div class="opciones-list">${opciones.map((o) => {
+      if (o.esBroker){
+        const enlace = enlaceDerivacionBroker(o.partner, o.categoria);
+        return `<div class="opcion opcion--broker"><strong>${escapeHtml(o.titulo)}</strong><p>${escapeHtml(o.texto)}</p>` +
+          `<a href="${enlace}" class="opcion-broker-link" target="_blank" rel="noopener" data-categoria="${escapeHtml(o.categoria || '')}" data-broker="${escapeHtml(o.partner.nombre)}">Contactar →</a></div>`;
+      }
+      return `<div class="opcion"><strong>${escapeHtml(o.titulo)}</strong><p>${escapeHtml(o.texto)}</p></div>`;
+    }).join('')}</div>`;
+  }
+
+  // Una entrada trae "opciones" (varios caminos posibles) o "pasos" (una secuencia
+  // única), nunca las dos cosas — esto decide cuál pintar sin que cada sitio que
+  // muestra una recomendación tenga que saberlo.
+  function renderRecomendacion(entry){
+    return entry.opciones ? renderOpciones(entry.opciones) : renderPasos(entry.pasos);
+  }
+
+  function renderWatchList(){
+    const list = $('watchList');
+    list.innerHTML = '';
+    if (vigilancias.length === 0){
+      list.innerHTML = '<p class="watch-empty">Todavía no has añadido nada aquí. La hipoteca de arriba ya cuenta en el resumen.</p>';
+    }
+    vigilancias.forEach((v) => {
+      const card = document.createElement('div');
+      card.className = 'watch-card';
+      card.innerHTML =
+        `<span class="lamp ${lampClass(v.estado)}"></span>` +
+        `<div class="watch-card__body">` +
+          `<p class="watch-card__name">${escapeHtml(v.nombre)}</p>` +
+          (v.resumenPlan ? `<p class="watch-card__plan">${escapeHtml(v.resumenPlan)}</p>` : '') +
+          `<p class="watch-card__meta state-trigger" data-state="${v.estado}" role="button" tabindex="0">${CATEGORY_LABELS[v.categoria] || v.categoria} · ${STATUS_LABELS[v.estado] || v.estado} <span class="info-hint">ⓘ</span></p>` +
+          `<p class="watch-card__detail">${escapeHtml(v.detalle)}</p>` +
+          renderEstacionInfo(v.estacionInfo) +
+          (v.estado === 'confirmar_uso' ? renderConfirmarUso(v.id) : renderRecomendacion(v)) +
+        `</div>` +
+        `<button class="watch-card__remove" data-id="${v.id}" aria-label="Eliminar" type="button">×</button>`;
+      list.appendChild(card);
+    });
+    list.querySelectorAll('.watch-card__remove').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        vigilancias = vigilancias.filter((v) => v.id !== btn.dataset.id);
+        renderWatchList();
+      });
+    });
+    list.querySelectorAll('.confirmar-uso-btn').forEach((btn) => {
+      btn.addEventListener('click', () => confirmarUsoSuscripcion(btn.dataset.id, btn.dataset.respuesta === 'si'));
+    });
+    list.querySelectorAll('.state-trigger').forEach((el) => {
+      el.addEventListener('click', () => openStateModal(el.dataset.state));
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter') openStateModal(el.dataset.state); });
+    });
+    updateSummary();
+  }
+
+  function updateSummary(){
+    const hipoteca = {
+      categoria: 'hipoteca',
+      nombre: 'Tu hipoteca',
+      estado: window.__hipotecaEstado || 'calma',
+      ahorroMensual: window.__hipotecaAhorroMensual || 0,
+      costeMensual: window.__hipotecaCuotaActual || 0,
+      detalle: (document.getElementById('statusCaption') || {}).textContent || '',
+      pasos: window.__hipotecaPasos || [],
+    };
+    const todas = [hipoteca, ...vigilancias];
+
+    $('summaryTotal').textContent = todas.length;
+    $('summarySenal').textContent = todas.filter((t) => t.estado === 'senal').length;
+    $('summaryObs').textContent = todas.filter((t) => t.estado === 'observacion').length;
+
+    // Total pagado: solo categorías con una cifra mensual real (la gasolina no tiene una, es €/L).
+    const totalPagado = todas.reduce((sum, t) => sum + (t.costeMensual || 0), 0);
+    $('resumenPagadoTotal').textContent = eurLocal.format(Math.round(totalPagado)) + '/mes';
+
+    const activas = todas.filter((t) => t.estado === 'senal');
+    const totalAhorro = activas.reduce((sum, t) => sum + (t.ahorroMensual || 0), 0);
+    $('resumenAhorroTotal').textContent = eurLocal.format(Math.round(totalAhorro)) + '/mes';
+    $('resumenAhorroAnual').textContent = eurLocal.format(Math.round(totalAhorro * 12)) + '/año';
+
+    const recs = $('resumenRecs');
+    recs.innerHTML = '';
+    if (activas.length === 0){
+      recs.innerHTML = '<p class="resumen-card__empty">Nada requiere tu atención ahora mismo. En cuanto algo cambie, aparecerá aquí.</p>';
+    } else {
+      activas.forEach((t) => {
+        const row = document.createElement('div');
+        row.className = 'resumen-rec';
+        row.innerHTML = `<span class="lamp is-signal"></span><div><strong>${escapeHtml(t.nombre)}</strong><p>${escapeHtml(t.detalle)}</p>${renderEstacionInfo(t.estacionInfo)}${renderRecomendacion(t)}</div>`;
+        recs.appendChild(row);
+      });
+    }
+
+    const suscripciones = vigilancias.filter((v) => v.categoria === 'suscripciones');
+    const subtotalEl = $('resumenSuscripcionesTotal');
+    if (suscripciones.length >= 2){
+      const totalSuscripciones = suscripciones.reduce((sum, v) => sum + (v.costeMensual || 0), 0);
+      subtotalEl.innerHTML = `Gastas <strong>${eurLocal.format(Math.round(totalSuscripciones))}/mes</strong> en total entre tus ${suscripciones.length} suscripciones.`;
+      subtotalEl.style.display = 'block';
+    } else {
+      subtotalEl.style.display = 'none';
+    }
+
+    window.__ultimoResumen = { totalPagado, totalAhorro, activas };
+    actualizarAcumulado();
+  }
+  window.__updateSummary = updateSummary;
+
+  // ----- Ahorro acumulado (demo): ahorro mensual actual × meses simulados con el slider -----
+  function actualizarAcumulado(){
+    const slider = $('mesesSimulados');
+    if (!slider) return;
+    const meses = parseInt(slider.value, 10);
+    $('mesesSimuladosLabel').textContent = meses + (meses === 1 ? ' mes' : ' meses');
+    const totalAhorro = (window.__ultimoResumen && window.__ultimoResumen.totalAhorro) || 0;
+    $('resumenAcumulado').textContent = eurLocal.format(Math.round(totalAhorro * meses));
+  }
+  $('mesesSimulados').addEventListener('input', actualizarAcumulado);
+
+  // ----- Informe descargable: genera una vista imprimible real y abre el diálogo de impresión -----
+  $('descargarInformeBtn').addEventListener('click', () => {
+    const resumen = window.__ultimoResumen || { totalPagado: 0, totalAhorro: 0, activas: [] };
+    const hoy = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+    const print = $('informePrint');
+    let recsHtml = resumen.activas.length
+      ? resumen.activas.map((t) => `<div class="informe-rec"><strong>${escapeHtml(t.nombre)}</strong><p>${escapeHtml(t.detalle)}</p></div>`).join('')
+      : '<p>Nada requería atención este mes.</p>';
+    print.innerHTML = `
+      <h1>Informe de Faro</h1>
+      <p class="informe-fecha">${hoy}</p>
+      <div class="informe-stat"><div class="num">${eurLocal.format(Math.round(resumen.totalPagado))}/mes</div><div class="label">Pagabas en total</div></div>
+      <div class="informe-stat"><div class="num">${eurLocal.format(Math.round(resumen.totalAhorro))}/mes — ${eurLocal.format(Math.round(resumen.totalAhorro * 12))}/año</div><div class="label">Ahorro estimado si actúas en las señales activas</div></div>
+      <h2 style="font-family:Georgia,serif;font-size:15px;margin:20px 0 10px;">Recomendaciones de este mes</h2>
+      ${recsHtml}
+    `;
+    window.print();
+  });
+
+  // ----- Boletín mensual automático: interruptor real (guarda la preferencia en
+  // esta sesión). El envío en sí necesita backend + email real — ver revisarGastos.js
+  // en el backend, donde ya existe la función de envío a conectar con un proveedor. -----
+  let boletinActivado = false;
+  $('boletinToggle').addEventListener('click', () => {
+    boletinActivado = !boletinActivado;
+    $('boletinToggle').setAttribute('aria-checked', String(boletinActivado));
+    $('boletinLabel').textContent = boletinActivado
+      ? 'Te escribiremos cada mes con tu informe — activado'
+      : 'Enviarme este informe cada mes por email — desactivado';
+  });
+
+  function aplicarEjemplos(categoria){
+    const ej = EJEMPLOS_GASTO[categoria];
+    if (!ej) return;
+    $('eNombre').placeholder = ej.nombre;
+    $('eCoste').placeholder = ej.coste;
+    $('ePeriodo').value = ej.periodo;
+    $('eAlternativa').placeholder = ej.alternativa || '';
+  }
+
+  function renderExtrasSeguro(tipo){
+    const extras = EXTRAS_POR_TIPO_SEGURO[tipo] || [];
+    const html = extras.map((ex) => `<label><input type="checkbox" value="${escapeHtml(ex)}"> ${escapeHtml(ex)}</label>`).join('');
+    $('sExtrasIncluidos').innerHTML = html;
+    $('sExtrasNoUsados').innerHTML = html;
+  }
+  $('sTipo').addEventListener('change', () => renderExtrasSeguro($('sTipo').value));
+  renderExtrasSeguro('seguro_coche'); // precarga las casillas aunque esa pestaña no sea la primera
+
+  const BLOQUES_CATEGORIA = { gasolina: 'gasolina', luz: 'luz', telco: 'telco', seguros: 'seguros' }; // el resto usa el bloque genérico "gasto"
+
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach((t) => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      activeCategory = tab.dataset.cat;
+      const bloque = BLOQUES_CATEGORIA[activeCategory] || 'gasto';
+      ['gasolina', 'luz', 'telco', 'seguros', 'gasto'].forEach((b) => {
+        document.querySelector(`[data-cat-fields="${b}"]`).style.display = (b === bloque) ? 'block' : 'none';
+      });
+      if (bloque === 'gasto') aplicarEjemplos(activeCategory);
+    });
+  });
+
+  // ----- Geocodifica el código postal (Nominatim/OpenStreetMap, gratis, sin token) -----
+  // y filtra las gasolineras por distancia real, no por toda la provincia entera.
+  async function geocodificarCP(cp){
+    const url = `https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(cp)}&country=Spain&format=jsonv2&limit=1`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    if (!data.length) throw new Error('Código postal no encontrado');
+    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+  }
+
+  function distanciaKm(lat1, lon1, lat2, lon2){
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  async function buscarMasBarataCercana(idProvincia, tipoCombustible, userLat, userLng){
+    const url = `https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/FiltroProvincia/${idProvincia}`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    const todas = data.ListaEESSPrecio || [];
+
+    // Ensanchamos el radio progresivamente solo si hace falta — mejor un resultado
+    // un poco más lejos que ninguno, pero nunca "la más barata de toda la provincia".
+    for (const radioKm of [15, 30, 50]){
+      const cercanas = todas.filter((e) => {
+        const lat = parseFloat(String(e['Latitud'] || '').replace(',', '.'));
+        const lng = parseFloat(String(e['Longitud (WGS84)'] || '').replace(',', '.'));
+        if (isNaN(lat) || isNaN(lng)) return false;
+        return distanciaKm(userLat, userLng, lat, lng) <= radioKm;
+      });
+      const mejor = encontrarMasBarataDemo(cercanas, tipoCombustible);
+      if (mejor) return { estacion: mejor, radioUsado: radioKm };
+    }
+    return null;
+  }
+
+  async function manejarAnadirGasolina(){
+    const costeActual = parseFloat($('gCosteActual').value);
+    const tipoCombustible = $('gTipoCombustible').value;
+    const litrosMes = parseFloat($('gLitrosMes').value) || 0;
+    const cp = $('gCodigoPostal').value.trim();
+    if (isNaN(costeActual)){ alert('Escribe cuánto pagas ahora por litro.'); return; }
+
+    const fallback = $('gManualFallback');
+    let masBarata = null;
+    let radioUsado = null;
+    let usarManual = false;
+
+    if (/^\d{5}$/.test(cp)){
+      const idProvincia = cp.slice(0, 2);
+      const btn = $('addWatchBtn');
+      const textoOriginal = btn.textContent;
+      btn.disabled = true;
+      try {
+        btn.textContent = 'Localizando tu código postal…';
+        const { lat, lng } = await geocodificarCP(cp);
+        btn.textContent = 'Buscando gasolineras cerca de ti…';
+        const resultado = await buscarMasBarataCercana(idProvincia, tipoCombustible, lat, lng);
+        if (resultado){ masBarata = resultado.estacion; radioUsado = resultado.radioUsado; }
+        else usarManual = true;
+      } catch (err) {
+        usarManual = true;
+      }
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    } else {
+      usarManual = true;
+    }
+
+    let lectura, pasos, nombre, estacionInfo = null;
+    nombre = cp ? `Gasolina (CP ${cp})` : 'Gasolina habitual';
+
+    if (masBarata){
+      lectura = calcularEstadoGasolinaDemo(costeActual, masBarata.precio, litrosMes);
+      pasos = generarPasosGasolina(lectura, masBarata, radioUsado);
+      if (lectura.estado === 'senal'){
+        nombre = `Gasolina — ${masBarata.rotulo || 'estación más barata'}`;
+        estacionInfo = masBarata;
+      }
+      fallback.style.display = 'none';
+    } else if (usarManual && fallback.style.display !== 'none' && $('gAlternativaManual').value){
+      // Ya se mostró el fallback antes y el usuario ha rellenado un precio manual.
+      const alternativaManual = parseFloat($('gAlternativaManual').value);
+      lectura = calcularEstadoGasolinaDemo(costeActual, alternativaManual, litrosMes);
+      pasos = generarPasosGasolina(lectura, null);
+    } else {
+      // Primera vez que falla: mostramos el campo manual y no añadimos todavía.
+      fallback.style.display = 'block';
+      $('gAlternativaManual').focus();
+      return;
+    }
+
+    watchIdCounter++;
+    vigilancias.push({ id: 'w' + watchIdCounter, nombre, categoria: 'gasolina', ...lectura, pasos, estacionInfo });
+    renderWatchList();
+    $('gCosteActual').value = ''; $('gCodigoPostal').value = ''; $('gAlternativaManual').value = '';
+    fallback.style.display = 'none';
+  }
+
+  async function manejarAnadirLuz(){
+    const costeActual = parseFloat($('lCosteActual').value);
+    const consumo = parseFloat($('lConsumo').value);
+    if (isNaN(costeActual)){ alert('Escribe cuánto pagas de media por kWh.'); return; }
+
+    const fallback = $('lManualFallback');
+    let precioMedio = null;
+    let usarManual = false;
+
+    const btn = $('addWatchBtn');
+    const textoOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Consultando el PVPC de hoy…';
+    try {
+      precioMedio = await precioMedioLuzHoy();
+    } catch (err) {
+      usarManual = true;
+    }
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+
+    let lectura;
+    if (precioMedio != null){
+      lectura = calcularEstadoLuzDemo(costeActual, precioMedio, consumo);
+      fallback.style.display = 'none';
+    } else if (usarManual && fallback.style.display !== 'none' && $('lAlternativaManual').value){
+      const alternativaManual = parseFloat($('lAlternativaManual').value);
+      lectura = calcularEstadoLuzDemo(costeActual, alternativaManual, consumo);
+    } else {
+      fallback.style.display = 'block';
+      $('lAlternativaManual').focus();
+      return;
+    }
+
+    watchIdCounter++;
+    vigilancias.push({ id: 'w' + watchIdCounter, nombre: 'Luz (PVPC)', categoria: 'luz', ...lectura });
+    renderWatchList();
+    $('lCosteActual').value = ''; $('lAlternativaManual').value = '';
+    fallback.style.display = 'none';
+  }
+
+  // ----- Consulta rápida de luz: mismo dato oficial en vivo que la vigilancia de luz,
+  // pero sin guardar nada — para cuando a alguien le surge la duda por su cuenta. -----
+  $('consultaLuzBtn').addEventListener('click', async () => {
+    const precioHabitual = parseFloat($('consultaLuzPrecio').value);
+    const resultadoEl = $('consultaLuzResultado');
+    if (isNaN(precioHabitual)){
+      resultadoEl.innerHTML = '<p class="hint">Escribe cuánto pagas ahora por kWh.</p>';
+      return;
+    }
+    const btn = $('consultaLuzBtn');
+    const textoOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Consultando…';
+
+    try {
+      const precioHoy = await precioMedioLuzHoy();
+      const diferencia = precioHabitual - precioHoy;
+      const diferenciaCent = (diferencia * 100).toFixed(1);
+      const precioHoyTexto = precioHoy.toFixed(3).replace('.', ',');
+      if (diferencia > 0.01){
+        resultadoEl.innerHTML =
+          `<div class="simulador__stat"><div class="num">${precioHoyTexto} €/kWh</div><div class="label">PVPC medio de hoy — vas ${diferenciaCent} cént./kWh por encima</div></div>` +
+          `<p class="hint">Hoy el PVPC compensa. Si tu tarifa fija sigue así, puede que merezca la pena mirarla.</p>`;
+      } else {
+        resultadoEl.innerHTML =
+          `<div class="simulador__stat"><div class="num">${precioHoyTexto} €/kWh</div><div class="label">PVPC medio de hoy</div></div>` +
+          `<p class="hint">Tu precio actual ya está igual o por debajo del PVPC de hoy — no hace falta que hagas nada.</p>`;
+      }
+    } catch (err) {
+      resultadoEl.innerHTML = '<p class="hint">No hemos podido consultar el PVPC en directo desde esta vista previa. Una vez publicado en tu propio dominio, esto debería conectar sin problema.</p>';
+    }
+
+    btn.disabled = false;
+    btn.textContent = textoOriginal;
+  });
+
+  function marcadosDe(contenedorId){
+    return [...document.querySelectorAll(`#${contenedorId} input[type=checkbox]:checked`)].map((el) => el.value);
+  }
+
+  function manejarAnadirTelco(){
+    const nombreBase = $('tNombre').value.trim();
+    const coste = parseFloat($('tCoste').value);
+    if (!nombreBase){ alert('Ponle un nombre al operador o plan.'); return; }
+    if (isNaN(coste)){ alert('Escribe cuánto pagas ahora.'); return; }
+
+    const lineas = $('tLineas').value;
+    const datos = $('tDatos').value.trim();
+    const fibra = $('tFibra').value.trim();
+    const extrasIncluidos = marcadosDe('tExtrasIncluidos');
+    const extrasNoUsados = marcadosDe('tExtrasNoUsados');
+    const fecha = $('tFecha').value || null;
+    const alternativa = parseFloat($('tAlternativa').value);
+    const alternativaDetalle = $('tAlternativaDetalle').value.trim();
+
+    const lectura = calcularEstadoTelcoDemo({
+      costeActual: coste, extrasIncluidos, extrasNoUsados, fechaReferencia: fecha,
+      alternativaConocida: isNaN(alternativa) ? null : alternativa, alternativaDetalle,
+    });
+
+    const resumenPlan = [lineas ? `${lineas} línea${lineas == 1 ? '' : 's'}` : null, datos || null, fibra || null]
+      .filter(Boolean).join(' · ');
+
+    watchIdCounter++;
+    vigilancias.push({
+      id: 'w' + watchIdCounter, nombre: nombreBase, categoria: 'telco',
+      resumenPlan, ...lectura,
+    });
+    renderWatchList();
+    sincronizarGastoConBackend('telco', {
+      nombre: nombreBase, costeActual: coste, periodo: 'mensual',
+      fechaReferencia: fecha, alternativaConocida: isNaN(alternativa) ? null : alternativa,
+      alternativaDetalle, extrasIncluidos, extrasNoUsados,
+    });
+    $('tNombre').value = ''; $('tCoste').value = ''; $('tDatos').value = ''; $('tFibra').value = '';
+    $('tFecha').value = ''; $('tAlternativa').value = ''; $('tAlternativaDetalle').value = '';
+    document.querySelectorAll('#tExtrasIncluidos input, #tExtrasNoUsados input').forEach((el) => { el.checked = false; });
+  }
+
+  function manejarAnadirSeguro(){
+    const tipoSeguro = $('sTipo').value;
+    const nombreBase = $('sNombre').value.trim();
+    const coste = parseFloat($('sCoste').value);
+    if (!nombreBase){ alert('Ponle un nombre a la aseguradora o plan.'); return; }
+    if (isNaN(coste)){ alert('Escribe cuánto pagas ahora.'); return; }
+
+    const periodo = $('sPeriodo').value;
+    const extrasIncluidos = marcadosDe('sExtrasIncluidos');
+    const extrasNoUsados = marcadosDe('sExtrasNoUsados');
+    const fecha = $('sFecha').value || null;
+    const alternativa = parseFloat($('sAlternativa').value);
+    const alternativaDetalle = $('sAlternativaDetalle').value.trim();
+
+    const lectura = calcularEstadoSeguroDemo({
+      tipoSeguro, costeActual: coste, periodo, extrasIncluidos, extrasNoUsados, fechaReferencia: fecha,
+      alternativaConocida: isNaN(alternativa) ? null : alternativa, alternativaDetalle,
+    });
+
+    watchIdCounter++;
+    vigilancias.push({ id: 'w' + watchIdCounter, nombre: nombreBase, categoria: tipoSeguro, ...lectura });
+    renderWatchList();
+    sincronizarGastoConBackend(tipoSeguro, {
+      nombre: nombreBase, costeActual: coste, periodo,
+      fechaReferencia: fecha, alternativaConocida: isNaN(alternativa) ? null : alternativa,
+      alternativaDetalle, extrasIncluidos, extrasNoUsados,
+    });
+    $('sNombre').value = ''; $('sCoste').value = ''; $('sFecha').value = '';
+    $('sAlternativa').value = ''; $('sAlternativaDetalle').value = '';
+    document.querySelectorAll('#sExtrasIncluidos input, #sExtrasNoUsados input').forEach((el) => { el.checked = false; });
+  }
+
+  $('addWatchBtn').addEventListener('click', () => {
+    if (activeCategory === 'gasolina'){
+      manejarAnadirGasolina();
+      return;
+    }
+    if (activeCategory === 'luz'){
+      manejarAnadirLuz();
+      return;
+    }
+    if (activeCategory === 'telco'){
+      manejarAnadirTelco();
+      return;
+    }
+    if (activeCategory === 'seguros'){
+      manejarAnadirSeguro();
+      return;
+    }
+    const nombre = $('eNombre').value.trim();
+    const coste = parseFloat($('eCoste').value);
+    const periodo = $('ePeriodo').value;
+    const fecha = $('eFecha').value || null;
+    const alternativa = parseFloat($('eAlternativa').value);
+    if (!nombre){ alert('Ponle un nombre.'); return; }
+    if (isNaN(coste)){ alert('Escribe cuánto pagas ahora.'); return; }
+
+    let lectura, extraEntry = {};
+    if (activeCategory === 'suscripciones'){
+      const hoyIso = new Date().toISOString().slice(0, 10);
+      lectura = calcularEstadoSuscripcionDemo({ costeActual: coste, periodo, ultimaConfirmacion: hoyIso });
+      extraEntry = { ultimaConfirmacion: hoyIso };
+    } else {
+      lectura = calcularEstadoGastoDemo({
+        categoria: activeCategory, costeActual: coste, periodo, fechaReferencia: fecha,
+        alternativaConocida: isNaN(alternativa) ? null : alternativa,
+      });
+    }
+    watchIdCounter++;
+    vigilancias.push({ id: 'w' + watchIdCounter, nombre, categoria: activeCategory, ...lectura, ...extraEntry });
+    renderWatchList();
+    sincronizarGastoConBackend(activeCategory, {
+      nombre, costeActual: coste, periodo, fechaReferencia: fecha,
+      alternativaConocida: isNaN(alternativa) ? null : alternativa,
+    });
+    $('eNombre').value = ''; $('eCoste').value = ''; $('eFecha').value = ''; $('eAlternativa').value = '';
+  });
+
+  renderWatchList();
+  actualizarSimulador(); // aquí sí: eurLocal y los datos de hipoteca ya están listos
+
+  // ----- Subnav del panel: resalta la sección visible mientras se hace scroll -----
+  const subnavLinks = document.querySelectorAll('.dash-subnav__link');
+  if (subnavLinks.length && 'IntersectionObserver' in window){
+    const secciones = document.querySelectorAll('.dash-section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        subnavLinks.forEach((link) => {
+          link.classList.toggle('is-active', link.getAttribute('href') === '#' + entry.target.id);
+        });
+      });
+    }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
+    secciones.forEach((s) => observer.observe(s));
+  }
+
+  // ----- Invitar a un amigo -----
+  const copyBtn = $('copyReferralBtn');
+  if (copyBtn){
+    copyBtn.addEventListener('click', () => {
+      const texto = $('referralLink').textContent;
+      const listo = () => { copyBtn.textContent = '¡Copiado!'; setTimeout(() => { copyBtn.textContent = 'Copiar'; }, 1800); };
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(texto).then(listo).catch(listo);
+      } else {
+        listo();
+      }
+    });
+  }
+
+  // ----- Compartir el panel (simulado: no hay backend en esta demo) -----
+  const compartirForm = $('compartirForm');
+  if (compartirForm){
+    compartirForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = $('compartirEmail').value.trim();
+      if (!email) return;
+      const item = document.createElement('div');
+      item.className = 'compartido-item';
+      item.innerHTML = `<span class="lamp"></span> Invitación enviada a ${escapeHtml(email)} (simulada)`;
+      $('compartidoCon').appendChild(item);
+      $('compartirEmail').value = '';
+    });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  const $ = (id) => document.getElementById(id);
+  const EMAIL_SOPORTE = 'faro.info2026@gmail.com';
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str == null ? '' : str;
+    return div.innerHTML;
+  }
+
+  // Preguntas que dejamos de contestar solas: piden una recomendación sobre
+  // un producto o entidad concreta. Ahí es donde el bot debe callarse y
+  // pasar la conversación a una persona — es la frontera que mantiene a
+  // Faro fuera de la intermediación financiera regulada (ver la charla sobre
+  // LCCI y distribución de seguros).
+  const ESCALADO_KEYWORDS = [
+    'santander', 'bbva', 'caixabank', 'sabadell', 'bankinter', 'ing', 'openbank', 'unicaja', 'evo banco',
+    'mapfre', 'allianz', 'axa', 'mutua madrileña', 'linea directa', 'línea directa', 'pelayo', 'generali', 'reale',
+    'movistar', 'vodafone', 'orange', 'yoigo', 'digi', 'masmovil', 'másmóvil',
+    'que banco', 'qué banco', 'cual elijo', 'cuál elijo', 'me recomiendas', 'que aseguradora', 'qué aseguradora',
+    'mejor oferta para mi', 'mejor oferta para mí', 'deberia cambiarme', 'debería cambiarme',
+    'cual es mejor', 'cuál es mejor', 'que me conviene', 'qué me conviene', 'a cual me cambio', 'a cuál me cambio',
+  ];
+
+  const BASE_CONOCIMIENTO = [
+    { keywords: ['que es faro', 'qué es faro', 'sobre faro', 'que hace faro', 'qué hace faro'],
+      respuesta: 'Faro vigila los gastos que sueles firmar una vez y no vuelves a mirar — hipoteca, seguros, luz, gasolina, telco, comisiones y suscripciones — y solo avisa cuando de verdad compensa hacer algo.' },
+    { keywords: ['estado', 'calma', 'observacion', 'observación', 'senal', 'señal', 'significa', 'lampara', 'lámpara'],
+      respuesta: 'Hay tres estados: EN CALMA (todo bien, no hace falta nada), EN OBSERVACIÓN (hay una diferencia pero es pequeña) y SEÑAL ACTIVA (compensa que le eches un vistazo). Toca cualquier estado en tu panel para ver la explicación completa con ejemplos.' },
+    { keywords: ['añadir', 'anadir', 'agregar', 'como añado', 'cómo añado', 'nueva vigilancia'],
+      respuesta: 'En tu panel, elige la pestaña de la categoría (gasolina, luz, seguro, telco...), rellena los datos que pide y pulsa "Añadir a mis vigilancias". Aparece al momento en tu lista y en el resumen de arriba.' },
+    { keywords: ['hipoteca', 'novacion', 'novación', 'subrogacion', 'subrogación'],
+      respuesta: 'Para la hipoteca, si sale señal activa, los pasos son: pedir una oferta de novación a tu banco citando el tipo de mercado de hoy, comparar con una subrogación si no la iguala, y firmar si el ahorro compensa el coste del cambio. Los verás con las cifras exactas en tu resumen en cuanto haya señal.' },
+    { keywords: ['gasolina', 'codigo postal', 'código postal', 'combustible'],
+      respuesta: 'En gasolina, escribe tu código postal y el combustible que usas — consultamos en directo la API oficial del Gobierno para encontrar la gasolinera más barata de tu provincia. Si no logramos conectar, te dejamos escribir el precio a mano.' },
+    { keywords: ['luz', 'pvpc', 'electricidad', 'kwh'],
+      respuesta: 'En luz comparamos lo que pagas de media por kWh con el precio del PVPC de hoy, tomado de datos oficiales de Red Eléctrica. Ajusta tu consumo mensual estimado para que el cálculo de ahorro sea más preciso.' },
+    { keywords: ['precio', 'coste', 'cuanto cuesta faro', 'cuánto cuesta faro', 'plan', 'suscripcion', 'suscripción', 'pago'],
+      respuesta: 'Faro cuesta 12€/mes, con todas las categorías incluidas y sin permanencia. Puedes darte de baja cuando quieras.' },
+    { keywords: ['cuenta', 'cerrar sesion', 'cerrar sesión', 'datos personales', 'privacidad'],
+      respuesta: 'Puedes cerrar sesión desde el botón de arriba a la derecha del panel. Tus datos solo se usan para hacer funcionar tu vigilancia — nunca los compartimos ni los vendemos.' },
+    { keywords: ['resumen', 'ahorro total', 'total', 'al año', 'al mes'],
+      respuesta: 'El resumen de tu panel junta todo: cuánto pagas en total al mes, cuánto ahorrarías si actúas en las señales activas (al mes y al año), y una recomendación con pasos concretos para cada una.' },
+  ];
+
+  function buscarRespuesta(pregunta){
+    const texto = pregunta.toLowerCase();
+    for (const kw of ESCALADO_KEYWORDS){
+      if (texto.includes(kw)) return { tipo: 'escalado' };
+    }
+    let mejor = null, mejorScore = 0;
+    for (const item of BASE_CONOCIMIENTO){
+      const score = item.keywords.filter((k) => texto.includes(k)).length;
+      if (score > mejorScore){ mejorScore = score; mejor = item; }
+    }
+    if (mejor) return { tipo: 'respuesta', texto: mejor.respuesta };
+    return { tipo: 'sin_respuesta' };
+  }
+
+  function addMensaje(texto, tipo){
+    const box = $('helpMessages');
+    const div = document.createElement('div');
+    div.className = 'help-msg help-msg--' + tipo;
+    div.innerHTML = escapeHtml(texto);
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function addEscalada(){
+    const box = $('helpMessages');
+    const div = document.createElement('div');
+    div.className = 'help-msg help-msg--escalate';
+    const asunto = encodeURIComponent('Duda desde Faro');
+    div.innerHTML =
+      'Esto depende de tu caso concreto y prefiero no darte una recomendación sin conocerlo bien. Escríbenos y te contestamos en persona.' +
+      `<br><a class="help-mailto" href="mailto:${EMAIL_SOPORTE}?subject=${asunto}">Escribir a ${EMAIL_SOPORTE}</a>`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function procesarPregunta(pregunta){
+    addMensaje(pregunta, 'user');
+    const resultado = buscarRespuesta(pregunta);
+    if (resultado.tipo === 'respuesta'){
+      addMensaje(resultado.texto, 'bot');
+    } else {
+      addEscalada();
+    }
+  }
+
+  $('helpFab').addEventListener('click', () => {
+    $('helpPanel').classList.toggle('is-open');
+  });
+  $('helpClose').addEventListener('click', () => $('helpPanel').classList.remove('is-open'));
+
+  $('helpQuick').querySelectorAll('.help-quick-btn').forEach((btn) => {
+    btn.addEventListener('click', () => procesarPregunta(btn.textContent));
+  });
+
+  $('helpForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = $('helpInput').value.trim();
+    if (!val) return;
+    procesarPregunta(val);
+    $('helpInput').value = '';
+  });
+
+  addMensaje('¡Hola! Puedo ayudarte con dudas sobre cómo funciona Faro y los pasos de cada categoría. Si tu duda es sobre qué producto o entidad concreta elegir, te paso directamente con nosotros por email.', 'bot');
+})();
+</script>
+
+</body>
+</html>
