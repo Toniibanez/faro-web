@@ -420,6 +420,37 @@ a{color:inherit;}
 .confirmar-uso-btn--si{border-color:var(--signal);color:var(--signal);}
 .confirmar-uso-btn--si:hover{background:var(--signal-soft);}
 .confirmar-uso-btn--no:hover{border-color:var(--coral);color:var(--coral);}
+
+/* --- Niveles de acción: interruptores de autorización y confirmación puntual --- */
+.autorizaciones-list{display:flex;flex-direction:column;gap:10px;}
+.autorizacion-row{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;}
+.autorizacion-row__texto{flex:1;}
+.autorizacion-row__texto strong{display:block;font-size:0.9rem;color:var(--foam);margin-bottom:2px;}
+.autorizacion-row__texto span{font-size:0.8rem;color:var(--foam-dim);}
+.opcion--texto{border-color:rgba(227,165,66,0.35);background:rgba(227,165,66,0.05);}
+.opcion__pre{
+  white-space:pre-wrap;font-family:var(--font-mono);font-size:0.76rem;color:var(--foam-dim);
+  background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0 0;
+}
+.opcion__copy{
+  margin-top:8px;font-family:var(--font-mono);font-size:0.76rem;font-weight:600;cursor:pointer;
+  border:1px solid var(--signal);background:transparent;color:var(--signal);border-radius:100px;padding:6px 14px;
+}
+.confirmacion-puntual{
+  margin-top:12px;border:1px solid rgba(227,165,66,0.45);background:rgba(227,165,66,0.06);
+  border-radius:12px;padding:12px;
+}
+.confirmacion-puntual__head{font-family:var(--font-mono);font-size:0.76rem;font-weight:600;letter-spacing:0.03em;color:var(--signal);margin:0 0 6px;}
+.confirmacion-puntual__pre{white-space:pre-wrap;font-family:var(--font-mono);font-size:0.76rem;color:var(--foam-dim);background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;margin:0 0 10px;}
+.confirmacion-puntual__btns{display:flex;gap:10px;flex-wrap:wrap;}
+.confirmacion-puntual__btn{
+  font-family:var(--font-mono);font-size:0.78rem;font-weight:600;border-radius:100px;padding:9px 16px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--foam-dim);transition:all .15s ease;
+}
+.confirmacion-puntual__btn--enviar{border-color:var(--signal);color:var(--signal);}
+.confirmacion-puntual__btn--enviar:hover{background:var(--signal-soft);}
+.confirmacion-puntual__btn--no:hover{border-color:var(--coral);color:var(--coral);}
+.confirmacion-puntual__hecho{font-size:0.82rem;color:var(--signal);margin:0;}
 .resumen-card__subtotal{
   margin-top:16px;padding-top:16px;border-top:1px solid var(--line);
   font-size:0.86rem;color:var(--foam-dim);
@@ -1072,8 +1103,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           <button class="tab" data-cat="luz" type="button">Luz</button>
           <button class="tab" data-cat="seguros" type="button">Seguros</button>
           <button class="tab" data-cat="telco" type="button">Telco</button>
+          <button class="tab" data-cat="gas" type="button">Gas</button>
           <button class="tab" data-cat="comisiones_bancarias" type="button">Comisiones</button>
           <button class="tab" data-cat="suscripciones" type="button">Suscripciones</button>
+          <button class="tab" data-cat="alquiler" type="button">Alquiler</button>
+          <button class="tab" data-cat="comisiones_inversion" type="button">Fondos y pensiones</button>
         </div>
 
         <div class="cat-fields" data-cat-fields="gasolina">
@@ -1140,6 +1174,88 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
               <span class="unit">€/kWh</span>
             </div>
           </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="gas" style="display:none;">
+          <div class="field">
+            <label for="gasCosteActual">Lo que pagas de media</label>
+            <div class="field__control">
+              <input type="number" id="gasCosteActual" step="0.0001" placeholder="0,065">
+              <span class="unit">€/kWh</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="gasConsumo">Tu consumo mensual estimado</label>
+            <div class="field__control">
+              <input type="number" id="gasConsumo" value="120" step="10">
+              <span class="unit">kWh</span>
+            </div>
+            <p class="hint">Comparamos con la tarifa regulada TUR de gas. No hay API pública para este dato: lo curamos a mano cada trimestre desde el BOE.</p>
+          </div>
+          <div class="field" id="gasManualFallback" style="display:none;">
+            <label for="gasTurManual">No tenemos la TUR cargada todavía — ¿sabes el término variable de la TUR de tu tramo?</label>
+            <div class="field__control">
+              <input type="number" id="gasTurManual" step="0.0001" placeholder="0,0382">
+              <span class="unit">€/kWh</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="alquiler" style="display:none;">
+          <div class="field">
+            <label for="alqRenta">Renta mensual actual</label>
+            <div class="field__control">
+              <input type="number" id="alqRenta" step="10" placeholder="900">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="alqSubida">Renta que te plantean tras la subida (si ya te la han comunicado)</label>
+            <div class="field__control">
+              <input type="number" id="alqSubida" step="10" placeholder="950">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="alqFecha">Fecha de la última actualización (opcional)</label>
+            <div class="field__control"><input type="date" id="alqFecha"></div>
+          </div>
+          <div class="field">
+            <label class="checkbox-inline"><input type="checkbox" id="alqTensionada"> La vivienda está en zona de mercado tensionado</label>
+          </div>
+        </div>
+
+        <div class="cat-fields" data-cat-fields="comisiones_inversion" style="display:none;">
+          <div class="field">
+            <label for="invTipo">Tipo de producto</label>
+            <div class="field__control">
+              <select id="invTipo">
+                <option value="fondo_inversion">Fondo de inversión</option>
+                <option value="plan_pensiones">Plan de pensiones</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="invNombre">Nombre del producto y entidad</label>
+            <div class="field__control">
+              <input type="text" id="invNombre" placeholder="Fondo mixto de mi banco">
+            </div>
+          </div>
+          <div class="field">
+            <label for="invComision">Comisión de gestión que pagas</label>
+            <div class="field__control">
+              <input type="number" id="invComision" step="0.01" placeholder="1,50">
+              <span class="unit">% anual</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="invPatrimonio">Patrimonio aproximado (opcional — solo para verlo en €/año)</label>
+            <div class="field__control">
+              <input type="number" id="invPatrimonio" step="1000" placeholder="20000">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <p class="hint">Faro solo te dice si la comisión es alta y te ayuda a preguntar a tu entidad. No recomienda productos concretos — eso es asesoramiento regulado (CNMV).</p>
         </div>
 
         <div class="cat-fields" data-cat-fields="seguros" style="display:none;">
@@ -1387,6 +1503,12 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </form>
         <div id="compartidoCon" class="compartido-lista"></div>
       </div>
+    </div>
+
+    <div class="referral-card" style="margin-top:24px;">
+      <p class="instrument__label">Qué puede hacer Faro por ti</p>
+      <p class="hint" style="margin-bottom:16px;">Activa una categoría para que Faro, cuando salte la señal, te deje el trámite <strong>preparado</strong>. Nunca lo envía sin que tú lo confirmes puntualmente en ese momento — activar esto no manda nada por sí solo.</p>
+      <div id="autorizacionesList" class="autorizaciones-list"></div>
     </div>
     </section>
   </main>
@@ -1830,6 +1952,180 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     return opciones;
   }
 
+  // ============================================================
+  // NIVELES DE ACCIÓN — espejo de src/niveles.js del backend
+  // ============================================================
+  // 0 informa · 1 redacta · 2 redacta y envía · 3 ejecuta.
+  // Regla de oro (2 y 3): la autorización general por categoría NUNCA envía ni
+  // ejecuta por sí sola — solo habilita que, al saltar la señal, aparezca el
+  // botón de confirmación puntual con el detalle exacto. Sin ese segundo clic,
+  // nada sale. Los topes por categoría codifican los límites legales del
+  // producto (hipoteca/seguros nunca pasan de 0; fondos/pensiones nunca de 2 y
+  // siempre con mensaje genérico; luz/gas llegan a 3 solo con socio energético).
+  const NIVEL_ACCION = { INFORMA: 0, REDACTA: 1, REDACTA_Y_ENVIA: 2, EJECUTA: 3 };
+  const NIVEL_MAX_POR_CATEGORIA = {
+    hipoteca: 0, seguro_coche: 0, seguro_hogar: 0, seguro_vida: 0, seguro_salud: 0, gasolina: 0,
+    comisiones_inversion: 2, telco: 1, comisiones_bancarias: 2, suscripciones: 2, alquiler: 2,
+    luz: 3, gas: 3,
+  };
+  const CATEGORIAS_ENERGIA = ['luz', 'gas'];
+  // Socios energéticos (Nivel 3): mismo patrón que BROKER_PARTNERS — vacío =
+  // apagado. Sin socio, luz y gas se quedan en Nivel 1.
+  const SOCIOS_ENERGIA = {};
+  const hayPartnerEnergetico = (categoria) =>
+    categoria ? !!SOCIOS_ENERGIA[categoria] : Object.keys(SOCIOS_ENERGIA).length > 0;
+
+  function nivelMaximoEfectivo(categoria){
+    const base = NIVEL_MAX_POR_CATEGORIA[categoria];
+    if (base == null) return NIVEL_ACCION.INFORMA;
+    if (CATEGORIAS_ENERGIA.includes(categoria) && !hayPartnerEnergetico(categoria)){
+      return Math.min(base, NIVEL_ACCION.REDACTA);
+    }
+    return base;
+  }
+  const permiteAutorizacionGeneral = (categoria) => nivelMaximoEfectivo(categoria) >= NIVEL_ACCION.REDACTA_Y_ENVIA;
+
+  // Espejo de src/redactar.js — mismo texto para Nivel 1 (el usuario lo copia y
+  // envía) y Nivel 2 (va dentro de la acción pendiente y se envía tras el
+  // segundo clic). Ninguno menciona un destino concreto: van al proveedor actual.
+  function redactarLocal(tipo, datos){
+    datos = datos || {};
+    if (tipo === 'cancelar_suscripcion'){
+      const servicio = datos.nombre || 'el servicio';
+      return {
+        asunto: `Baja de ${servicio}`,
+        cuerpo: `Hola,\n\nQuiero dar de baja mi suscripción a ${servicio} con efecto a la mayor brevedad posible y que no se renueve en el próximo ciclo de facturación.\n\nOs pido confirmación por escrito de la fecha efectiva de baja y de que no habrá cargos posteriores.\n\nUn saludo.`,
+      };
+    }
+    if (tipo === 'escrito_alquiler'){
+      return {
+        asunto: 'Actualización de renta por encima del índice legal',
+        cuerpo: `Hola,\n\nHe recibido una actualización de la renta` +
+          (datos.subidaPropuesta != null ? ` que la sitúa en ${datos.subidaPropuesta} €` : '') +
+          (datos.rentaActual != null ? ` (renta actual: ${datos.rentaActual} €)` : '') + `.\n\n` +
+          `La normativa vigente limita la actualización anual de la renta al índice de referencia publicado por el INE` +
+          (datos.topeLegalPct != null ? `, que para este periodo supone un máximo del ${datos.topeLegalPct} %` : '') + `. ` +
+          `La subida planteada supera ese límite, por lo que solicito que se ajuste al porcentaje legal y se me remita el nuevo importe corregido por escrito.\n\nUn saludo.`,
+      };
+    }
+    if (tipo === 'revisar_comision_gestion'){
+      const producto = datos.tipoProducto === 'plan_pensiones' ? 'mi plan de pensiones' : 'mi fondo de inversión';
+      return {
+        asunto: 'Revisión de la comisión de gestión',
+        cuerpo: `Hola,\n\nMe gustaría que revisarais la comisión de gestión que estoy pagando en ${producto}` +
+          (datos.comisionActual != null ? ` (actualmente ${datos.comisionActual} %)` : '') +
+          `. ¿Existe alguna clase o modalidad del mismo producto con una comisión más baja a la que pueda acogerme?\n\nUn saludo.`,
+      };
+    }
+    if (tipo === 'reclamar_comision'){
+      const entidad = datos.nombre || 'mi entidad';
+      return {
+        asunto: 'Reclamación de una comisión',
+        cuerpo: `Hola,\n\nHe detectado el cobro de una comisión en mi cuenta de ${entidad}. Solicito que me indiquéis en qué condición pactada se basa el cargo y, si cumplo los requisitos de bonificación, que se me devuelva el importe.\n\nUn saludo.`,
+      };
+    }
+    return null;
+  }
+
+  // Mapea el motivo de una señal al tipo de escrito de Nivel 2, y deja la acción
+  // PREPARADA (nunca enviada) si la autorización general de esa categoría está
+  // activa. Espejo de accionNivel2Para() del backend.
+  const MOTIVO_A_TIPO = {
+    subida_por_encima_tope: 'escrito_alquiler',
+    comision_alta: 'revisar_comision_gestion',
+  };
+  function wireNivel2(entry, datosRedaccion){
+    if (entry.estado !== 'senal' || !entry.motivo) return;
+    const tipo = MOTIVO_A_TIPO[entry.motivo];
+    if (!tipo || !autorizacionActivaLocal(entry.categoria)) return;
+    const texto = redactarLocal(tipo, datosRedaccion || {});
+    if (!texto) return;
+    entry.accionPendiente = { tipo, asunto: texto.asunto, cuerpo: texto.cuerpo, estado: 'pendiente' };
+    const userId = window.__getCurrentUserId && window.__getCurrentUserId();
+    if (userId && window.__apiPost){
+      window.__apiPost('/api/acciones/preparar', {
+        userId, categoria: entry.categoria, refId: entry.backendId || null, tipo, datos: datosRedaccion || {},
+      }).then((r) => { if (r && r.accion) entry.accionPendiente.backendId = r.accion.id; });
+    }
+  }
+
+  // --- Autorización general por categoría (interruptor, igual que el boletín) ---
+  // Set en memoria de esta sesión; si hay backend + usuario, se sincroniza.
+  const autorizaciones = new Set();
+  const autorizacionActivaLocal = (categoria) => autorizaciones.has(categoria);
+
+  const AUTORIZACIONES_INFO = {
+    suscripciones: { titulo: 'Cancelar suscripciones', desc: 'Cuando digas que ya no usas una, Faro deja la baja redactada y lista para que la confirmes.' },
+    comisiones_bancarias: { titulo: 'Reclamar comisiones bancarias', desc: 'Faro deja redactada la reclamación al banco cuando detecte un cobro revisable.' },
+    alquiler: { titulo: 'Escrito de alquiler', desc: 'Si la subida de la renta supera el índice legal, Faro deja el escrito listo para enviar al casero.' },
+    comisiones_inversion: { titulo: 'Revisar comisión de gestión', desc: 'Faro deja un mensaje genérico a tu entidad pidiendo revisar la comisión. Nunca propone un producto concreto.' },
+    luz: { titulo: 'Cambio de comercializadora de luz', desc: 'Si aparece una tarifa mejor, Faro deja la solicitud de cambio lista para que la confirmes. Solo disponible con un socio energético configurado.' },
+    gas: { titulo: 'Cambio de comercializadora de gas', desc: 'Igual que la luz. Solo disponible con un socio energético configurado.' },
+  };
+  // Categorías con flujo de Nivel 2/3 cableado. renderAutorizaciones filtra
+  // además por permiteAutorizacionGeneral, así que luz/gas solo aparecen si hay
+  // un socio energético (SOCIOS_ENERGIA) configurado.
+  const AUTORIZACIONES_ACTIVAS = ['suscripciones', 'alquiler', 'comisiones_inversion', 'luz', 'gas'];
+
+  function renderAutorizaciones(){
+    const cont = document.getElementById('autorizacionesList');
+    if (!cont) return;
+    const categorias = AUTORIZACIONES_ACTIVAS.filter((c) => permiteAutorizacionGeneral(c) && AUTORIZACIONES_INFO[c]);
+    cont.innerHTML = categorias.map((c) => {
+      const info = AUTORIZACIONES_INFO[c];
+      const on = autorizacionActivaLocal(c);
+      return `<div class="autorizacion-row">` +
+        `<button class="toggle-switch" data-categoria="${c}" type="button" role="switch" aria-checked="${on}"${on ? ' data-on="1"' : ''}>` +
+        `<span class="toggle-switch__knob"></span></button>` +
+        `<div class="autorizacion-row__texto"><strong>${escapeHtml(info.titulo)}</strong><span>${escapeHtml(info.desc)}</span></div>` +
+      `</div>`;
+    }).join('');
+    cont.querySelectorAll('.toggle-switch').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const c = btn.dataset.categoria;
+        const activa = !autorizacionActivaLocal(c);
+        if (activa) autorizaciones.add(c); else autorizaciones.delete(c);
+        btn.setAttribute('aria-checked', String(activa));
+        if (activa) btn.dataset.on = '1'; else delete btn.dataset.on;
+        const userId = window.__getCurrentUserId && window.__getCurrentUserId();
+        if (userId && window.__apiPost) window.__apiPost('/api/autorizaciones', { userId, categoria: c, activa });
+        renderWatchList(); // que aparezca/desaparezca la confirmación puntual en las señales vivas
+      });
+    });
+  }
+
+  // --- Confirmación puntual (Niveles 2 y 3): el segundo clic ---
+  function renderConfirmacionPuntual(entry){
+    const a = entry.accionPendiente;
+    if (!a) return '';
+    if (a.estado === 'enviada'){
+      const via = a.tipo === 'cambio_comercializadora' ? 'se enviaría al socio energético' : 'saldría de verdad por email';
+      return `<div class="confirmacion-puntual"><p class="confirmacion-puntual__hecho">✓ Enviado (simulado en esta demo). En producción ${via}.</p></div>`;
+    }
+    return `<div class="confirmacion-puntual">` +
+      `<p class="confirmacion-puntual__head">Faro va a enviar esto en tu nombre — confírmalo</p>` +
+      `<pre class="confirmacion-puntual__pre">Asunto: ${escapeHtml(a.asunto)}\n\n${escapeHtml(a.cuerpo)}</pre>` +
+      `<div class="confirmacion-puntual__btns">` +
+        `<button class="confirmacion-puntual__btn confirmacion-puntual__btn--enviar" data-id="${entry.id}" data-accion="enviar" type="button">Confirmar y enviar</button>` +
+        `<button class="confirmacion-puntual__btn confirmacion-puntual__btn--no" data-id="${entry.id}" data-accion="no" type="button">No enviar</button>` +
+      `</div></div>`;
+  }
+
+  function resolverConfirmacionPuntual(id, enviar){
+    const entry = vigilancias.find((v) => v.id === id);
+    if (!entry || !entry.accionPendiente) return;
+    if (enviar){
+      const backendId = entry.accionPendiente.backendId;
+      if (backendId && window.__apiPost) window.__apiPost('/api/acciones/' + backendId + '/confirmar', {});
+      entry.accionPendiente.estado = 'enviada';
+    } else {
+      const backendId = entry.accionPendiente.backendId;
+      if (backendId && window.__apiPost) window.__apiPost('/api/acciones/' + backendId + '/cancelar', {});
+      entry.accionPendiente = null;
+    }
+    renderWatchList();
+  }
+
   function generarPasosGasto(categoria, motivo){
     const nombreCat = (CATEGORY_LABELS[categoria] || categoria).toLowerCase();
     if (motivo === 'renovacion_proxima'){
@@ -2102,10 +2398,90 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: 'Hay una pequeña diferencia con el PVPC de hoy, pero no suele compensar cambiar por tan poco.', pasos: [] };
   }
 
+  // ----- Gas natural: mismo patrón que luz, contra la tarifa regulada TUR.
+  // No hay API pública; el valor de la TUR se cura a mano (backend, clave
+  // 'tur_gas_variable') o se pide a mano. Nivel 3 (cambio de comercializadora)
+  // solo si hay socio energético configurado — si no, se queda en Nivel 1. -----
+  function calcularEstadoGasDemo(precioHabitual, turVariable, consumoMensual){
+    if (isNaN(precioHabitual) || isNaN(turVariable)){
+      return { estado: 'sin_datos', detalle: 'Nos falta el precio de la TUR para poder comparar.', pasos: [] };
+    }
+    const diferencia = precioHabitual - turVariable; // €/kWh
+    const consumo = (consumoMensual && !isNaN(consumoMensual)) ? consumoMensual : 120;
+    const ahorroMensual = Math.round(diferencia * consumo * 100) / 100;
+    if (diferencia <= 0) return { estado: 'calma', costeMensual: precioHabitual * consumo, detalle: 'Tu precio ya es competitivo frente a la TUR de gas.', pasos: [] };
+    if (ahorroMensual >= 3){
+      return {
+        estado: 'senal', motivo: 'tur_mas_barata', ahorroMensual, costeMensual: precioHabitual * consumo,
+        detalle: `La TUR de gas está unos ${(diferencia*100).toFixed(2)} cént./kWh por debajo de lo que pagas — unos ${eurLocal.format(Math.round(ahorroMensual))}/mes con tu consumo.`,
+        pasos: [
+          'Comprueba si puedes acogerte a la TUR de gas (depende de tu consumo anual y del tamaño de tu contador).',
+          'Si prefieres mercado libre, usa la TUR como referencia al comparar ofertas.',
+        ],
+      };
+    }
+    return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: 'Hay una pequeña diferencia con la TUR, pero no suele compensar cambiar por tan poco.', pasos: [] };
+  }
+
+  // ----- Alquiler: señal si la subida de la renta supera el índice legal de
+  // referencia (INE). Tope reforzado en zona tensionada. Nivel 2 (escrito al
+  // arrendador), nunca Nivel 3. Espejo de src/calculoAlquiler.js. -----
+  const ALQ_TOPE_GENERAL_DEFECTO = 2.2;   // %, curable en backend (alquiler_tope_general)
+  const ALQ_TOPE_TENSIONADA_DEFECTO = 2.2;
+  function calcularEstadoAlquilerDemo({ rentaActual, subidaPropuesta, fechaUltimaActualizacion, zonaTensionada, topeGeneralPct, topeTensionadaPct }){
+    const topeGen = topeGeneralPct != null ? topeGeneralPct : ALQ_TOPE_GENERAL_DEFECTO;
+    const topeTen = topeTensionadaPct != null ? topeTensionadaPct : (topeGeneralPct != null ? topeGeneralPct : ALQ_TOPE_TENSIONADA_DEFECTO);
+    const tope = zonaTensionada ? Math.min(topeGen, topeTen) : topeGen;
+    if (rentaActual != null && subidaPropuesta != null && rentaActual > 0){
+      const subidaPct = ((subidaPropuesta - rentaActual) / rentaActual) * 100;
+      if (subidaPct > tope + 0.1){
+        const rentaMaxLegal = Math.round(rentaActual * (1 + tope / 100) * 100) / 100;
+        const exceso = Math.round((subidaPropuesta - rentaMaxLegal) * 100) / 100;
+        return {
+          estado: 'senal', motivo: 'subida_por_encima_tope', topeAplicablePct: tope, rentaMaxLegal, ahorroMensual: exceso,
+          detalle: `La subida planteada es del ${subidaPct.toFixed(1)} %, por encima del ${tope} % que permite el índice legal${zonaTensionada ? ' (zona tensionada)' : ''}. El máximo legal serían ${rentaMaxLegal.toFixed(0)} € — te piden ${exceso.toFixed(0)} €/mes de más.`,
+        };
+      }
+      return { estado: 'calma', topeAplicablePct: tope, detalle: `La subida planteada (${subidaPct.toFixed(1)} %) está dentro del tope legal del ${tope} %.` };
+    }
+    if (fechaUltimaActualizacion){
+      const dias = Math.round((new Date(fechaUltimaActualizacion + 'T00:00:00') - new Date()) / (1000*60*60*24));
+      const faltan = 365 - ((((dias % 365) + 365) % 365));
+      if (faltan <= 45){
+        return { estado: 'observacion', motivo: 'actualizacion_proxima', topeAplicablePct: tope,
+          detalle: `Se acerca el aniversario de la actualización de tu renta. El tope legal para la subida es del ${tope} %${zonaTensionada ? ' (zona tensionada)' : ''} — vigílalo cuando te lo comuniquen.` };
+      }
+    }
+    return { estado: 'calma', topeAplicablePct: tope, detalle: 'Todavía no hay ninguna subida sobre la mesa. Faro seguirá vigilando.' };
+  }
+
+  // ----- Comisiones de fondos de inversión y planes de pensiones.
+  // LÍMITE: nunca sugiere ni prepara un producto concreto; techo Nivel 2 con
+  // mensaje genérico a la entidad actual. Espejo de src/calculoInversion.js. -----
+  const INV_REFERENCIA_PCT_DEFECTO = 0.4;
+  function calcularEstadoComisionInversionDemo({ comisionActualPct, tipoProducto, patrimonio, referenciaPct }){
+    const ref = referenciaPct != null ? referenciaPct : INV_REFERENCIA_PCT_DEFECTO;
+    if (comisionActualPct == null || isNaN(comisionActualPct)){
+      return { estado: 'calma', referenciaPct: ref, detalle: 'Escribe tu comisión de gestión para comparar.' };
+    }
+    const dif = Math.round((comisionActualPct - ref) * 100) / 100;
+    if (dif >= 0.5){
+      const costeAnual = (patrimonio && !isNaN(patrimonio)) ? Math.round((dif / 100) * patrimonio * 100) / 100 : null;
+      return {
+        estado: 'senal', motivo: 'comision_alta', referenciaPct: ref, ahorroAnual: costeAnual,
+        detalle: `Pagas un ${comisionActualPct} % de comisión de gestión, frente a una referencia de mercado de aproximadamente ${ref} %` +
+          (costeAnual != null ? ` — unos ${eurLocal.format(Math.round(costeAnual))} al año de diferencia sobre tu patrimonio` : '') +
+          `. Merece la pena preguntar a tu entidad si hay una clase con menos comisión.`,
+      };
+    }
+    return { estado: 'calma', referenciaPct: ref, detalle: `Tu comisión (${comisionActualPct} %) está en línea con la referencia de mercado.` };
+  }
+
   const CATEGORY_LABELS = {
-    hipoteca: 'Hipoteca', gasolina: 'Gasolina', luz: 'Luz',
+    hipoteca: 'Hipoteca', gasolina: 'Gasolina', luz: 'Luz', gas: 'Gas natural',
     seguro_coche: 'Seguro de coche', seguro_hogar: 'Seguro de hogar', seguro_vida: 'Seguro de vida', seguro_salud: 'Seguro de salud',
     telco: 'Telefonía / fibra', comisiones_bancarias: 'Comisiones bancarias', suscripciones: 'Suscripciones',
+    alquiler: 'Alquiler', comisiones_inversion: 'Comisiones de fondos y pensiones',
   };
   const EXTRAS_POR_TIPO_SEGURO = {
     seguro_coche: ['Asistencia en carretera', 'Coche de sustitución', 'Lunas', 'Ocupantes'],
@@ -2163,9 +2539,28 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       Object.assign(entry, relectura);
     } else {
       entry.estado = 'senal';
+      entry.motivo = 'cancelar_suscripcion';
       entry.ahorroMensual = entry.costeMensual;
       entry.detalle = `Llevas 3 meses sin usarla — cancélala y ahorra ${eurLocal.format(Math.round(entry.costeMensual))}/mes.`;
-      entry.pasos = ['Cancélala hoy mismo: la mayoría se hace en dos minutos desde la app o la web del servicio.'];
+      const texto = redactarLocal('cancelar_suscripcion', { nombre: entry.nombre });
+      // Nivel 1 siempre disponible: el texto listo para copiar y enviar tú.
+      entry.pasos = null;
+      entry.opciones = [
+        { titulo: 'Cancélala tú', texto: 'La mayoría se cancela en dos minutos desde la app o la web del servicio.' },
+        { titulo: 'Usar el texto de baja', textoLargo: `Asunto: ${texto.asunto}\n\n${texto.cuerpo}`, esTexto: true },
+      ];
+      // Nivel 2: si la autorización general de suscripciones está activa, deja la
+      // baja PREPARADA y pendiente de confirmación puntual (nunca se envía sola).
+      if (autorizacionActivaLocal('suscripciones')){
+        entry.accionPendiente = { tipo: 'cancelar_suscripcion', asunto: texto.asunto, cuerpo: texto.cuerpo, estado: 'pendiente' };
+        const userId = window.__getCurrentUserId && window.__getCurrentUserId();
+        if (userId && window.__apiPost){
+          window.__apiPost('/api/acciones/preparar', {
+            userId, categoria: 'suscripciones', refId: entry.backendId || null,
+            tipo: 'cancelar_suscripcion', datos: { nombre: entry.nombre },
+          }).then((r) => { if (r && r.accion){ entry.accionPendiente.backendId = r.accion.id; } });
+        }
+      }
     }
     renderWatchList();
   }
@@ -2220,6 +2615,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         return `<div class="opcion opcion--broker"><strong>${escapeHtml(o.titulo)}</strong><p>${escapeHtml(o.texto)}</p>` +
           `<a href="${enlace}" class="opcion-broker-link" target="_blank" rel="noopener" data-categoria="${escapeHtml(o.categoria || '')}" data-broker="${escapeHtml(o.partner.nombre)}">Contactar →</a></div>`;
       }
+      if (o.esTexto){
+        return `<div class="opcion opcion--texto"><strong>${escapeHtml(o.titulo)}</strong>` +
+          `<pre class="opcion__pre">${escapeHtml(o.textoLargo)}</pre>` +
+          `<button class="opcion__copy" type="button" data-copiar="${escapeHtml(o.textoLargo)}">Copiar texto</button></div>`;
+      }
       return `<div class="opcion"><strong>${escapeHtml(o.titulo)}</strong><p>${escapeHtml(o.texto)}</p></div>`;
     }).join('')}</div>`;
   }
@@ -2228,7 +2628,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // única), nunca las dos cosas — esto decide cuál pintar sin que cada sitio que
   // muestra una recomendación tenga que saberlo.
   function renderRecomendacion(entry){
-    return entry.opciones ? renderOpciones(entry.opciones) : renderPasos(entry.pasos);
+    const resto = entry.opciones ? renderOpciones(entry.opciones) : renderPasos(entry.pasos);
+    return renderConfirmacionPuntual(entry) + resto;
   }
 
   function renderWatchList(){
@@ -2261,6 +2662,17 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     });
     list.querySelectorAll('.confirmar-uso-btn').forEach((btn) => {
       btn.addEventListener('click', () => confirmarUsoSuscripcion(btn.dataset.id, btn.dataset.respuesta === 'si'));
+    });
+    list.querySelectorAll('.confirmacion-puntual__btn').forEach((btn) => {
+      btn.addEventListener('click', () => resolverConfirmacionPuntual(btn.dataset.id, btn.dataset.accion === 'enviar'));
+    });
+    list.querySelectorAll('.opcion__copy').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const texto = btn.dataset.copiar || '';
+        const hecho = () => { btn.textContent = '¡Copiado!'; setTimeout(() => { btn.textContent = 'Copiar texto'; }, 1800); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texto).then(hecho).catch(hecho);
+        else hecho();
+      });
     });
     list.querySelectorAll('.state-trigger').forEach((el) => {
       el.addEventListener('click', () => openStateModal(el.dataset.state));
@@ -2382,7 +2794,12 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   $('sTipo').addEventListener('change', () => renderExtrasSeguro($('sTipo').value));
   renderExtrasSeguro('seguro_coche'); // precarga las casillas aunque esa pestaña no sea la primera
 
-  const BLOQUES_CATEGORIA = { gasolina: 'gasolina', luz: 'luz', telco: 'telco', seguros: 'seguros' }; // el resto usa el bloque genérico "gasto"
+  // Cada categoría con formulario propio; el resto usa el bloque genérico "gasto".
+  const BLOQUES_CATEGORIA = {
+    gasolina: 'gasolina', luz: 'luz', gas: 'gas', telco: 'telco', seguros: 'seguros',
+    alquiler: 'alquiler', comisiones_inversion: 'comisiones_inversion',
+  };
+  const BLOQUES_TODOS = ['gasolina', 'luz', 'gas', 'telco', 'seguros', 'alquiler', 'comisiones_inversion', 'gasto'];
 
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -2390,8 +2807,9 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       tab.classList.add('is-active');
       activeCategory = tab.dataset.cat;
       const bloque = BLOQUES_CATEGORIA[activeCategory] || 'gasto';
-      ['gasolina', 'luz', 'telco', 'seguros', 'gasto'].forEach((b) => {
-        document.querySelector(`[data-cat-fields="${b}"]`).style.display = (b === bloque) ? 'block' : 'none';
+      BLOQUES_TODOS.forEach((b) => {
+        const el = document.querySelector(`[data-cat-fields="${b}"]`);
+        if (el) el.style.display = (b === bloque) ? 'block' : 'none';
       });
       if (bloque === 'gasto') aplicarEjemplos(activeCategory);
     });
@@ -2536,10 +2954,29 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     }
 
     watchIdCounter++;
-    vigilancias.push({ id: 'w' + watchIdCounter, nombre: 'Luz (PVPC)', categoria: 'luz', ...lectura });
+    const entry = { id: 'w' + watchIdCounter, nombre: 'Luz (PVPC)', categoria: 'luz', ...lectura };
+    wireNivel3Energia(entry, 'luz');
+    vigilancias.push(entry);
     renderWatchList();
     $('lCosteActual').value = ''; $('lAlternativaManual').value = '';
     fallback.style.display = 'none';
+  }
+
+  // Nivel 3 de luz/gas: solo si hay socio energético configurado (SOCIOS_ENERGIA
+  // vacío por defecto → esto queda inerte y la categoría se comporta como Nivel 1).
+  function wireNivel3Energia(entry, suministro){
+    if (entry.estado !== 'senal') return;
+    if (!autorizacionActivaLocal(suministro) || !hayPartnerEnergetico(suministro)) return;
+    const texto = redactarLocal('cambio_comercializadora', { suministro, ahorroMensual: Math.round(entry.ahorroMensual || 0) });
+    if (!texto) return;
+    entry.accionPendiente = { tipo: 'cambio_comercializadora', asunto: texto.asunto, cuerpo: texto.cuerpo, estado: 'pendiente' };
+    const userId = window.__getCurrentUserId && window.__getCurrentUserId();
+    if (userId && window.__apiPost){
+      window.__apiPost('/api/acciones/preparar', {
+        userId, categoria: suministro, tipo: 'cambio_comercializadora',
+        datos: { suministro, ahorroMensual: Math.round(entry.ahorroMensual || 0) },
+      }).then((r) => { if (r && r.accion) entry.accionPendiente.backendId = r.accion.id; });
+    }
   }
 
   // ----- Consulta rápida de luz: mismo dato oficial en vivo que la vigilancia de luz,
@@ -2653,6 +3090,78 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     document.querySelectorAll('#sExtrasIncluidos input, #sExtrasNoUsados input').forEach((el) => { el.checked = false; });
   }
 
+  async function turGasHoy(){
+    if (!API_BASE_URL) return null;
+    try {
+      const resp = await fetch(API_BASE_URL + '/api/market-rate?clave=tur_gas_variable');
+      if (!resp.ok) return null;
+      const data = await resp.json();
+      return (data && typeof data.valor === 'number') ? data.valor : null;
+    } catch (err) { return null; }
+  }
+
+  async function manejarAnadirGas(){
+    const costeActual = parseFloat($('gasCosteActual').value);
+    const consumo = parseFloat($('gasConsumo').value);
+    if (isNaN(costeActual)){ alert('Escribe cuánto pagas de media por kWh de gas.'); return; }
+
+    const fallback = $('gasManualFallback');
+    const btn = $('addWatchBtn'); const txt = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Consultando la TUR de gas…';
+    let tur = await turGasHoy();
+    btn.disabled = false; btn.textContent = txt;
+
+    if (tur == null){
+      const manual = parseFloat($('gasTurManual').value);
+      if (fallback.style.display !== 'none' && !isNaN(manual)){ tur = manual; }
+      else { fallback.style.display = 'block'; $('gasTurManual').focus(); return; }
+    }
+    const lectura = calcularEstadoGasDemo(costeActual, tur, consumo);
+    watchIdCounter++;
+    const entry = { id: 'w' + watchIdCounter, nombre: 'Gas natural (TUR)', categoria: 'gas', ...lectura };
+    wireNivel3Energia(entry, 'gas');
+    vigilancias.push(entry);
+    renderWatchList();
+    $('gasCosteActual').value = ''; $('gasTurManual').value = ''; fallback.style.display = 'none';
+  }
+
+  function manejarAnadirAlquiler(){
+    const renta = parseFloat($('alqRenta').value);
+    if (isNaN(renta)){ alert('Escribe tu renta mensual actual.'); return; }
+    const subida = parseFloat($('alqSubida').value);
+    const fecha = $('alqFecha').value || null;
+    const tensionada = $('alqTensionada').checked;
+    const lectura = calcularEstadoAlquilerDemo({
+      rentaActual: renta, subidaPropuesta: isNaN(subida) ? null : subida,
+      fechaUltimaActualizacion: fecha, zonaTensionada: tensionada,
+    });
+    watchIdCounter++;
+    const entry = { id: 'w' + watchIdCounter, nombre: 'Alquiler', categoria: 'alquiler', costeMensual: renta, ...lectura };
+    wireNivel2(entry, { rentaActual: renta, subidaPropuesta: isNaN(subida) ? null : subida, topeLegalPct: lectura.topeAplicablePct, fechaActualizacion: fecha });
+    vigilancias.push(entry);
+    renderWatchList();
+    sincronizarGastoConBackend('alquiler', { nombre: 'Alquiler', costeActual: renta, fechaReferencia: fecha, zonaTensionada: tensionada, subidaPropuesta: isNaN(subida) ? null : subida });
+    $('alqRenta').value = ''; $('alqSubida').value = ''; $('alqFecha').value = ''; $('alqTensionada').checked = false;
+  }
+
+  function manejarAnadirInversion(){
+    const comision = parseFloat($('invComision').value);
+    if (isNaN(comision)){ alert('Escribe la comisión de gestión que pagas (%).'); return; }
+    const tipoProducto = $('invTipo').value;
+    const nombre = $('invNombre').value.trim() || (tipoProducto === 'plan_pensiones' ? 'Plan de pensiones' : 'Fondo de inversión');
+    const patrimonio = parseFloat($('invPatrimonio').value);
+    const lectura = calcularEstadoComisionInversionDemo({
+      comisionActualPct: comision, tipoProducto, patrimonio: isNaN(patrimonio) ? null : patrimonio,
+    });
+    watchIdCounter++;
+    const entry = { id: 'w' + watchIdCounter, nombre, categoria: 'comisiones_inversion', ...lectura };
+    wireNivel2(entry, { tipoProducto, comisionActual: comision });
+    vigilancias.push(entry);
+    renderWatchList();
+    sincronizarGastoConBackend('comisiones_inversion', { nombre, comisionActualPct: comision, tipoProducto, patrimonio: isNaN(patrimonio) ? null : patrimonio });
+    $('invNombre').value = ''; $('invComision').value = ''; $('invPatrimonio').value = '';
+  }
+
   $('addWatchBtn').addEventListener('click', () => {
     if (activeCategory === 'gasolina'){
       manejarAnadirGasolina();
@@ -2662,12 +3171,24 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       manejarAnadirLuz();
       return;
     }
+    if (activeCategory === 'gas'){
+      manejarAnadirGas();
+      return;
+    }
     if (activeCategory === 'telco'){
       manejarAnadirTelco();
       return;
     }
     if (activeCategory === 'seguros'){
       manejarAnadirSeguro();
+      return;
+    }
+    if (activeCategory === 'alquiler'){
+      manejarAnadirAlquiler();
+      return;
+    }
+    if (activeCategory === 'comisiones_inversion'){
+      manejarAnadirInversion();
       return;
     }
     const nombre = $('eNombre').value.trim();
@@ -2700,6 +3221,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   });
 
   renderWatchList();
+  renderAutorizaciones();
   actualizarSimulador(); // aquí sí: eurLocal y los datos de hipoteca ya están listos
 
   // ----- Subnav del panel: resalta la sección visible mientras se hace scroll -----
