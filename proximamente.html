@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Próximamente — Faro</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+:root{
+  --ink:#0E1A26; --ink-2:#132433; --foam:#EDE8DD; --foam-dim:#9FB0B8;
+  --signal:#E3A542; --line:rgba(237,232,221,0.12);
+  --font-head:'Fraunces', serif; --font-body:'IBM Plex Sans', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ink);color:var(--foam);font-family:var(--font-body);line-height:1.65;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+a{color:var(--signal);}
+nav{border-bottom:1px solid var(--line);padding:18px 0;}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;}
+.brand{font-family:var(--font-head);font-weight:600;font-size:1.15rem;text-decoration:none;color:var(--foam);}
+nav a.back{font-family:var(--font-mono);font-size:0.8rem;color:var(--foam-dim);text-decoration:none;}
+main{padding:56px 0 80px;}
+.eyebrow{font-family:var(--font-mono);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);margin:0 0 14px;}
+h1{font-family:var(--font-head);font-size:2.1rem;font-weight:600;margin:0 0 8px;letter-spacing:-0.01em;}
+.lead{color:var(--foam-dim);font-size:1rem;margin:0 0 44px;}
+.item{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:26px;margin-bottom:20px;}
+.item__tag{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--signal);}
+.item h2{font-family:var(--font-head);font-size:1.25rem;font-weight:600;margin:12px 0 10px;}
+.item p{color:var(--foam-dim);margin:0;font-size:0.96rem;}
+.cta{display:inline-block;margin-top:16px;font-family:var(--font-mono);font-weight:600;font-size:0.9rem;background:var(--signal);color:var(--ink);padding:12px 22px;border-radius:100px;text-decoration:none;}
+footer{border-top:1px solid var(--line);padding:24px 0;text-align:center;}
+footer p{font-size:0.78rem;color:var(--foam-dim);opacity:0.7;margin:0;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="index.html">Faro</a>
+    <a class="back" href="index.html">← Volver a Faro</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <p class="eyebrow">Próximamente</p>
+  <h1>Esto es solo el principio</h1>
+  <p class="lead">Hoy Faro avisa y te deja el trámite preparado. La idea es que, con tu permiso, mañana también lo termine.</p>
+
+  <div class="item">
+    <span class="item__tag">Próximamente</span>
+    <h2>No solo te avisa — lo resuelve</h2>
+    <p>Cancelar una suscripción que no usas, cambiar de comercializadora de luz o gas cuando aparezca una tarifa mejor, enviar la reclamación de una comisión... sin que tengas que hacer tú la llamada. Ya funciona en modo "lo dejo redactado y tú confirmas"; el siguiente paso es cerrar los acuerdos para que se ejecute de verdad.</p>
+  </div>
+
+  <div class="item">
+    <span class="item__tag">Con tu autorización</span>
+    <h2>Tú decides qué puede hacer solo</h2>
+    <p>Nada se ejecuta sin que lo actives categoría por categoría, y aun así cada acción concreta necesita una confirmación tuya en el momento. Y en lo regulado —hipotecas, seguros— actuar significa gestionarlo junto a un intermediario autorizado, no saltárselo.</p>
+  </div>
+
+  <a class="cta" href="index.html#activar">Crear cuenta</a>
+</main>
+
+<footer>
+  <div class="wrap"><p>Faro · Estimaciones informativas, no asesoramiento financiero.</p></div>
+</footer>
+
+</body>
+</html>

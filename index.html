@@ -187,6 +187,53 @@ a{color:inherit;}
 }
 .faq__item[open] summary::after{transform:rotate(45deg);}
 .faq__item p{color:var(--foam-dim);font-size:0.92rem;margin:14px 0 0;line-height:1.6;}
+.faq__more{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.faq__more[hidden]{display:none;}
+.faq__toggle{
+  align-self:flex-start;margin-top:16px;font-family:var(--font-mono);font-size:0.8rem;font-weight:600;
+  color:var(--signal);background:transparent;border:1px solid rgba(227,165,66,0.35);border-radius:100px;
+  padding:9px 18px;cursor:pointer;transition:background .15s ease;
+}
+.faq__toggle:hover{background:var(--signal-soft);}
+
+/* categorías agrupadas en acordeón (reutiliza .faq__item) */
+.cat-group{margin-bottom:34px;}
+.cat-group:last-child{margin-bottom:0;}
+.cat-group__title{
+  font-family:var(--font-mono);font-size:0.76rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--foam-dim);margin:0 0 12px;
+}
+.cat-acc{display:flex;flex-direction:column;gap:8px;max-width:52rem;}
+.cat-acc .faq__item summary{font-size:0.98rem;}
+.cat-num{font-family:var(--font-mono);font-size:0.8rem;color:var(--signal);margin-right:12px;letter-spacing:0.04em;}
+
+/* cita de apoyo del hero */
+.hero__quote{
+  margin:36px 0 0;max-width:46rem;border-left:2px solid var(--signal);padding-left:22px;
+}
+.hero__quote blockquote{
+  font-family:var(--font-display);font-size:clamp(1.15rem,2.2vw,1.45rem);line-height:1.35;
+  margin:0 0 12px;font-weight:500;color:var(--foam);
+}
+.hero__quote p{color:var(--foam-dim);font-size:0.96rem;margin:0;max-width:52ch;}
+
+/* subnav de la portada (mismo patrón que .dash-subnav) */
+.page-subnav{
+  position:sticky;top:57px;z-index:19;
+  background:rgba(14,26,38,0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+.page-subnav__inner{
+  display:flex;gap:6px;max-width:1120px;margin:0 auto;padding:10px 28px;overflow-x:auto;scrollbar-width:none;
+}
+.page-subnav__inner::-webkit-scrollbar{display:none;}
+.page-subnav__link{
+  flex:none;font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.02em;
+  color:var(--foam-dim);text-decoration:none;padding:7px 14px;border-radius:100px;
+  border:1px solid transparent;white-space:nowrap;transition:all .15s ease;
+}
+.page-subnav__link:hover{color:var(--foam);border-color:var(--line);}
+.page-subnav__link.is-active{color:var(--signal);background:var(--signal-soft);border-color:rgba(227,165,66,0.3);}
+#publicView > section[id]{scroll-margin-top:120px;}
 .roadmap__grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
 @media (max-width:860px){ .roadmap__grid{grid-template-columns:1fr;} }
 .roadmap__item{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:28px;}
@@ -677,14 +724,23 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       Faro
     </div>
     <div class="nav__links">
-      <a href="#categorias">Qué vigilamos</a>
-      <a href="#vista-previa">Cómo se ve</a>
+      <a href="como-funciona.html">Cómo funciona</a>
+      <a href="proximamente.html">Próximamente</a>
       <a href="#faq">Preguntas</a>
-      <a href="#crear-cuenta">Crear cuenta</a>
     </div>
-    <a class="nav__cta" href="#crear-cuenta">Crear cuenta</a>
+    <a class="nav__cta" href="#activar">Crear cuenta</a>
   </div>
 </nav>
+
+<div class="page-subnav" id="pageSubnav">
+  <div class="page-subnav__inner">
+    <a href="#inicio" class="page-subnav__link is-active">Inicio</a>
+    <a href="#categorias" class="page-subnav__link">Categorías</a>
+    <a href="#vista-previa" class="page-subnav__link">Vista previa</a>
+    <a href="#faq" class="page-subnav__link">Preguntas</a>
+    <a href="#activar" class="page-subnav__link">Crear cuenta</a>
+  </div>
+</div>
 
 <main class="wrap" id="publicView">
 
@@ -707,87 +763,60 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <span class="preview-chip"><span class="lamp is-signal"></span> Alquiler</span>
       <span class="preview-chip"><span class="lamp"></span> Fondos y pensiones</span>
     </div>
+
+    <div class="hero__quote reveal reveal--3">
+      <blockquote>"La mejor hipoteca fija no es necesariamente la que firmaste hace tres años."</blockquote>
+      <p>Tu hipoteca, tus seguros, tu tarifa de luz: los firmaste un día concreto y nadie te avisa cuando el mercado se mueve. Revisarlo tú cada mes —comparando ofertas y calculando si compensa el cambio— es justo la tarea que casi nadie hace.</p>
+    </div>
   </section>
 
   <section class="categorias" id="categorias">
     <div class="section-head">
       <h2>Todo lo que Faro vigila</h2>
-      <p>Diez categorías, un mismo criterio: la señal solo se enciende cuando compensa de verdad.</p>
+      <p>Diez categorías en cuatro familias, un mismo criterio: la señal solo se enciende cuando compensa de verdad.</p>
     </div>
-    <div class="categorias__grid">
-      <div class="categoria-card">
-        <span class="categoria-card__num">01</span>
-        <h3>Hipoteca</h3>
-        <p>Conectado en directo al euríbor oficial del Banco de España. Te dice si compensa cambiar, con el coste del cambio ya descontado.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">02</span>
-        <h3>Gasolina</h3>
-        <p>Precios oficiales del Ministerio, filtrados por distancia real a tu código postal — no la más barata a una hora de casa.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">03</span>
-        <h3>Luz</h3>
-        <p>Compara lo que pagas con el precio regulado (PVPC) de Red Eléctrica de España, actualizado hora a hora.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">04</span>
-        <h3>Gas natural</h3>
-        <p>Compara lo que pagas con la tarifa regulada TUR de gas, que el Gobierno fija cada trimestre y se publica en el BOE.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">05</span>
-        <h3>Seguros</h3>
-        <p>Coche, hogar, vida o salud. Detecta si pagas por coberturas que no usas — no solo si hay algo más barato.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">06</span>
-        <h3>Telefonía y fibra</h3>
-        <p>Vigila la fecha de permanencia y compara ofertas, con el mismo aviso de extras que pagas sin usar.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">07</span>
-        <h3>Comisiones bancarias</h3>
-        <p>Recuerda revisar las condiciones de bonificación de tu cuenta antes de que te cobren de más.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">08</span>
-        <h3>Suscripciones</h3>
-        <p>Avisa cuando llevas tiempo sin revisarlas, para que nada se quede pagando solo y sin usarse.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">09</span>
-        <h3>Alquiler</h3>
-        <p>Comprueba que la subida de tu renta no supera el índice de referencia del INE — el tope legal, más bajo aún en zonas de mercado tensionado.</p>
-      </div>
-      <div class="categoria-card">
-        <span class="categoria-card__num">10</span>
-        <h3>Comisiones de fondos y pensiones</h3>
-        <p>Compara la comisión de gestión que pagas con una referencia de mercado y te ayuda a preguntar a tu entidad. No recomienda productos.</p>
-      </div>
-    </div>
-  </section>
 
-  <section class="steps" id="como-funciona">
-    <div class="section-head">
-      <h2>Cómo vigila Faro cada cosa</h2>
-      <p>Tres pasos, en ese orden, para la hipoteca y para cada categoría que añadas abajo. No te avisamos hasta que llega el tercero.</p>
+    <div class="cat-group">
+      <p class="cat-group__title">Vivienda</p>
+      <div class="cat-acc">
+        <details class="faq__item"><summary><span><span class="cat-num">01</span>Hipoteca</span></summary>
+          <p>Conectado en directo al euríbor oficial del Banco de España. Te dice si compensa cambiar, con el coste del cambio ya descontado.</p></details>
+        <details class="faq__item"><summary><span><span class="cat-num">02</span>Alquiler</span></summary>
+          <p>Comprueba que la subida de tu renta no supera el índice de referencia del INE — el tope legal, más bajo aún en zonas de mercado tensionado.</p></details>
+      </div>
     </div>
-    <div class="steps__grid">
-      <div class="step">
-        <span class="step__num">01</span>
-        <h3>Nos cuentas qué vigilar</h3>
-        <p>La hipoteca, la gasolina, un seguro, la tarifa de fibra... cada una con sus propios datos. Dos minutos por categoría, sin conectar tu banco.</p>
+
+    <div class="cat-group">
+      <p class="cat-group__title">Suministros</p>
+      <div class="cat-acc">
+        <details class="faq__item"><summary><span><span class="cat-num">03</span>Luz</span></summary>
+          <p>Compara lo que pagas con el precio regulado (PVPC) de Red Eléctrica de España, actualizado hora a hora.</p></details>
+        <details class="faq__item"><summary><span><span class="cat-num">04</span>Gas natural</span></summary>
+          <p>Compara lo que pagas con la tarifa regulada TUR de gas, que el Gobierno fija cada trimestre y se publica en el BOE.</p></details>
+        <details class="faq__item"><summary><span><span class="cat-num">05</span>Gasolina</span></summary>
+          <p>Precios oficiales del Ministerio, filtrados por distancia real a tu código postal — no la más barata a una hora de casa.</p></details>
       </div>
-      <div class="step">
-        <span class="step__num">02</span>
-        <h3>Vigilamos con las reglas de cada una</h3>
-        <p>Datos oficiales cuando existen (hipoteca, gasolina), fechas de renovación cuando aplican (seguros, telco), recordatorios cuando no hay otra forma (comisiones, suscripciones).</p>
+    </div>
+
+    <div class="cat-group">
+      <p class="cat-group__title">Contratos</p>
+      <div class="cat-acc">
+        <details class="faq__item"><summary><span><span class="cat-num">06</span>Seguros</span></summary>
+          <p>Coche, hogar, vida o salud. Detecta si pagas por coberturas que no usas — no solo si hay algo más barato.</p></details>
+        <details class="faq__item"><summary><span><span class="cat-num">07</span>Telefonía y fibra</span></summary>
+          <p>Vigila la fecha de permanencia y compara ofertas, con el mismo aviso de extras que pagas sin usar.</p></details>
       </div>
-      <div class="step">
-        <span class="step__num">03</span>
-        <h3>Encendemos la señal solo cuando compensa</h3>
-        <p>El mismo criterio en las diez categorías: nada de avisos por una diferencia mínima. Solo cuando el ahorro, o la urgencia de una fecha, es real.</p>
+    </div>
+
+    <div class="cat-group">
+      <p class="cat-group__title">Dinero</p>
+      <div class="cat-acc">
+        <details class="faq__item"><summary><span><span class="cat-num">08</span>Comisiones bancarias</span></summary>
+          <p>Recuerda revisar las condiciones de bonificación de tu cuenta antes de que te cobren de más.</p></details>
+        <details class="faq__item"><summary><span><span class="cat-num">09</span>Comisiones de fondos y pensiones</span></summary>
+          <p>Compara la comisión de gestión que pagas con una referencia de mercado y te ayuda a preguntar a tu entidad. No recomienda productos.</p></details>
+        <details class="faq__item"><summary><span><span class="cat-num">10</span>Suscripciones</span></summary>
+          <p>Avisa cuando llevas tiempo sin revisarlas, para que nada se quede pagando solo y sin usarse.</p></details>
       </div>
     </div>
   </section>
@@ -817,42 +846,12 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </div>
         <div class="resumen-rec">
           <span class="lamp is-signal"></span>
-          <div><strong>Fibra Movistar</strong><p>Hay una alternativa que ahorraría unos 25 €/mes. Ojo: comprueba que incluye lo mismo que de verdad usas.</p></div>
+          <div><strong>Fibra Operador X</strong><p>Hay una alternativa que ahorraría unos 25 €/mes. Ojo: comprueba que incluye lo mismo que de verdad usas.</p></div>
         </div>
         <div class="resumen-rec">
           <span class="lamp is-watch"></span>
-          <div><strong>Seguro coche Mapfre</strong><p>Hay una pequeña diferencia, pero no suele compensar cambiar por tan poco todavía.</p></div>
+          <div><strong>Seguro de coche Aseguradora X</strong><p>Hay una pequeña diferencia, pero no suele compensar cambiar por tan poco todavía.</p></div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="roadmap" id="proximamente">
-    <div class="section-head">
-      <h2>Esto es solo el principio</h2>
-      <p>Hoy Faro avisa. La idea es que, con tu permiso, mañana también actúe.</p>
-    </div>
-    <div class="roadmap__grid">
-      <div class="roadmap__item">
-        <span class="roadmap__tag">Próximamente</span>
-        <h3>No solo te avisa — lo resuelve</h3>
-        <p>Cancelar una suscripción que no usas, cambiar de compañía de luz cuando aparezca una tarifa mejor, iniciar el cambio de seguro... sin que tengas que hacer tú la llamada.</p>
-      </div>
-      <div class="roadmap__item">
-        <span class="roadmap__tag">Con tu autorización</span>
-        <h3>Tú decides qué puede hacer solo</h3>
-        <p>Nada se ejecuta sin que lo actives categoría por categoría. Y en lo regulado —hipotecas, seguros— actuar significa gestionarlo junto a un intermediario autorizado, no saltárselo.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="problem">
-    <div class="problem__grid">
-      <blockquote>"La mejor hipoteca fija no es necesariamente la que firmaste hace tres años."</blockquote>
-      <div class="problem__notes">
-        <p>Tu hipoteca se firmó un día concreto, a un tipo concreto. Desde entonces el mercado ha subido y bajado muchas veces, y nadie te ha avisado de ello.</p>
-        <p>Tu banco no tiene ningún incentivo en decirte que hoy podrías conseguir mejores condiciones en otro sitio.</p>
-        <p>Y revisarlo tú mismo cada mes —comparando ofertas y calculando si compensa una vez pagado el cambio— es exactamente el tipo de tarea tediosa que casi nadie hace, aunque sepa que debería.</p>
       </div>
     </div>
   </section>
@@ -868,10 +867,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         <p>No. Faro no se conecta a tu cuenta bancaria ni pide credenciales de ningún tipo. Solo usa los datos que tú escribes a mano — lo que pagas, con quién — para hacer la comparación.</p>
       </details>
       <details class="faq__item">
-        <summary>¿De dónde salen los datos de mercado?</summary>
-        <p>De fuentes oficiales y públicas siempre que existen: el Banco de España (euríbor), Red Eléctrica de España (precio de la luz), el Ministerio para la Transición Ecológica (gasolina), el INE (índice legal de actualización del alquiler) y la tarifa regulada TUR de gas que fija el Gobierno. Cuando no hay un dato oficial publicado como serie —el tipo fijo de referencia de la hipoteca o la comisión media de un fondo—, lo curamos a mano y lo decimos.</p>
-      </details>
-      <details class="faq__item">
         <summary>¿Cómo gana dinero Faro?</summary>
         <p>Con tu suscripción de 12€/mes, nada más. No cobramos comisión sobre lo que ahorres ni vendemos tus datos a terceros — así no tenemos ningún incentivo en decirte que cambies de algo si no compensa de verdad.</p>
       </details>
@@ -879,14 +874,22 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         <summary>¿Puedo cancelar cuando quiera?</summary>
         <p>Sí, sin permanencia. Se cancela en un clic desde tu cuenta, sin llamadas ni justificaciones.</p>
       </details>
-      <details class="faq__item">
-        <summary>¿Faro cambia las cosas por mí automáticamente?</summary>
-        <p>Todavía no. Hoy te avisa y te da los pasos concretos a seguir — la parte de actuar en tu nombre, con tu autorización, es la que contamos en "Esto es solo el principio" más arriba.</p>
-      </details>
-      <details class="faq__item">
-        <summary>¿Y si no encuentra nada mejor?</summary>
-        <p>Entonces no te molesta. El silencio también es información: significa que, ahora mismo, ya tienes lo mejor que hay para ti.</p>
-      </details>
+
+      <div class="faq__more" id="faqMore" hidden>
+        <details class="faq__item">
+          <summary>¿De dónde salen los datos de mercado?</summary>
+          <p>De fuentes oficiales y públicas siempre que existen: el Banco de España (euríbor), Red Eléctrica de España (precio de la luz), el Ministerio para la Transición Ecológica (gasolina), el INE (índice legal de actualización del alquiler) y la tarifa regulada TUR de gas que fija el Gobierno. Cuando no hay un dato oficial publicado como serie —el tipo fijo de referencia de la hipoteca o la comisión media de un fondo—, lo curamos a mano y lo decimos.</p>
+        </details>
+        <details class="faq__item">
+          <summary>¿Faro cambia las cosas por mí automáticamente?</summary>
+          <p>Todavía no. Hoy te avisa y te da los pasos concretos a seguir — con tu autorización, la parte de actuar en tu nombre es la que contamos en <a href="proximamente.html">Próximamente</a>.</p>
+        </details>
+        <details class="faq__item">
+          <summary>¿Y si no encuentra nada mejor?</summary>
+          <p>Entonces no te molesta. El silencio también es información: significa que, ahora mismo, ya tienes lo mejor que hay para ti.</p>
+        </details>
+      </div>
+      <button class="faq__toggle" id="faqToggle" type="button" aria-expanded="false">Ver todas las preguntas</button>
     </div>
   </section>
 
@@ -1581,7 +1584,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   <div class="wrap">
     <p class="footer__brand">Faro</p>
     <p class="footer__legal">Faro ofrece estimaciones informativas calculadas a partir de los datos que introduces. No constituye asesoramiento financiero, legal ni fiscal, y no sustituye la valoración de un profesional autorizado ni la información oficial de tu entidad bancaria. Antes de tomar cualquier decisión sobre tu hipoteca, contrasta las cifras con tu banco o con un asesor cualificado.</p>
-    <p class="footer__links"><a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos y condiciones</a> · <a href="aviso-legal.html">Aviso legal</a></p>
+    <p class="footer__links"><a href="como-funciona.html">Cómo funciona</a> · <a href="proximamente.html">Próximamente</a> · <a href="privacidad.html">Privacidad</a> · <a href="terminos.html">Términos y condiciones</a> · <a href="aviso-legal.html">Aviso legal</a></p>
   </div>
 </footer>
 
@@ -1813,6 +1816,34 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       $('publicView').classList.remove('is-hidden');
       window.scrollTo(0, 0);
     });
+  }
+
+  // ----- FAQ: 3 preguntas visibles + "ver todas" (el resto está en #faqMore) -----
+  const faqToggle = $('faqToggle');
+  const faqMore = $('faqMore');
+  if (faqToggle && faqMore){
+    faqToggle.addEventListener('click', () => {
+      const abierto = !faqMore.hidden;
+      faqMore.hidden = abierto;
+      faqToggle.setAttribute('aria-expanded', String(!abierto));
+      faqToggle.textContent = abierto ? 'Ver todas las preguntas' : 'Ver menos';
+    });
+  }
+
+  // ----- Subnav de la portada: mismo patrón de scroll-spy que el del panel
+  // (.dash-subnav) — resalta la sección visible mientras se hace scroll. -----
+  const pageLinks = document.querySelectorAll('.page-subnav__link');
+  if (pageLinks.length && 'IntersectionObserver' in window){
+    const secciones = document.querySelectorAll('#publicView > section[id]');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        pageLinks.forEach((link) => {
+          link.classList.toggle('is-active', link.getAttribute('href') === '#' + entry.target.id);
+        });
+      });
+    }, { rootMargin: '-120px 0px -60% 0px', threshold: 0 });
+    secciones.forEach((s) => obs.observe(s));
   }
 })();
 </script>
