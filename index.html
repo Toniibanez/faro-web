@@ -265,6 +265,18 @@ a{color:inherit;}
   display:block;font-size:0.82rem;color:var(--foam-dim);margin-bottom:6px;
 }
 .field .hint{font-size:0.74rem;color:var(--foam-dim);opacity:0.65;margin-top:4px;}
+/* Mismo estilo para pistas que van sueltas dentro de un bloque de categoría,
+   no anidadas en un .field (p.ej. la nota de fuente de gasolina, o la línea
+   de "tipo de vigilancia" al principio de cada formulario). */
+.cat-fields > .hint{font-size:0.78rem;color:var(--foam-dim);opacity:0.8;margin:0 0 16px;}
+
+.tipo-vigilancia{
+  display:flex;align-items:center;gap:8px;margin:0 0 18px;padding:9px 12px;
+  background:var(--ink);border:1px solid var(--line);border-radius:10px;
+  font-size:0.8rem;color:var(--foam-dim);
+}
+.tipo-vigilancia__dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--foam-dim);}
+.tipo-vigilancia--oficial .tipo-vigilancia__dot{background:var(--signal);}
 
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:4px;}
@@ -467,6 +479,12 @@ a{color:inherit;}
 .confirmar-uso-btn--si{border-color:var(--signal);color:var(--signal);}
 .confirmar-uso-btn--si:hover{background:var(--signal-soft);}
 .confirmar-uso-btn--no:hover{border-color:var(--coral);color:var(--coral);}
+.watch-card__ask-use{
+  margin-top:10px;background:transparent;border:0;padding:0;cursor:pointer;
+  font-family:var(--font-mono);font-size:0.78rem;color:var(--foam-dim);text-decoration:underline;
+  text-underline-offset:3px;
+}
+.watch-card__ask-use:hover{color:var(--signal);}
 
 /* --- Niveles de acción: interruptores de autorización y confirmación puntual --- */
 .autorizaciones-list{display:flex;flex-direction:column;gap:10px;}
@@ -747,7 +765,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   <section class="hero" id="inicio">
     <p class="eyebrow reveal reveal--1">Vigilancia continua de lo que pagas cada mes</p>
     <h1 class="reveal reveal--2">Lo contrataste una vez. El mercado no ha dejado de moverse <em>desde entonces</em>.</h1>
-    <p class="hero__sub reveal reveal--3">Faro vigila tu hipoteca, tus seguros, la luz, el gas, la gasolina, la fibra, el alquiler, las comisiones y las suscripciones que se te olvida revisar — y enciende la señal solo cuando cambiar de verdad compensa.</p>
+    <p class="hero__sub reveal reveal--3">Faro vigila tu hipoteca, tus seguros, la luz, el gas, la gasolina, la fibra, las comisiones y las suscripciones que se te olvida revisar — y enciende la señal solo cuando cambiar de verdad compensa.</p>
 
     <a href="#crear-cuenta" class="hero__cta reveal reveal--3">Crear cuenta gratis</a>
 
@@ -760,7 +778,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <span class="preview-chip"><span class="lamp"></span> Telco</span>
       <span class="preview-chip"><span class="lamp"></span> Comisiones</span>
       <span class="preview-chip"><span class="lamp is-watch"></span> Suscripciones</span>
-      <span class="preview-chip"><span class="lamp is-signal"></span> Alquiler</span>
       <span class="preview-chip"><span class="lamp"></span> Fondos y pensiones</span>
     </div>
 
@@ -773,27 +790,19 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   <section class="categorias" id="categorias">
     <div class="section-head">
       <h2>Todo lo que Faro vigila</h2>
-      <p>Diez categorías en cuatro familias, un mismo criterio: la señal solo se enciende cuando compensa de verdad.</p>
+      <p>Nueve categorías en tres familias, un mismo criterio: la señal solo se enciende cuando compensa de verdad.</p>
     </div>
 
     <div class="cat-group">
-      <p class="cat-group__title">Vivienda</p>
+      <p class="cat-group__title">Vivienda y suministros</p>
       <div class="cat-acc">
         <details class="faq__item"><summary><span><span class="cat-num">01</span>Hipoteca</span></summary>
           <p>Conectado en directo al euríbor oficial del Banco de España. Te dice si compensa cambiar, con el coste del cambio ya descontado.</p></details>
-        <details class="faq__item"><summary><span><span class="cat-num">02</span>Alquiler</span></summary>
-          <p>Comprueba que la subida de tu renta no supera el índice de referencia del INE — el tope legal, más bajo aún en zonas de mercado tensionado.</p></details>
-      </div>
-    </div>
-
-    <div class="cat-group">
-      <p class="cat-group__title">Suministros</p>
-      <div class="cat-acc">
-        <details class="faq__item"><summary><span><span class="cat-num">03</span>Luz</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">02</span>Luz</span></summary>
           <p>Compara lo que pagas con el precio regulado (PVPC) de Red Eléctrica de España, actualizado hora a hora.</p></details>
-        <details class="faq__item"><summary><span><span class="cat-num">04</span>Gas natural</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">03</span>Gas natural</span></summary>
           <p>Compara lo que pagas con la tarifa regulada TUR de gas, que el Gobierno fija cada trimestre y se publica en el BOE.</p></details>
-        <details class="faq__item"><summary><span><span class="cat-num">05</span>Gasolina</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">04</span>Gasolina</span></summary>
           <p>Precios oficiales del Ministerio, filtrados por distancia real a tu código postal — no la más barata a una hora de casa.</p></details>
       </div>
     </div>
@@ -801,9 +810,9 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     <div class="cat-group">
       <p class="cat-group__title">Contratos</p>
       <div class="cat-acc">
-        <details class="faq__item"><summary><span><span class="cat-num">06</span>Seguros</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">05</span>Seguros</span></summary>
           <p>Coche, hogar, vida o salud. Detecta si pagas por coberturas que no usas — no solo si hay algo más barato.</p></details>
-        <details class="faq__item"><summary><span><span class="cat-num">07</span>Telefonía y fibra</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">06</span>Telefonía y fibra</span></summary>
           <p>Vigila la fecha de permanencia y compara ofertas, con el mismo aviso de extras que pagas sin usar.</p></details>
       </div>
     </div>
@@ -811,11 +820,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     <div class="cat-group">
       <p class="cat-group__title">Dinero</p>
       <div class="cat-acc">
-        <details class="faq__item"><summary><span><span class="cat-num">08</span>Comisiones bancarias</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">07</span>Comisiones bancarias</span></summary>
           <p>Recuerda revisar las condiciones de bonificación de tu cuenta antes de que te cobren de más.</p></details>
-        <details class="faq__item"><summary><span><span class="cat-num">09</span>Comisiones de fondos y pensiones</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">08</span>Comisiones de fondos y pensiones</span></summary>
           <p>Compara la comisión de gestión que pagas con una referencia de mercado y te ayuda a preguntar a tu entidad. No recomienda productos.</p></details>
-        <details class="faq__item"><summary><span><span class="cat-num">10</span>Suscripciones</span></summary>
+        <details class="faq__item"><summary><span><span class="cat-num">09</span>Suscripciones</span></summary>
           <p>Avisa cuando llevas tiempo sin revisarlas, para que nada se quede pagando solo y sin usarse.</p></details>
       </div>
     </div>
@@ -842,7 +851,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <div class="preview-mock__recs">
         <div class="resumen-rec">
           <span class="lamp is-signal"></span>
-          <div><strong>Tu hipoteca</strong><p>Cambiar de hipoteca ahorraría 68 €/mes — pide una oferta de novación citando el tipo de mercado actual (2,9%).</p></div>
+          <div><strong>Tu hipoteca</strong><p>Cambiar de hipoteca ahorraría 68 €/mes — pide una oferta de novación (renegociar con tu propio banco) citando el tipo de mercado actual (2,9%).</p></div>
         </div>
         <div class="resumen-rec">
           <span class="lamp is-signal"></span>
@@ -878,7 +887,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <div class="faq__more" id="faqMore" hidden>
         <details class="faq__item">
           <summary>¿De dónde salen los datos de mercado?</summary>
-          <p>De fuentes oficiales y públicas siempre que existen: el Banco de España (euríbor), Red Eléctrica de España (precio de la luz), el Ministerio para la Transición Ecológica (gasolina), el INE (índice legal de actualización del alquiler) y la tarifa regulada TUR de gas que fija el Gobierno. Cuando no hay un dato oficial publicado como serie —el tipo fijo de referencia de la hipoteca o la comisión media de un fondo—, lo curamos a mano y lo decimos.</p>
+          <p>De fuentes oficiales y públicas siempre que existen: el Banco de España (euríbor), Red Eléctrica de España (precio de la luz), el Ministerio para la Transición Ecológica (gasolina) y la tarifa regulada TUR de gas que fija el Gobierno. Cuando no hay un dato oficial publicado como serie —el tipo fijo de referencia de la hipoteca, la referencia de precio de telco/seguros o la comisión media de un fondo—, lo investigamos y lo curamos a mano, con revisión humana, y lo decimos.</p>
         </details>
         <details class="faq__item">
           <summary>¿Faro cambia las cosas por mí automáticamente?</summary>
@@ -896,7 +905,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   <section class="signup" id="activar">
     <div class="section-head">
       <h2>Crea tu cuenta</h2>
-      <p>Un único plan, las diez categorías incluidas. Sin permanencia.</p>
+      <p>Un único plan, las nueve categorías incluidas. Sin permanencia.</p>
     </div>
     <div class="signup__panel">
       <div class="plan-card">
@@ -910,7 +919,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         <p class="plan-card__price" id="planPrecio">12€<span>/mes</span></p>
         <p class="plan-card__ahorro" id="planAhorro" style="display:none;">Pagas 119,99€ una vez al año — 24€ menos que pagando mes a mes.</p>
         <ul class="plan-card__list">
-          <li>Hipoteca, gasolina, luz, gas, seguros, telco, comisiones bancarias, suscripciones, alquiler y comisiones de fondos y pensiones</li>
+          <li>Hipoteca, gasolina, luz, gas, seguros, telco, comisiones bancarias, suscripciones y comisiones de fondos y pensiones</li>
           <li>Resumen mensual con lo que te habría costado no revisarlo</li>
           <li>Avisos por email solo cuando hay señal activa</li>
           <li>Cancela cuando quieras, sin permanencia</li>
@@ -1028,6 +1037,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     <div class="instrument">
       <div class="instrument__left">
         <p class="instrument__label">Tu hipoteca, ahora mismo</p>
+        <p class="tipo-vigilancia tipo-vigilancia--oficial"><span class="tipo-vigilancia__dot"></span>Con dato oficial en directo: el euríbor del Banco de España.</p>
 
         <div class="field">
           <label for="capital">Capital pendiente</label>
@@ -1127,11 +1137,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           <button class="tab" data-cat="gas" type="button">Gas</button>
           <button class="tab" data-cat="comisiones_bancarias" type="button">Comisiones</button>
           <button class="tab" data-cat="suscripciones" type="button">Suscripciones</button>
-          <button class="tab" data-cat="alquiler" type="button">Alquiler</button>
           <button class="tab" data-cat="comisiones_inversion" type="button">Fondos y pensiones</button>
         </div>
 
         <div class="cat-fields" data-cat-fields="gasolina">
+          <p class="tipo-vigilancia tipo-vigilancia--oficial"><span class="tipo-vigilancia__dot"></span>Con dato oficial en directo: Faro compara esto contra datos públicos, en tiempo real.</p>
           <div class="field">
             <label for="gCosteActual">Lo que pagas ahora</label>
             <div class="field__control">
@@ -1173,23 +1183,26 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </div>
 
         <div class="cat-fields" data-cat-fields="luz" style="display:none;">
-          <div class="field">
-            <label for="lCosteActual">Lo que pagas de media</label>
-            <div class="field__control">
-              <input type="number" id="lCosteActual" step="0.001" placeholder="0,18">
-              <span class="unit">€/kWh</span>
+          <p class="tipo-vigilancia tipo-vigilancia--oficial"><span class="tipo-vigilancia__dot"></span>Con dato oficial en directo: Faro compara esto contra el PVPC de Red Eléctrica de España, en tiempo real.</p>
+          <div class="field-row">
+            <div class="field">
+              <label for="lImporte">Importe de tu última factura</label>
+              <div class="field__control">
+                <input type="number" id="lImporte" step="1" placeholder="54">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="lKwh">Consumo de esa factura</label>
+              <div class="field__control">
+                <input type="number" id="lKwh" step="5" placeholder="300">
+                <span class="unit">kWh</span>
+              </div>
             </div>
           </div>
-          <div class="field">
-            <label for="lConsumo">Tu consumo mensual estimado</label>
-            <div class="field__control">
-              <input type="number" id="lConsumo" value="300" step="10">
-              <span class="unit">kWh</span>
-            </div>
-            <p class="hint">Buscamos en directo el precio medio de hoy de la tarifa regulada (PVPC), publicado por Red Eléctrica de España.</p>
-          </div>
+          <p class="hint">Los dos datos están impresos en tu factura, normalmente en la primera página. Faro calcula el precio por kWh — no hace falta que saques tú la cuenta. Si tu factura cubre más de un mes, el ahorro estimado será proporcional a ese periodo, no exactamente mensual.</p>
           <div class="field" id="lManualFallback" style="display:none;">
-            <label for="lAlternativaManual">No hemos podido consultarlo en directo desde aquí — ¿sabes a cuánto está el PVPC hoy?</label>
+            <label for="lAlternativaManual">No hemos podido consultar el PVPC en directo desde aquí — ¿sabes a cuánto está hoy?</label>
             <div class="field__control">
               <input type="number" id="lAlternativaManual" step="0.001" placeholder="0,13">
               <span class="unit">€/kWh</span>
@@ -1198,21 +1211,25 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </div>
 
         <div class="cat-fields" data-cat-fields="gas" style="display:none;">
-          <div class="field">
-            <label for="gasCosteActual">Lo que pagas de media</label>
-            <div class="field__control">
-              <input type="number" id="gasCosteActual" step="0.0001" placeholder="0,065">
-              <span class="unit">€/kWh</span>
+          <p class="tipo-vigilancia tipo-vigilancia--oficial"><span class="tipo-vigilancia__dot"></span>Con dato oficial: Faro compara esto contra la tarifa regulada TUR de gas.</p>
+          <p class="hint">Se revisa cada trimestre. No hay API pública para este dato: lo curamos desde el BOE.</p>
+          <div class="field-row">
+            <div class="field">
+              <label for="gasImporte">Importe de tu última factura</label>
+              <div class="field__control">
+                <input type="number" id="gasImporte" step="1" placeholder="30">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="gasKwh">Consumo de esa factura</label>
+              <div class="field__control">
+                <input type="number" id="gasKwh" step="5" placeholder="120">
+                <span class="unit">kWh</span>
+              </div>
             </div>
           </div>
-          <div class="field">
-            <label for="gasConsumo">Tu consumo mensual estimado</label>
-            <div class="field__control">
-              <input type="number" id="gasConsumo" value="120" step="10">
-              <span class="unit">kWh</span>
-            </div>
-            <p class="hint">Comparamos con la tarifa regulada TUR de gas. No hay API pública para este dato: lo curamos a mano cada trimestre desde el BOE.</p>
-          </div>
+          <p class="hint">Los dos datos están impresos en tu factura. Faro calcula el precio por kWh por ti. Si tu factura cubre más de un mes, el ahorro estimado será proporcional a ese periodo, no exactamente mensual.</p>
           <div class="field" id="gasManualFallback" style="display:none;">
             <label for="gasTurManual">No tenemos la TUR cargada todavía — ¿sabes el término variable de la TUR de tu tramo?</label>
             <div class="field__control">
@@ -1222,31 +1239,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           </div>
         </div>
 
-        <div class="cat-fields" data-cat-fields="alquiler" style="display:none;">
-          <div class="field">
-            <label for="alqRenta">Renta mensual actual</label>
-            <div class="field__control">
-              <input type="number" id="alqRenta" step="10" placeholder="900">
-              <span class="unit">€</span>
-            </div>
-          </div>
-          <div class="field">
-            <label for="alqSubida">Renta que te plantean tras la subida (si ya te la han comunicado)</label>
-            <div class="field__control">
-              <input type="number" id="alqSubida" step="10" placeholder="950">
-              <span class="unit">€</span>
-            </div>
-          </div>
-          <div class="field">
-            <label for="alqFecha">Fecha de la última actualización (opcional)</label>
-            <div class="field__control"><input type="date" id="alqFecha"></div>
-          </div>
-          <div class="field">
-            <label class="checkbox-inline"><input type="checkbox" id="alqTensionada"> La vivienda está en zona de mercado tensionado</label>
-          </div>
-        </div>
-
         <div class="cat-fields" data-cat-fields="comisiones_inversion" style="display:none;">
+          <p class="tipo-vigilancia"><span class="tipo-vigilancia__dot"></span>Con techo de referencia estable: Faro compara tu comisión contra un techo razonable de mercado, revisado con poca frecuencia.</p>
           <div class="field">
             <label for="invTipo">Tipo de producto</label>
             <div class="field__control">
@@ -1280,6 +1274,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </div>
 
         <div class="cat-fields" data-cat-fields="seguros" style="display:none;">
+          <p class="tipo-vigilancia"><span class="tipo-vigilancia__dot"></span>Con investigación de mercado: Faro compara esto contra una referencia que se actualiza cada mes, revisada por una persona antes de usarla.</p>
           <div class="field">
             <label for="sTipo">Tipo de seguro</label>
             <div class="field__control">
@@ -1297,6 +1292,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
               <input type="text" id="sNombre" placeholder="Mapfre Seguro Coche a Todo Riesgo">
             </div>
           </div>
+          <div id="sPerfilCampos"></div>
           <div class="field-row">
             <div class="field">
               <label for="sCoste">Lo que pagas ahora</label>
@@ -1339,6 +1335,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </div>
 
         <div class="cat-fields" data-cat-fields="telco" style="display:none;">
+          <p class="tipo-vigilancia"><span class="tipo-vigilancia__dot"></span>Con investigación de mercado: Faro compara esto contra una referencia que se actualiza cada mes, revisada por una persona antes de usarla.</p>
           <div class="field">
             <label for="tNombre">Operador y plan</label>
             <div class="field__control">
@@ -1403,6 +1400,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         </div>
 
         <div class="cat-fields" data-cat-fields="gasto" style="display:none;">
+          <p class="tipo-vigilancia"><span class="tipo-vigilancia__dot"></span>Según lo que nos cuentes: Faro vigila las fechas y condiciones que tú marcas.</p>
           <div class="field">
             <label for="eNombre">Nombre</label>
             <div class="field__control">
@@ -1482,11 +1480,20 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <p class="hint" style="margin-bottom:18px;">Sin añadir nada a tus vigilancias — solo para salir de dudas cuando te lo preguntes.</p>
       <div class="simulador__grid">
         <div class="simulador__form">
-          <div class="field">
-            <label for="consultaLuzPrecio">Lo que pagas ahora</label>
-            <div class="field__control">
-              <input type="number" id="consultaLuzPrecio" step="0.001" placeholder="0,18">
-              <span class="unit">€/kWh</span>
+          <div class="field-row">
+            <div class="field">
+              <label for="consultaLuzImporte">Importe de tu factura</label>
+              <div class="field__control">
+                <input type="number" id="consultaLuzImporte" step="1" placeholder="54">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="consultaLuzKwh">Consumo de esa factura</label>
+              <div class="field__control">
+                <input type="number" id="consultaLuzKwh" step="5" placeholder="300">
+                <span class="unit">kWh</span>
+              </div>
             </div>
           </div>
           <button class="add-btn" id="consultaLuzBtn" type="button">Consultar PVPC de hoy</button>
@@ -1750,8 +1757,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     if (typeof window.__actualizarSimulador === 'function') window.__actualizarSimulador();
     sincronizarHipotecaConBackend(capital, tipoActual, anios, costeCambio);
     window.__hipotecaPasos = status === 'senal' ? [
-      `Pide a tu banco actual una oferta de novación citando el tipo de mercado de hoy (${tipoMercado}%).`,
-      'Si no la iguala, pide una simulación de subrogación a otro banco o a un bróker hipotecario.',
+      `Pide a tu banco actual una oferta de novación (renegociar tus condiciones sin cambiar de banco) citando el tipo de mercado de hoy (${tipoMercado}%).`,
+      'Si no la iguala, pide una simulación de subrogación (cambiarte a otro banco, que absorbe tu hipoteca con sus condiciones) a otro banco o a un bróker hipotecario.',
       `Compara el coste total del cambio (~${eur.format(Math.round(costeCambio))}) frente al ahorro estimado (~${eur.format(Math.round(ahorroMensual))}/mes).`,
       `Si compensa, firma la novación o subrogación — recuperas el coste del cambio en unos ${isFinite(breakevenMeses) ? Math.ceil(breakevenMeses) : '—'} meses.`,
     ] : status === 'observacion' ? [
@@ -1860,7 +1867,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // Con API_BASE_URL vacío, Faro funciona todo en memoria del navegador y se
   // pierde al recargar. Con la URL del backend puesta (como ahora), el alta de
   // usuario, la hipoteca y las categorías con forma de "gasto" (seguros, telco,
-  // comisiones bancarias, suscripciones, alquiler, comisiones de inversión) se
+  // comisiones bancarias, suscripciones, comisiones de inversión) se
   // guardan también ahí de verdad, además de en memoria.
   //
   // Dos huecos honestos, todavía SIN sincronizar, y por qué:
@@ -1958,7 +1965,14 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // COLABORACIONES CON BRÓKERS REGISTRADOS — APAGADO POR DEFECTO
   // ============================================================
   // No actives esto hasta tener CONFIRMADO por escrito: (1) que el acuerdo con
-  // el bróker está cerrado y (2) que un abogado ha validado el modelo de comisión.
+  // el bróker está cerrado, (2) que un abogado ha validado el modelo de
+  // comisión, y (3) que el bróker ofrece un CANAL AUTOMATIZADO para la pieza
+  // 4 (ejecución) — API, webhook o, como mínimo, un fichero/email de formato
+  // fijo. Esto es tan condición del acuerdo comercial como los otros dos: un
+  // agente de navegador rellenando su formulario a mano solo vale como puente
+  // muy temporal mientras se construye la integración real — nunca como
+  // diseño permanente. Sin canal automatizado confirmado, no se activa la
+  // entrada aunque el resto esté cerrado.
   // Usa SIEMPRE comisionTipo:'fija' — una comisión que dependa de si la hipoteca
   // o la póliza se firma empieza a parecerse económicamente a intermediación
   // financiera regulada (LCCI / DGSFP), que es justo lo que este diseño evita.
@@ -2013,12 +2027,16 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   const NIVEL_ACCION = { INFORMA: 0, REDACTA: 1, REDACTA_Y_ENVIA: 2, EJECUTA: 3 };
   const NIVEL_MAX_POR_CATEGORIA = {
     hipoteca: 0, seguro_coche: 0, seguro_hogar: 0, seguro_vida: 0, seguro_salud: 0, gasolina: 0,
-    comisiones_inversion: 2, telco: 1, comisiones_bancarias: 2, suscripciones: 2, alquiler: 2,
+    comisiones_inversion: 2, telco: 1, comisiones_bancarias: 2, suscripciones: 2,
     luz: 3, gas: 3,
   };
   const CATEGORIAS_ENERGIA = ['luz', 'gas'];
   // Socios energéticos (Nivel 3): mismo patrón que BROKER_PARTNERS — vacío =
-  // apagado. Sin socio, luz y gas se quedan en Nivel 1.
+  // apagado. Sin socio, luz y gas se quedan en Nivel 1. Misma condición del
+  // canal automatizado que BROKER_PARTNERS (ver ese bloque arriba): sin API,
+  // webhook o fichero/email de formato fijo confirmado por el socio, no se
+  // activa la entrada — el Nivel 3 no se construye sobre un agente que rellena
+  // formularios a mano.
   const SOCIOS_ENERGIA = {};
   const hayPartnerEnergetico = (categoria) =>
     categoria ? !!SOCIOS_ENERGIA[categoria] : Object.keys(SOCIOS_ENERGIA).length > 0;
@@ -2045,17 +2063,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         cuerpo: `Hola,\n\nQuiero dar de baja mi suscripción a ${servicio} con efecto a la mayor brevedad posible y que no se renueve en el próximo ciclo de facturación.\n\nOs pido confirmación por escrito de la fecha efectiva de baja y de que no habrá cargos posteriores.\n\nUn saludo.`,
       };
     }
-    if (tipo === 'escrito_alquiler'){
-      return {
-        asunto: 'Actualización de renta por encima del índice legal',
-        cuerpo: `Hola,\n\nHe recibido una actualización de la renta` +
-          (datos.subidaPropuesta != null ? ` que la sitúa en ${datos.subidaPropuesta} €` : '') +
-          (datos.rentaActual != null ? ` (renta actual: ${datos.rentaActual} €)` : '') + `.\n\n` +
-          `La normativa vigente limita la actualización anual de la renta al índice de referencia publicado por el INE` +
-          (datos.topeLegalPct != null ? `, que para este periodo supone un máximo del ${datos.topeLegalPct} %` : '') + `. ` +
-          `La subida planteada supera ese límite, por lo que solicito que se ajuste al porcentaje legal y se me remita el nuevo importe corregido por escrito.\n\nUn saludo.`,
-      };
-    }
     if (tipo === 'revisar_comision_gestion'){
       const producto = datos.tipoProducto === 'plan_pensiones' ? 'mi plan de pensiones' : 'mi fondo de inversión';
       return {
@@ -2079,7 +2086,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // PREPARADA (nunca enviada) si la autorización general de esa categoría está
   // activa. Espejo de accionNivel2Para() del backend.
   const MOTIVO_A_TIPO = {
-    subida_por_encima_tope: 'escrito_alquiler',
     comision_alta: 'revisar_comision_gestion',
   };
   function wireNivel2(entry, datosRedaccion){
@@ -2105,7 +2111,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   const AUTORIZACIONES_INFO = {
     suscripciones: { titulo: 'Cancelar suscripciones', desc: 'Cuando digas que ya no usas una, Faro deja la baja redactada y lista para que la confirmes.' },
     comisiones_bancarias: { titulo: 'Reclamar comisiones bancarias', desc: 'Faro deja redactada la reclamación al banco cuando detecte un cobro revisable.' },
-    alquiler: { titulo: 'Escrito de alquiler', desc: 'Si la subida de la renta supera el índice legal, Faro deja el escrito listo para enviar al casero.' },
     comisiones_inversion: { titulo: 'Revisar comisión de gestión', desc: 'Faro deja un mensaje genérico a tu entidad pidiendo revisar la comisión. Nunca propone un producto concreto.' },
     luz: { titulo: 'Cambio de comercializadora de luz', desc: 'Si aparece una tarifa mejor, Faro deja la solicitud de cambio lista para que la confirmes. Solo disponible con un socio energético configurado.' },
     gas: { titulo: 'Cambio de comercializadora de gas', desc: 'Igual que la luz. Solo disponible con un socio energético configurado.' },
@@ -2113,7 +2118,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // Categorías con flujo de Nivel 2/3 cableado. renderAutorizaciones filtra
   // además por permiteAutorizacionGeneral, así que luz/gas solo aparecen si hay
   // un socio energético (SOCIOS_ENERGIA) configurado.
-  const AUTORIZACIONES_ACTIVAS = ['suscripciones', 'alquiler', 'comisiones_inversion', 'luz', 'gas'];
+  const AUTORIZACIONES_ACTIVAS = ['suscripciones', 'comisiones_inversion', 'luz', 'gas'];
 
   function renderAutorizaciones(){
     const cont = document.getElementById('autorizacionesList');
@@ -2340,6 +2345,54 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     });
   }
 
+  // ----- Investigación de mercado (pieza 1 de 4, telco y seguros) — espejo de
+  // calcularEstadoConReferenciaMercado() en src/calculoGastos.js. Solo se
+  // consulta cuando el usuario no trajo ya su propia alternativa y nada más
+  // (extras, fecha) dio señal; nunca la sustituye, solo rellena el hueco. -----
+  function calcularEstadoConReferenciaMercadoDemo({ costeActual, periodo, referencia }){
+    if (!referencia) return null;
+    const costeMensual = periodo === 'anual' ? costeActual / 12 : costeActual;
+    if (referencia.tipo === 'unico'){
+      const diferencia = costeMensual - referencia.valor;
+      if (diferencia < 3) return null;
+      return {
+        estado: 'senal', motivo: 'por_encima_de_referencia_investigada', ahorroMensual: Math.round(diferencia * 100) / 100,
+        detalle: `Pagas ${eurLocal.format(Math.round(costeMensual))}/mes. La referencia de mercado investigada este mes ronda los ${eurLocal.format(Math.round(referencia.valor))}/mes para una oferta similar (${referencia.fuente}) — unos ${eurLocal.format(Math.round(diferencia))}/mes de diferencia.`,
+      };
+    }
+    if (referencia.tipo === 'rango'){
+      if (costeMensual <= referencia.max) return null;
+      return {
+        estado: 'senal', motivo: 'por_encima_de_rango_investigado',
+        detalle: `Pagas ${eurLocal.format(Math.round(costeMensual))}/mes. Para un perfil similar al tuyo${referencia.perfil ? ` (${referencia.perfil})` : ''}, la referencia de mercado investigada este mes ronda entre ${eurLocal.format(Math.round(referencia.min))} y ${eurLocal.format(Math.round(referencia.max))}/mes (${referencia.fuente}). Estás por encima de ese rango — puede merecer la pena pedir otras ofertas.`,
+      };
+    }
+    return null;
+  }
+
+  function segmentoTelcoLocal(lineas, fibra){
+    const tieneFibra = !!(fibra && !/^sin fibra$/i.test(fibra.trim()));
+    const tieneMovil = Number(lineas) >= 1;
+    if (tieneFibra && tieneMovil) return 'fibra_movil';
+    if (tieneFibra) return 'solo_fibra';
+    return 'solo_movil';
+  }
+
+  // Trae la referencia YA REVISADA (getReferenciaRevisada filtra por
+  // revisado_por_humano en el backend) — sin backend conectado, devuelve null
+  // y la categoría se comporta exactamente igual que antes de esta pieza.
+  async function getReferenciaInvestigada(categoria, segmento){
+    if (!API_BASE_URL) return null;
+    try {
+      const resp = await fetch(`${API_BASE_URL}/api/investigacion?categoria=${encodeURIComponent(categoria)}&segmento=${encodeURIComponent(segmento)}`);
+      if (!resp.ok) return null; // 404 = sin referencia revisada todavía, no es un error
+      const fila = await resp.json();
+      return categoria === 'telco'
+        ? { tipo: 'unico', valor: fila.valor_min, fuente: fila.fuente }
+        : { tipo: 'rango', min: fila.valor_min, max: fila.valor_max, perfil: fila.perfil_descripcion, fuente: fila.fuente };
+    } catch (err) { return null; }
+  }
+
   function calcularEstadoGastoDemo({ categoria, costeActual, periodo, fechaReferencia, alternativaConocida }){
     const DIAS_AVISO_ANTES = 30, DIAS_AVISO_DESPUES = 14, UMBRAL_MIN = 3;
     const aMensual = (c) => (c == null || isNaN(c)) ? null : (periodo === 'anual' ? c / 12 : c);
@@ -2424,6 +2477,12 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     return Math.round(media * 1000) / 1000;
   }
 
+  // Formatea un precio por kWh con 3 decimales y coma (como se ve en una
+  // factura española), p.ej. 0.183 -> "0,183 €/kWh".
+  function fmtKwh(precio){
+    return precio.toFixed(3).replace('.', ',') + ' €/kWh';
+  }
+
   function calcularEstadoLuzDemo(precioHabitual, precioAlternativo, consumoMensual){
     if (isNaN(precioHabitual) || isNaN(precioAlternativo)){
       return { estado: 'sin_datos', detalle: 'Nos falta un precio para poder comparar.', pasos: [] };
@@ -2431,11 +2490,16 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     const diferencia = precioHabitual - precioAlternativo; // €/kWh
     const consumo = (consumoMensual && !isNaN(consumoMensual)) ? consumoMensual : 300;
     const ahorroMensual = Math.round(diferencia * consumo * 100) / 100;
-    if (diferencia <= 0) return { estado: 'calma', costeMensual: precioHabitual * consumo, detalle: 'Tu precio medio ya es competitivo frente al PVPC de hoy.', pasos: [] };
+    // Siempre mostramos el cálculo completo, no solo el veredicto: de dónde
+    // sale el número importa tanto como el número en sí.
+    const base = `Pagas ${fmtKwh(precioHabitual)}. El PVPC medio de hoy es ${fmtKwh(precioAlternativo)}. `;
+    if (diferencia <= 0){
+      return { estado: 'calma', costeMensual: precioHabitual * consumo, detalle: base + 'Ya estás igual o por debajo del precio regulado — no hace falta que hagas nada.', pasos: [] };
+    }
     if (ahorroMensual >= 5){
       return {
         estado: 'senal', ahorroMensual, costeMensual: precioHabitual * consumo,
-        detalle: `El PVPC de hoy está unos ${(diferencia*100).toFixed(1)} cént./kWh por debajo de lo que dices pagar — unos ${eurLocal.format(Math.round(ahorroMensual))}/mes con tu consumo.`,
+        detalle: base + `Con tu consumo, la diferencia son unos ${eurLocal.format(Math.round(ahorroMensual))}/mes. El PVPC suele salir más barato de media, pero cambia cada hora — es menos predecible que un precio fijo. Si prefieres saber siempre lo que vas a pagar, puede compensarte quedarte aunque salga algo más caro de media.`,
         pasos: [
           'Compara tu factura actual con la tarifa regulada PVPC de tu comercializadora de referencia.',
           'Si tu consumo es flexible (lavadora, coche eléctrico, etc.), cambiarte al PVPC puede compensar aunque el precio varíe cada hora.',
@@ -2443,7 +2507,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         ],
       };
     }
-    return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: 'Hay una pequeña diferencia con el PVPC de hoy, pero no suele compensar cambiar por tan poco.', pasos: [] };
+    return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: base + `La diferencia es de solo unos ${eurLocal.format(Math.round(ahorroMensual))}/mes — no suele compensar cambiar por tan poco.`, pasos: [] };
   }
 
   // ----- Gas natural: mismo patrón que luz, contra la tarifa regulada TUR.
@@ -2457,50 +2521,21 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     const diferencia = precioHabitual - turVariable; // €/kWh
     const consumo = (consumoMensual && !isNaN(consumoMensual)) ? consumoMensual : 120;
     const ahorroMensual = Math.round(diferencia * consumo * 100) / 100;
-    if (diferencia <= 0) return { estado: 'calma', costeMensual: precioHabitual * consumo, detalle: 'Tu precio ya es competitivo frente a la TUR de gas.', pasos: [] };
+    const base = `Pagas ${fmtKwh(precioHabitual)}. La TUR de gas ahora mismo es ${fmtKwh(turVariable)}. `;
+    if (diferencia <= 0){
+      return { estado: 'calma', costeMensual: precioHabitual * consumo, detalle: base + 'Ya estás igual o por debajo de la tarifa regulada — no hace falta que hagas nada.', pasos: [] };
+    }
     if (ahorroMensual >= 3){
       return {
         estado: 'senal', motivo: 'tur_mas_barata', ahorroMensual, costeMensual: precioHabitual * consumo,
-        detalle: `La TUR de gas está unos ${(diferencia*100).toFixed(2)} cént./kWh por debajo de lo que pagas — unos ${eurLocal.format(Math.round(ahorroMensual))}/mes con tu consumo.`,
+        detalle: base + `Con tu consumo, la diferencia son unos ${eurLocal.format(Math.round(ahorroMensual))}/mes. La TUR se revisa cada trimestre — es más estable que el PVPC de la luz, pero aun así puede subir o bajar en la próxima revisión, así que trátalo como una referencia de hoy, no una garantía para todo el año.`,
         pasos: [
           'Comprueba si puedes acogerte a la TUR de gas (depende de tu consumo anual y del tamaño de tu contador).',
           'Si prefieres mercado libre, usa la TUR como referencia al comparar ofertas.',
         ],
       };
     }
-    return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: 'Hay una pequeña diferencia con la TUR, pero no suele compensar cambiar por tan poco.', pasos: [] };
-  }
-
-  // ----- Alquiler: señal si la subida de la renta supera el índice legal de
-  // referencia (INE). Tope reforzado en zona tensionada. Nivel 2 (escrito al
-  // arrendador), nunca Nivel 3. Espejo de src/calculoAlquiler.js. -----
-  const ALQ_TOPE_GENERAL_DEFECTO = 2.2;   // %, curable en backend (alquiler_tope_general)
-  const ALQ_TOPE_TENSIONADA_DEFECTO = 2.2;
-  function calcularEstadoAlquilerDemo({ rentaActual, subidaPropuesta, fechaUltimaActualizacion, zonaTensionada, topeGeneralPct, topeTensionadaPct }){
-    const topeGen = topeGeneralPct != null ? topeGeneralPct : ALQ_TOPE_GENERAL_DEFECTO;
-    const topeTen = topeTensionadaPct != null ? topeTensionadaPct : (topeGeneralPct != null ? topeGeneralPct : ALQ_TOPE_TENSIONADA_DEFECTO);
-    const tope = zonaTensionada ? Math.min(topeGen, topeTen) : topeGen;
-    if (rentaActual != null && subidaPropuesta != null && rentaActual > 0){
-      const subidaPct = ((subidaPropuesta - rentaActual) / rentaActual) * 100;
-      if (subidaPct > tope + 0.1){
-        const rentaMaxLegal = Math.round(rentaActual * (1 + tope / 100) * 100) / 100;
-        const exceso = Math.round((subidaPropuesta - rentaMaxLegal) * 100) / 100;
-        return {
-          estado: 'senal', motivo: 'subida_por_encima_tope', topeAplicablePct: tope, rentaMaxLegal, ahorroMensual: exceso,
-          detalle: `La subida planteada es del ${subidaPct.toFixed(1)} %, por encima del ${tope} % que permite el índice legal${zonaTensionada ? ' (zona tensionada)' : ''}. El máximo legal serían ${rentaMaxLegal.toFixed(0)} € — te piden ${exceso.toFixed(0)} €/mes de más.`,
-        };
-      }
-      return { estado: 'calma', topeAplicablePct: tope, detalle: `La subida planteada (${subidaPct.toFixed(1)} %) está dentro del tope legal del ${tope} %.` };
-    }
-    if (fechaUltimaActualizacion){
-      const dias = Math.round((new Date(fechaUltimaActualizacion + 'T00:00:00') - new Date()) / (1000*60*60*24));
-      const faltan = 365 - ((((dias % 365) + 365) % 365));
-      if (faltan <= 45){
-        return { estado: 'observacion', motivo: 'actualizacion_proxima', topeAplicablePct: tope,
-          detalle: `Se acerca el aniversario de la actualización de tu renta. El tope legal para la subida es del ${tope} %${zonaTensionada ? ' (zona tensionada)' : ''} — vigílalo cuando te lo comuniquen.` };
-      }
-    }
-    return { estado: 'calma', topeAplicablePct: tope, detalle: 'Todavía no hay ninguna subida sobre la mesa. Faro seguirá vigilando.' };
+    return { estado: 'observacion', costeMensual: precioHabitual * consumo, detalle: base + `La diferencia es de solo unos ${eurLocal.format(Math.round(ahorroMensual))}/mes — no suele compensar cambiar por tan poco.`, pasos: [] };
   }
 
   // ----- Comisiones de fondos de inversión y planes de pensiones.
@@ -2529,7 +2564,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     hipoteca: 'Hipoteca', gasolina: 'Gasolina', luz: 'Luz', gas: 'Gas natural',
     seguro_coche: 'Seguro de coche', seguro_hogar: 'Seguro de hogar', seguro_vida: 'Seguro de vida', seguro_salud: 'Seguro de salud',
     telco: 'Telefonía / fibra', comisiones_bancarias: 'Comisiones bancarias', suscripciones: 'Suscripciones',
-    alquiler: 'Alquiler', comisiones_inversion: 'Comisiones de fondos y pensiones',
+    comisiones_inversion: 'Comisiones de fondos y pensiones',
   };
   const EXTRAS_POR_TIPO_SEGURO = {
     seguro_coche: ['Asistencia en carretera', 'Coche de sustitución', 'Lunas', 'Ocupantes'],
@@ -2578,9 +2613,18 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     `</div>`;
   }
 
+  // Sin esto, "¿la sigues usando?" solo aparecía a los 90 días — inalcanzable
+  // en cualquier prueba real del producto. Deja el mismo Sí/No disponible en
+  // cualquier momento, a demanda, sin tocar la lógica de cálculo ni el reloj
+  // de 90 días (que sigue preguntando solo, además de esto).
+  function renderPreguntarUso(id){
+    return `<button class="watch-card__ask-use" data-id="${id}" type="button">¿Ya no usas esto? Dínoslo</button>`;
+  }
+
   function confirmarUsoSuscripcion(id, siLaUsa){
     const entry = vigilancias.find((v) => v.id === id);
     if (!entry) return;
+    entry.mostrarConfirmarUso = false; // ya ha respondido: dejar de mostrar el Sí/No
     if (siLaUsa){
       entry.ultimaConfirmacion = new Date().toISOString().slice(0, 10);
       const relectura = calcularEstadoSuscripcionDemo({ costeActual: entry.costeMensual, periodo: 'mensual', ultimaConfirmacion: entry.ultimaConfirmacion });
@@ -2697,7 +2741,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           `<p class="watch-card__meta state-trigger" data-state="${v.estado}" role="button" tabindex="0">${CATEGORY_LABELS[v.categoria] || v.categoria} · ${STATUS_LABELS[v.estado] || v.estado} <span class="info-hint">ⓘ</span></p>` +
           `<p class="watch-card__detail">${escapeHtml(v.detalle)}</p>` +
           renderEstacionInfo(v.estacionInfo) +
-          (v.estado === 'confirmar_uso' ? renderConfirmarUso(v.id) : renderRecomendacion(v)) +
+          ((v.estado === 'confirmar_uso' || v.mostrarConfirmarUso) ? renderConfirmarUso(v.id) : renderRecomendacion(v)) +
+          (v.categoria === 'suscripciones' && v.estado === 'calma' && !v.mostrarConfirmarUso ? renderPreguntarUso(v.id) : '') +
         `</div>` +
         `<button class="watch-card__remove" data-id="${v.id}" aria-label="Eliminar" type="button">×</button>`;
       list.appendChild(card);
@@ -2710,6 +2755,13 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     });
     list.querySelectorAll('.confirmar-uso-btn').forEach((btn) => {
       btn.addEventListener('click', () => confirmarUsoSuscripcion(btn.dataset.id, btn.dataset.respuesta === 'si'));
+    });
+    list.querySelectorAll('.watch-card__ask-use').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const entry = vigilancias.find((v) => v.id === btn.dataset.id);
+        if (entry) entry.mostrarConfirmarUso = true;
+        renderWatchList();
+      });
     });
     list.querySelectorAll('.confirmacion-puntual__btn').forEach((btn) => {
       btn.addEventListener('click', () => resolverConfirmacionPuntual(btn.dataset.id, btn.dataset.accion === 'enviar'));
@@ -2842,12 +2894,66 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   $('sTipo').addEventListener('change', () => renderExtrasSeguro($('sTipo').value));
   renderExtrasSeguro('seguro_coche'); // precarga las casillas aunque esa pestaña no sea la primera
 
+  // Campos de perfil por tipo de seguro — los mínimos que pide la investigación
+  // de mercado para no comparar peras con manzanas (edad, vehículo, capital...).
+  function renderPerfilSeguro(tipo){
+    const campoEdad = `
+      <div class="field">
+        <label for="sEdad">Edad del asegurado</label>
+        <div class="field__control"><input type="number" id="sEdad" min="18" max="99" step="1" placeholder="35"></div>
+      </div>`;
+    let extra = '';
+    if (tipo === 'seguro_coche'){
+      extra = `
+      <div class="field-row">
+        <div class="field">
+          <label for="sTipoVehiculo">Tipo de vehículo</label>
+          <div class="field__control">
+            <select id="sTipoVehiculo">
+              <option value="utilitario">Utilitario</option>
+              <option value="berlina">Berlina / turismo medio</option>
+              <option value="suv">SUV / todoterreno</option>
+              <option value="furgoneta">Furgoneta</option>
+              <option value="moto">Moto</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="sAntiguedadVehiculo">Antigüedad (años)</label>
+          <div class="field__control"><input type="number" id="sAntiguedadVehiculo" min="0" max="40" step="1" placeholder="5"></div>
+        </div>
+      </div>`;
+    } else if (tipo === 'seguro_vida'){
+      extra = `
+      <div class="field">
+        <label for="sCapitalAsegurado">Capital asegurado</label>
+        <div class="field__control"><input type="number" id="sCapitalAsegurado" step="1000" placeholder="100000"><span class="unit">€</span></div>
+      </div>`;
+    } else if (tipo === 'seguro_salud'){
+      extra = `
+      <div class="field">
+        <label for="sCoberturaCompleta">Cobertura</label>
+        <div class="field__control">
+          <select id="sCoberturaCompleta">
+            <option value="1">Cuadro médico privado completo</option>
+            <option value="0">Cobertura básica</option>
+          </select>
+        </div>
+      </div>`;
+    }
+    // Hogar no pide nada adicional por ahora — no hay campo de perfil claro
+    // y sencillo que afine el rango sin complicar el formulario.
+    $('sPerfilCampos').innerHTML = tipo === 'seguro_hogar' ? '' : campoEdad + extra;
+  }
+  $('sTipo').addEventListener('change', () => renderPerfilSeguro($('sTipo').value));
+  renderPerfilSeguro('seguro_coche');
+
   // Cada categoría con formulario propio; el resto usa el bloque genérico "gasto".
   const BLOQUES_CATEGORIA = {
     gasolina: 'gasolina', luz: 'luz', gas: 'gas', telco: 'telco', seguros: 'seguros',
-    alquiler: 'alquiler', comisiones_inversion: 'comisiones_inversion',
+    comisiones_inversion: 'comisiones_inversion',
   };
-  const BLOQUES_TODOS = ['gasolina', 'luz', 'gas', 'telco', 'seguros', 'alquiler', 'comisiones_inversion', 'gasto'];
+  const BLOQUES_TODOS = ['gasolina', 'luz', 'gas', 'telco', 'seguros', 'comisiones_inversion', 'gasto'];
 
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -2968,9 +3074,10 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   }
 
   async function manejarAnadirLuz(){
-    const costeActual = parseFloat($('lCosteActual').value);
-    const consumo = parseFloat($('lConsumo').value);
-    if (isNaN(costeActual)){ alert('Escribe cuánto pagas de media por kWh.'); return; }
+    const importe = parseFloat($('lImporte').value);
+    const consumo = parseFloat($('lKwh').value);
+    if (isNaN(importe) || isNaN(consumo) || consumo <= 0){ alert('Escribe el importe de tu factura y los kWh consumidos — los dos vienen impresos en ella.'); return; }
+    const costeActual = importe / consumo; // €/kWh — el usuario nunca hace esta cuenta
 
     const fallback = $('lManualFallback');
     let precioMedio = null;
@@ -3006,7 +3113,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     wireNivel3Energia(entry, 'luz');
     vigilancias.push(entry);
     renderWatchList();
-    $('lCosteActual').value = ''; $('lAlternativaManual').value = '';
+    $('lImporte').value = ''; $('lKwh').value = ''; $('lAlternativaManual').value = '';
     fallback.style.display = 'none';
   }
 
@@ -3030,12 +3137,14 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // ----- Consulta rápida de luz: mismo dato oficial en vivo que la vigilancia de luz,
   // pero sin guardar nada — para cuando a alguien le surge la duda por su cuenta. -----
   $('consultaLuzBtn').addEventListener('click', async () => {
-    const precioHabitual = parseFloat($('consultaLuzPrecio').value);
+    const importe = parseFloat($('consultaLuzImporte').value);
+    const kwh = parseFloat($('consultaLuzKwh').value);
     const resultadoEl = $('consultaLuzResultado');
-    if (isNaN(precioHabitual)){
-      resultadoEl.innerHTML = '<p class="hint">Escribe cuánto pagas ahora por kWh.</p>';
+    if (isNaN(importe) || isNaN(kwh) || kwh <= 0){
+      resultadoEl.innerHTML = '<p class="hint">Escribe el importe de tu factura y los kWh consumidos — los dos vienen impresos en ella.</p>';
       return;
     }
+    const precioHabitual = importe / kwh; // €/kWh, calculado por Faro
     const btn = $('consultaLuzBtn');
     const textoOriginal = btn.textContent;
     btn.disabled = true;
@@ -3044,16 +3153,17 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     try {
       const precioHoy = await precioMedioLuzHoy();
       const diferencia = precioHabitual - precioHoy;
-      const diferenciaCent = (diferencia * 100).toFixed(1);
-      const precioHoyTexto = precioHoy.toFixed(3).replace('.', ',');
+      const precioHabitualTexto = fmtKwh(precioHabitual);
+      const precioHoyTexto = fmtKwh(precioHoy);
       if (diferencia > 0.01){
+        const ahorroMensual = Math.round(diferencia * kwh * 100) / 100;
         resultadoEl.innerHTML =
-          `<div class="simulador__stat"><div class="num">${precioHoyTexto} €/kWh</div><div class="label">PVPC medio de hoy — vas ${diferenciaCent} cént./kWh por encima</div></div>` +
-          `<p class="hint">Hoy el PVPC compensa. Si tu tarifa fija sigue así, puede que merezca la pena mirarla.</p>`;
+          `<div class="simulador__stat"><div class="num">${precioHoyTexto}</div><div class="label">PVPC medio de hoy</div></div>` +
+          `<p class="hint">Pagas ${precioHabitualTexto}. Con tu consumo de esta factura, la diferencia son unos ${eurLocal.format(Math.round(ahorroMensual))}. El PVPC suele salir más barato de media, pero cambia cada hora — si prefieres un precio previsible, puede compensarte quedarte aunque salga algo más caro de media.</p>`;
       } else {
         resultadoEl.innerHTML =
-          `<div class="simulador__stat"><div class="num">${precioHoyTexto} €/kWh</div><div class="label">PVPC medio de hoy</div></div>` +
-          `<p class="hint">Tu precio actual ya está igual o por debajo del PVPC de hoy — no hace falta que hagas nada.</p>`;
+          `<div class="simulador__stat"><div class="num">${precioHoyTexto}</div><div class="label">PVPC medio de hoy</div></div>` +
+          `<p class="hint">Pagas ${precioHabitualTexto} — ya está igual o por debajo del PVPC de hoy, no hace falta que hagas nada.</p>`;
       }
     } catch (err) {
       resultadoEl.innerHTML = '<p class="hint">No hemos podido consultar el PVPC en directo desde esta vista previa. Una vez publicado en tu propio dominio, esto debería conectar sin problema.</p>';
@@ -3067,7 +3177,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     return [...document.querySelectorAll(`#${contenedorId} input[type=checkbox]:checked`)].map((el) => el.value);
   }
 
-  function manejarAnadirTelco(){
+  async function manejarAnadirTelco(){
     const nombreBase = $('tNombre').value.trim();
     const coste = parseFloat($('tCoste').value);
     if (!nombreBase){ alert('Ponle un nombre al operador o plan.'); return; }
@@ -3081,11 +3191,21 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     const fecha = $('tFecha').value || null;
     const alternativa = parseFloat($('tAlternativa').value);
     const alternativaDetalle = $('tAlternativaDetalle').value.trim();
+    const sinAlternativa = isNaN(alternativa);
 
-    const lectura = calcularEstadoTelcoDemo({
+    let lectura = calcularEstadoTelcoDemo({
       costeActual: coste, extrasIncluidos, extrasNoUsados, fechaReferencia: fecha,
-      alternativaConocida: isNaN(alternativa) ? null : alternativa, alternativaDetalle,
+      alternativaConocida: sinAlternativa ? null : alternativa, alternativaDetalle,
     });
+
+    // Si no hay ya una señal propia, mira si hay una referencia de mercado
+    // investigada (y revisada por una persona) para este segmento.
+    if (lectura.estado === 'calma' && sinAlternativa){
+      const segmento = segmentoTelcoLocal(lineas, fibra);
+      const referencia = await getReferenciaInvestigada('telco', segmento);
+      const investigado = calcularEstadoConReferenciaMercadoDemo({ costeActual: coste, periodo: 'mensual', referencia });
+      if (investigado) lectura = investigado;
+    }
 
     const resumenPlan = [lineas ? `${lineas} línea${lineas == 1 ? '' : 's'}` : null, datos || null, fibra || null]
       .filter(Boolean).join(' · ');
@@ -3098,15 +3218,15 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     renderWatchList();
     sincronizarGastoConBackend('telco', {
       nombre: nombreBase, costeActual: coste, periodo: 'mensual',
-      fechaReferencia: fecha, alternativaConocida: isNaN(alternativa) ? null : alternativa,
-      alternativaDetalle, extrasIncluidos, extrasNoUsados,
+      fechaReferencia: fecha, alternativaConocida: sinAlternativa ? null : alternativa,
+      alternativaDetalle, extrasIncluidos, extrasNoUsados, lineas, fibra,
     });
     $('tNombre').value = ''; $('tCoste').value = ''; $('tDatos').value = ''; $('tFibra').value = '';
     $('tFecha').value = ''; $('tAlternativa').value = ''; $('tAlternativaDetalle').value = '';
     document.querySelectorAll('#tExtrasIncluidos input, #tExtrasNoUsados input').forEach((el) => { el.checked = false; });
   }
 
-  function manejarAnadirSeguro(){
+  async function manejarAnadirSeguro(){
     const tipoSeguro = $('sTipo').value;
     const nombreBase = $('sNombre').value.trim();
     const coste = parseFloat($('sCoste').value);
@@ -3119,22 +3239,41 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     const fecha = $('sFecha').value || null;
     const alternativa = parseFloat($('sAlternativa').value);
     const alternativaDetalle = $('sAlternativaDetalle').value.trim();
+    const sinAlternativa = isNaN(alternativa);
 
-    const lectura = calcularEstadoSeguroDemo({
+    const edadEl = $('sEdad'); const tipoVehiculoEl = $('sTipoVehiculo');
+    const antiguedadVehiculoEl = $('sAntiguedadVehiculo'); const capitalAseguradoEl = $('sCapitalAsegurado');
+    const coberturaCompletaEl = $('sCoberturaCompleta');
+    const edad = edadEl && edadEl.value ? parseFloat(edadEl.value) : null;
+    const tipoVehiculo = tipoVehiculoEl ? tipoVehiculoEl.value : null;
+    const antiguedadVehiculo = antiguedadVehiculoEl && antiguedadVehiculoEl.value ? parseFloat(antiguedadVehiculoEl.value) : null;
+    const capitalAsegurado = capitalAseguradoEl && capitalAseguradoEl.value ? parseFloat(capitalAseguradoEl.value) : null;
+    const coberturaCompleta = coberturaCompletaEl ? coberturaCompletaEl.value : null;
+
+    let lectura = calcularEstadoSeguroDemo({
       tipoSeguro, costeActual: coste, periodo, extrasIncluidos, extrasNoUsados, fechaReferencia: fecha,
-      alternativaConocida: isNaN(alternativa) ? null : alternativa, alternativaDetalle,
+      alternativaConocida: sinAlternativa ? null : alternativa, alternativaDetalle,
     });
+
+    if (lectura.estado === 'calma' && sinAlternativa){
+      const referencia = await getReferenciaInvestigada(tipoSeguro, 'perfil_estandar');
+      const investigado = calcularEstadoConReferenciaMercadoDemo({ costeActual: coste, periodo, referencia });
+      if (investigado) lectura = investigado;
+    }
 
     watchIdCounter++;
     vigilancias.push({ id: 'w' + watchIdCounter, nombre: nombreBase, categoria: tipoSeguro, ...lectura });
     renderWatchList();
     sincronizarGastoConBackend(tipoSeguro, {
       nombre: nombreBase, costeActual: coste, periodo,
-      fechaReferencia: fecha, alternativaConocida: isNaN(alternativa) ? null : alternativa,
+      fechaReferencia: fecha, alternativaConocida: sinAlternativa ? null : alternativa,
       alternativaDetalle, extrasIncluidos, extrasNoUsados,
+      edad, tipoVehiculo, antiguedadVehiculo, capitalAsegurado, coberturaCompleta,
     });
     $('sNombre').value = ''; $('sCoste').value = ''; $('sFecha').value = '';
     $('sAlternativa').value = ''; $('sAlternativaDetalle').value = '';
+    if (edadEl) edadEl.value = ''; if (antiguedadVehiculoEl) antiguedadVehiculoEl.value = '';
+    if (capitalAseguradoEl) capitalAseguradoEl.value = '';
     document.querySelectorAll('#sExtrasIncluidos input, #sExtrasNoUsados input').forEach((el) => { el.checked = false; });
   }
 
@@ -3149,9 +3288,10 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   }
 
   async function manejarAnadirGas(){
-    const costeActual = parseFloat($('gasCosteActual').value);
-    const consumo = parseFloat($('gasConsumo').value);
-    if (isNaN(costeActual)){ alert('Escribe cuánto pagas de media por kWh de gas.'); return; }
+    const importe = parseFloat($('gasImporte').value);
+    const consumo = parseFloat($('gasKwh').value);
+    if (isNaN(importe) || isNaN(consumo) || consumo <= 0){ alert('Escribe el importe de tu factura de gas y los kWh consumidos — los dos vienen impresos en ella.'); return; }
+    const costeActual = importe / consumo; // €/kWh — el usuario nunca hace esta cuenta
 
     const fallback = $('gasManualFallback');
     const btn = $('addWatchBtn'); const txt = btn.textContent;
@@ -3170,26 +3310,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     wireNivel3Energia(entry, 'gas');
     vigilancias.push(entry);
     renderWatchList();
-    $('gasCosteActual').value = ''; $('gasTurManual').value = ''; fallback.style.display = 'none';
-  }
-
-  function manejarAnadirAlquiler(){
-    const renta = parseFloat($('alqRenta').value);
-    if (isNaN(renta)){ alert('Escribe tu renta mensual actual.'); return; }
-    const subida = parseFloat($('alqSubida').value);
-    const fecha = $('alqFecha').value || null;
-    const tensionada = $('alqTensionada').checked;
-    const lectura = calcularEstadoAlquilerDemo({
-      rentaActual: renta, subidaPropuesta: isNaN(subida) ? null : subida,
-      fechaUltimaActualizacion: fecha, zonaTensionada: tensionada,
-    });
-    watchIdCounter++;
-    const entry = { id: 'w' + watchIdCounter, nombre: 'Alquiler', categoria: 'alquiler', costeMensual: renta, ...lectura };
-    wireNivel2(entry, { rentaActual: renta, subidaPropuesta: isNaN(subida) ? null : subida, topeLegalPct: lectura.topeAplicablePct, fechaActualizacion: fecha });
-    vigilancias.push(entry);
-    renderWatchList();
-    sincronizarGastoConBackend('alquiler', { nombre: 'Alquiler', costeActual: renta, fechaReferencia: fecha, zonaTensionada: tensionada, subidaPropuesta: isNaN(subida) ? null : subida });
-    $('alqRenta').value = ''; $('alqSubida').value = ''; $('alqFecha').value = ''; $('alqTensionada').checked = false;
+    $('gasImporte').value = ''; $('gasKwh').value = ''; $('gasTurManual').value = ''; fallback.style.display = 'none';
   }
 
   function manejarAnadirInversion(){
@@ -3229,10 +3350,6 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     }
     if (activeCategory === 'seguros'){
       manejarAnadirSeguro();
-      return;
-    }
-    if (activeCategory === 'alquiler'){
-      manejarAnadirAlquiler();
       return;
     }
     if (activeCategory === 'comisiones_inversion'){
@@ -3351,7 +3468,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     { keywords: ['añadir', 'anadir', 'agregar', 'como añado', 'cómo añado', 'nueva vigilancia'],
       respuesta: 'En tu panel, elige la pestaña de la categoría (gasolina, luz, seguro, telco...), rellena los datos que pide y pulsa "Añadir a mis vigilancias". Aparece al momento en tu lista y en el resumen de arriba.' },
     { keywords: ['hipoteca', 'novacion', 'novación', 'subrogacion', 'subrogación'],
-      respuesta: 'Para la hipoteca, si sale señal activa, los pasos son: pedir una oferta de novación a tu banco citando el tipo de mercado de hoy, comparar con una subrogación si no la iguala, y firmar si el ahorro compensa el coste del cambio. Los verás con las cifras exactas en tu resumen en cuanto haya señal.' },
+      respuesta: 'Para la hipoteca, si sale señal activa, los pasos son: pedir una novación (renegociar con tu propio banco) citando el tipo de mercado de hoy, comparar con una subrogación (cambiarte a otro banco que absorbe tu hipoteca) si no la iguala, y firmar si el ahorro compensa el coste del cambio. Los verás con las cifras exactas en tu resumen en cuanto haya señal.' },
     { keywords: ['gasolina', 'codigo postal', 'código postal', 'combustible'],
       respuesta: 'En gasolina, escribe tu código postal y el combustible que usas — consultamos en directo la API oficial del Gobierno para encontrar la gasolinera más barata de tu provincia. Si no logramos conectar, te dejamos escribir el precio a mano.' },
     { keywords: ['luz', 'pvpc', 'electricidad', 'kwh'],
