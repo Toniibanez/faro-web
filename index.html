@@ -72,6 +72,20 @@ a{color:inherit;}
 .dash-subnav__link.is-active{color:var(--signal);background:var(--signal-soft);border-color:rgba(227,165,66,0.3);}
 
 [hidden]{display:none !important;}
+.nav__login{font-family:var(--font-mono);font-size:0.8rem;letter-spacing:0.04em;color:var(--foam-dim);text-decoration:none;margin-right:14px;}
+.nav__login:hover{color:var(--foam);}
+.hero__login{display:inline-block;margin-left:18px;font-size:0.92rem;color:var(--foam-dim);text-decoration:underline;}
+.hero__login:hover{color:var(--foam);}
+.signup__switch{margin:14px 0 0;font-size:0.9rem;}
+.signup__switch a{color:var(--foam-dim);text-decoration:underline;}
+.acceso-error{margin:10px 0 0;font-size:0.9rem;color:#e8836a;}
+.acceso-aviso{padding:12px 16px;margin:0 0 20px;border:1px solid var(--line);border-radius:12px;font-size:0.9rem;color:var(--foam-dim);}
+.btn-peligro{font:inherit;font-size:0.9rem;padding:10px 18px;border-radius:10px;border:1px solid #e8836a;background:transparent;color:#e8836a;cursor:pointer;}
+.btn-peligro:hover{background:rgba(232,131,106,0.12);}
+.btn-peligro:disabled{opacity:0.6;cursor:wait;}
+.plan-cancelar__confirm{margin-top:14px;padding:14px 16px;border:1px solid #e8836a;border-radius:12px;}
+.plan-cancelar__confirm p{margin:0 0 12px;}
+.plan-cancelar__confirm button + button{margin-left:10px;}
 .foto-factura{margin:0 0 16px;}
 .foto-factura__btn{font:inherit;font-size:0.9rem;padding:9px 16px;border-radius:10px;border:1px dashed rgba(227,165,66,0.5);background:var(--signal-soft);color:var(--signal);cursor:pointer;}
 .foto-factura__btn:hover{background:rgba(227,165,66,0.18);}
@@ -762,7 +776,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <a href="proximamente.html">Próximamente</a>
       <a href="#faq">Preguntas</a>
     </div>
-    <a class="nav__cta" href="#activar">Crear cuenta</a>
+    <span><a class="nav__login" href="#activar" data-acceso="login">Iniciar sesión</a><a class="nav__cta" href="#activar" data-acceso="alta">Crear cuenta</a></span>
   </div>
 </nav>
 
@@ -783,7 +797,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     <h1 class="reveal reveal--2">Lo contrataste una vez. El mercado no ha dejado de moverse <em>desde entonces</em>.</h1>
     <p class="hero__sub reveal reveal--3">Faro vigila lo que pagas cada mes — hipoteca, luz, seguros y más — y enciende la señal solo cuando cambiar de verdad compensa.</p>
 
-    <a href="#activar" class="hero__cta reveal reveal--3">Crear cuenta — 12 €/mes, sin permanencia</a>
+    <a href="#activar" class="hero__cta reveal reveal--3" data-acceso="alta">Crear cuenta — 12 €/mes, sin permanencia</a><a href="#activar" class="hero__login reveal reveal--3" data-acceso="login">¿Ya tienes cuenta? Iniciar sesión</a>
   </section>
 
   <section class="categorias" id="categorias">
@@ -907,8 +921,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
 
   <section class="signup" id="activar">
     <div class="section-head">
-      <h2>Crea tu cuenta</h2>
-      <p>Un único plan, las nueve categorías incluidas. Sin permanencia.</p>
+      <h2 id="accesoTitulo">Crea tu cuenta</h2>
+      <p id="accesoSub">Un único plan, las nueve categorías incluidas. Sin permanencia.</p>
     </div>
     <div class="signup__panel">
       <div class="plan-card">
@@ -930,7 +944,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       </div>
       <div>
         <form id="signupForm">
-          <div class="field">
+          <div class="field" id="nameField">
             <label for="nameInput">Nombre</label>
             <div class="field__control" style="border:1px solid var(--line);border-radius:10px;padding:0;">
               <input type="text" id="nameInput" placeholder="Tu nombre" required style="padding:11px 14px;">
@@ -938,8 +952,10 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           </div>
           <input type="email" id="emailInput" placeholder="tu@email.com" required>
           <button type="submit" id="signupSubmitBtn">Crear cuenta y suscribirme — 12€/mes</button>
-          <span class="signup__note">Prototipo de demostración: no se procesa ningún pago real. En producción este botón llevaría a Stripe Checkout — Faro nunca ve ni guarda el número de tarjeta, eso lo gestiona Stripe directamente. Aquí, simplemente, te lleva a tu panel.</span>
+          <p class="acceso-error" id="accesoError" role="alert" hidden></p>
+          <span class="signup__note" id="signupNote">Prototipo de demostración: no se procesa ningún pago real. En producción este botón llevaría a Stripe Checkout — Faro nunca ve ni guarda el número de tarjeta, eso lo gestiona Stripe directamente. Aquí, simplemente, te lleva a tu panel.</span>
         </form>
+        <p class="signup__switch"><a href="#" id="accesoSwitch">¿Ya tienes cuenta? Iniciar sesión</a></p>
       </div>
     </div>
   </section>
@@ -972,6 +988,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   </div>
 
   <main class="wrap dashboard-main">
+    <p class="acceso-aviso" id="avisoLogin" hidden>Has entrado con tu cuenta. Por ahora Faro no recupera automáticamente las vigilancias que guardaste en otras sesiones: vuelve a añadirlas desde la pestaña Vigilancias.</p>
     <section id="primerUso" class="resumen-card primer-uso is-hidden" aria-labelledby="primerUsoTitulo">
       <h2 id="primerUsoTitulo">¿Qué quieres vigilar primero?</h2>
       <p>Elige una y la añadimos juntos. El resto podrás verlo después.</p>
@@ -1581,6 +1598,18 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <p class="hint" style="margin-bottom:16px;">Activa una categoría para que Faro, cuando salte la señal, te deje el trámite <strong>preparado</strong>. Nunca lo envía sin que tú lo confirmes puntualmente en ese momento — activar esto no manda nada por sí solo.</p>
       <div id="autorizacionesList" class="autorizaciones-list"></div>
     </div>
+
+    <div class="referral-card" id="planCard" style="margin-top:24px;">
+      <p class="instrument__label">Tu plan</p>
+      <p class="hint" id="planEstadoTxt" style="margin-bottom:16px;">Plan Faro activo. Sin permanencia: puedes cancelarlo cuando quieras, sin llamadas ni justificaciones.</p>
+      <button type="button" class="btn-peligro" id="cancelarPlanBtn">Cancelar mi plan</button>
+      <div class="plan-cancelar__confirm" id="cancelarConfirm" hidden>
+        <p><strong>¿Seguro que quieres cancelar tu plan?</strong> Dejarás de tener Faro vigilando lo que pagas y no se te volverá a cobrar. Podrás reactivarlo creando la cuenta de nuevo con el mismo email.</p>
+        <button type="button" class="btn-peligro" id="cancelarSi">Sí, cancelar mi plan</button>
+        <button type="button" id="cancelarNo">No, mantenerlo</button>
+      </div>
+      <p class="acceso-error" id="cancelarError" role="alert" hidden></p>
+    </div>
     </section>
   </main>
 </div>
@@ -1848,11 +1877,69 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   }
   window.__mostrarVista = mostrarVista;
 
+  // ----- Acceso: "Crear cuenta" (alta) e "Iniciar sesión" (login) comparten formulario -----
+  // OJO: Faro aún no tiene contraseña ni verificación por email; el login solo
+  // comprueba que la cuenta existe.
+  let modoAcceso = 'alta';
+  function setModoAcceso(modo){
+    modoAcceso = modo;
+    const login = modo === 'login';
+    $('accesoTitulo').textContent = login ? 'Inicia sesión' : 'Crea tu cuenta';
+    $('accesoSub').textContent = login ? 'Entra con el email de tu cuenta.' : 'Un único plan, las nueve categorías incluidas. Sin permanencia.';
+    document.querySelector('#activar .plan-card').style.display = login ? 'none' : '';
+    $('nameField').style.display = login ? 'none' : '';
+    $('nameInput').required = !login;
+    $('signupNote').style.display = login ? 'none' : '';
+    $('signupSubmitBtn').textContent = login ? 'Entrar' : $('signupSubmitBtn').dataset.textoAlta;
+    $('accesoSwitch').textContent = login ? '¿No tienes cuenta? Crear cuenta' : '¿Ya tienes cuenta? Iniciar sesión';
+    $('accesoError').hidden = true;
+  }
+  $('signupSubmitBtn').dataset.textoAlta = $('signupSubmitBtn').textContent;
+  document.querySelectorAll('[data-acceso]').forEach((a) => {
+    a.addEventListener('click', () => setModoAcceso(a.dataset.acceso));
+  });
+  $('accesoSwitch').addEventListener('click', (e) => {
+    e.preventDefault();
+    setModoAcceso(modoAcceso === 'login' ? 'alta' : 'login');
+  });
+  function errorAcceso(texto){ $('accesoError').textContent = texto; $('accesoError').hidden = false; }
+
+  async function iniciarSesion(email){
+    const base = window.__API_BASE_URL;
+    if (!base){ errorAcceso('El acceso no está disponible ahora mismo. Inténtalo de nuevo más tarde.'); return; }
+    const btn = $('signupSubmitBtn'); const txt = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Entrando…';
+    try {
+      const resp = await fetch(`${base}/api/users/login`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.status === 404){ errorAcceso('No encontramos una cuenta con ese email. ¿Quieres crearla? Pulsa "Crear cuenta" aquí debajo.'); return; }
+      if (!resp.ok){ errorAcceso(data.error || 'No hemos podido iniciar sesión. Inténtalo de nuevo.'); return; }
+      if (data.cancelada){ errorAcceso('El plan de esta cuenta está cancelado. Para reactivarlo, pulsa "Crear cuenta" aquí debajo y usa este mismo email.'); return; }
+      window.__currentEmail = email;
+      window.__setCurrentUserId(data.id);
+      mostrarVista(true);
+      if (window.__primerUso) window.__primerUso.alSalir();
+      $('dashboardGreeting').textContent = 'Hola de nuevo';
+      $('avisoLogin').hidden = false;
+      $('emailInput').value = '';
+      window.scrollTo(0, 0);
+    } catch (err){
+      errorAcceso('No hemos podido conectar con Faro. Comprueba tu conexión e inténtalo de nuevo.');
+    } finally {
+      btn.disabled = false; btn.textContent = txt;
+    }
+  }
+
   const form = $('signupForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
     const nombre = ($('nameInput') && $('nameInput').value.trim()) || '';
     const email = ($('emailInput') && $('emailInput').value.trim()) || '';
+    if (modoAcceso === 'login'){ if (email) iniciarSesion(email); else errorAcceso('Escribe el email de tu cuenta.'); return; }
+    window.__currentEmail = email;
+    $('avisoLogin').hidden = true;
     mostrarVista(true);
     if (window.__primerUso) window.__primerUso.alEntrar();
     $('dashboardGreeting').textContent = nombre ? `Hola, ${nombre}` : 'Hola';
@@ -1944,6 +2031,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // Añadir estas dos piezas es el siguiente paso natural del backend, no algo
   // que esté simulado aquí fingiendo que funciona.
   const API_BASE_URL = 'https://faro-backend-production-8eba.up.railway.app';
+  window.__API_BASE_URL = API_BASE_URL;
   let currentUserId = null;
 
   async function apiPost(path, body){
@@ -2134,6 +2222,36 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         cuerpo: `Hola,\n\nMe gustaría que revisarais la comisión de gestión que estoy pagando en ${producto}` +
           (datos.comisionActual != null ? ` (actualmente ${datos.comisionActual} %)` : '') +
           `. ¿Existe alguna clase o modalidad del mismo producto con una comisión más baja a la que pueda acogerme?\n\nUn saludo.`,
+      };
+    }
+    if (tipo === 'negociar_permanencia'){
+      // Nivel 1 (telco): texto para copiar y decir/escribir tal cual. Espejo de
+      // textoNegociarPermanencia() en src/redactar.js.
+      const eur = (n) => `${Number(n).toFixed(0)} €`;
+      const operador = datos.nombre || 'mi operadora';
+      let peticion;
+      if (datos.motivo === 'extras_sin_usar' && datos.extras && datos.extras.length){
+        peticion = `Estoy pagando por ${datos.extras.join(', ')} y no lo utilizo. Quiero que me lo quitéis de la tarifa y que me indiquéis cuánto bajaría mi cuota, o si existe un plan más básico que no lo incluya.`;
+      } else if (datos.motivo === 'alternativa_mas_barata' && datos.alternativaPrecio != null){
+        peticion = `He encontrado una oferta de ${eur(datos.alternativaPrecio)} al mes` + (datos.alternativaDetalle ? ` (${datos.alternativaDetalle})` : '') +
+          (datos.costeActual != null ? `, frente a los ${eur(datos.costeActual)} que pago ahora` : '') +
+          `. Me gustaría que igualarais o mejorarais esa oferta; si no es posible, valoraré cambiarme.`;
+      } else if ((datos.motivo === 'renovacion_proxima' || datos.motivo === 'renovacion_reciente') && datos.fechaPermanencia){
+        peticion = `Mi permanencia ${datos.motivo === 'renovacion_reciente' ? 'terminó' : 'termina'} el ${datos.fechaPermanencia}. Antes de renovar o de que se prorrogue, quiero conocer las mejores condiciones que podéis ofrecerme y confirmar que no habrá subida de precio ni nueva permanencia sin mi acuerdo.`;
+      } else if (datos.motivo === 'por_encima_de_referencia_investigada' && datos.referencia != null){
+        peticion = `Pago ${datos.costeActual != null ? eur(datos.costeActual) : 'una cuota'} al mes y, según las comparativas de mercado que he consultado, una oferta similar ronda los ${eur(datos.referencia)} al mes. ¿Podéis revisar mi tarifa y ajustarla?`;
+      } else {
+        peticion = 'Quiero revisar mi tarifa actual y saber si existe una opción mejor para mi caso.';
+      }
+      return {
+        asunto: 'Revisión de mi tarifa',
+        cuerpo: `Hola,
+
+Soy cliente de ${operador}. ${peticion}
+
+Quedo a la espera de vuestra respuesta.
+
+Un saludo.`,
       };
     }
     if (tipo === 'reclamar_comision'){
@@ -2808,7 +2926,10 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // muestra una recomendación tenga que saberlo.
   function renderRecomendacion(entry){
     const resto = entry.opciones ? renderOpciones(entry.opciones) : renderPasos(entry.pasos);
-    return renderConfirmacionPuntual(entry) + resto;
+    // Nivel 1 (telco): texto listo para copiar, visible en cuanto hay señal. Sin
+    // autorización ni confirmación: Faro nunca lo envía, solo lo enseña.
+    const nivel1 = entry.textoNivel1 ? renderOpciones([entry.textoNivel1]) : '';
+    return renderConfirmacionPuntual(entry) + resto + nivel1;
   }
 
   function renderWatchList(){
@@ -3298,6 +3419,20 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     const resumenPlan = [lineas ? `${lineas} línea${lineas == 1 ? '' : 's'}` : null, datos || null, fibra || null]
       .filter(Boolean).join(' · ');
 
+    if (lectura.estado === 'senal'){
+      const fechaLegible = fecha ? fecha.split('-').reverse().join('/') : null;
+      const texto = redactarLocal('negociar_permanencia', {
+        nombre: nombreBase, motivo: lectura.motivo, costeActual: coste,
+        alternativaPrecio: sinAlternativa ? null : alternativa, alternativaDetalle,
+        extras: extrasIncluidos.filter((x) => extrasNoUsados.includes(x)),
+        fechaPermanencia: fechaLegible,
+        referencia: lectura.ahorroMensual != null ? coste - lectura.ahorroMensual : null,
+      });
+      lectura.textoNivel1 = { titulo: 'Texto para tu operadora — cópialo y úsalo tal cual', textoLargo: `Asunto: ${texto.asunto}
+
+${texto.cuerpo}`, esTexto: true };
+    }
+
     watchIdCounter++;
     vigilancias.push({
       id: 'w' + watchIdCounter, nombre: nombreBase, categoria: 'telco',
@@ -3364,6 +3499,33 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     if (capitalAseguradoEl) capitalAseguradoEl.value = '';
     document.querySelectorAll('#sExtrasIncluidos input, #sExtrasNoUsados input').forEach((el) => { el.checked = false; });
   }
+
+  // ----- Cancelar el plan: confirmación intermedia y baja registrada en el backend.
+  // El cobro sigue siendo un mock (no hay Stripe), pero la baja queda guardada. -----
+  (function(){
+    const btn = $('cancelarPlanBtn'), conf = $('cancelarConfirm'), err = $('cancelarError');
+    btn.addEventListener('click', () => { err.hidden = true; conf.hidden = false; btn.hidden = true; });
+    $('cancelarNo').addEventListener('click', () => { conf.hidden = true; btn.hidden = false; });
+    $('cancelarSi').addEventListener('click', async () => {
+      const si = $('cancelarSi'); si.disabled = true; const t = si.textContent; si.textContent = 'Cancelando…';
+      err.hidden = true;
+      try {
+        if (!currentUserId || !window.__currentEmail) throw new Error('sin-cuenta');
+        const resp = await fetch(`${API_BASE_URL}/api/users/${currentUserId}/cancelar`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: window.__currentEmail }),
+        });
+        if (!resp.ok) throw new Error('http');
+        conf.hidden = true;
+        $('planEstadoTxt').textContent = 'Tu plan está cancelado y no se te volverá a cobrar. Si cambias de idea, vuelve a crear la cuenta con el mismo email para reactivarlo.';
+        btn.hidden = true;
+      } catch (e){
+        err.textContent = 'No hemos podido cancelar tu plan ahora mismo, así que sigue activo. Inténtalo de nuevo en un momento.';
+        err.hidden = false;
+      } finally {
+        si.disabled = false; si.textContent = t;
+      }
+    });
+  })();
 
   // ----- Foto de factura (luz y gas): ayuda a rellenar importe y kWh. Lo leído va a
   // los campos editables y NUNCA se guarda hasta que el usuario pulsa "Añadir". -----
