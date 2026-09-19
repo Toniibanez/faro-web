@@ -71,8 +71,24 @@ a{color:inherit;}
 .dash-subnav__link:hover{color:var(--foam);border-color:var(--line);}
 .dash-subnav__link.is-active{color:var(--signal);background:var(--signal-soft);border-color:rgba(227,165,66,0.3);}
 
-.dash-section{scroll-margin-top:130px;margin-top:70px;}
-.dash-section:first-of-type{margin-top:0;}
+[hidden]{display:none !important;}
+.foto-factura{margin:0 0 16px;}
+.foto-factura__btn{font:inherit;font-size:0.9rem;padding:9px 16px;border-radius:10px;border:1px dashed rgba(227,165,66,0.5);background:var(--signal-soft);color:var(--signal);cursor:pointer;}
+.foto-factura__btn:hover{background:rgba(227,165,66,0.18);}
+.foto-factura__btn:disabled{opacity:0.6;cursor:wait;}
+.foto-factura .hint{margin:8px 0 0;}
+.field__control input.is-leido{border-color:var(--signal);box-shadow:0 0 0 2px var(--signal-soft);}
+.primer-uso{max-width:560px;margin:24px auto 0;}
+.primer-uso h2{margin:0 0 6px;}
+.primer-uso__skip{margin:14px 0 0;font-size:0.88rem;}
+.primer-uso__skip a,.primer-uso__banner a{color:var(--foam-dim);text-decoration:underline;}
+.primer-uso__banner{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;padding:14px 18px;margin:0 0 24px;border:1px solid rgba(227,165,66,0.3);background:var(--signal-soft);border-radius:12px;}
+.primer-uso__banner p{margin:0;flex:1 1 320px;}
+.primer-uso__banner .add-btn{width:auto;margin:0;}
+.dashboard--guiado .dash-subnav{display:none;}
+/* Pestañas reales: solo la sección activa está montada; el scroll de dentro de cada una sigue igual. */
+.dash-section{display:none;scroll-margin-top:130px;}
+.dash-section.is-active{display:block;}
 
 .resumen-card .summary-strip{margin:0 0 20px;padding-bottom:20px;border-bottom:1px solid var(--line);}
 
@@ -765,26 +781,9 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   <section class="hero" id="inicio">
     <p class="eyebrow reveal reveal--1">Vigilancia continua de lo que pagas cada mes</p>
     <h1 class="reveal reveal--2">Lo contrataste una vez. El mercado no ha dejado de moverse <em>desde entonces</em>.</h1>
-    <p class="hero__sub reveal reveal--3">Faro vigila tu hipoteca, tus seguros, la luz, el gas, la gasolina, la fibra, las comisiones y las suscripciones que se te olvida revisar — y enciende la señal solo cuando cambiar de verdad compensa.</p>
+    <p class="hero__sub reveal reveal--3">Faro vigila lo que pagas cada mes — hipoteca, luz, seguros y más — y enciende la señal solo cuando cambiar de verdad compensa.</p>
 
-    <a href="#crear-cuenta" class="hero__cta reveal reveal--3">Crear cuenta gratis</a>
-
-    <div class="hero__preview reveal reveal--3">
-      <span class="preview-chip"><span class="lamp"></span> Hipoteca</span>
-      <span class="preview-chip"><span class="lamp is-signal"></span> Gasolina</span>
-      <span class="preview-chip"><span class="lamp"></span> Luz</span>
-      <span class="preview-chip"><span class="lamp"></span> Gas</span>
-      <span class="preview-chip"><span class="lamp is-watch"></span> Seguros</span>
-      <span class="preview-chip"><span class="lamp"></span> Telco</span>
-      <span class="preview-chip"><span class="lamp"></span> Comisiones</span>
-      <span class="preview-chip"><span class="lamp is-watch"></span> Suscripciones</span>
-      <span class="preview-chip"><span class="lamp"></span> Fondos y pensiones</span>
-    </div>
-
-    <div class="hero__quote reveal reveal--3">
-      <blockquote>"La mejor hipoteca fija no es necesariamente la que firmaste hace tres años."</blockquote>
-      <p>Tu hipoteca, tus seguros, tu tarifa de luz: los firmaste un día concreto y nadie te avisa cuando el mercado se mueve. Revisarlo tú cada mes —comparando ofertas y calculando si compensa el cambio— es justo la tarea que casi nadie hace.</p>
-    </div>
+    <a href="#activar" class="hero__cta reveal reveal--3">Crear cuenta gratis</a>
   </section>
 
   <section class="categorias" id="categorias">
@@ -792,7 +791,9 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <h2>Todo lo que Faro vigila</h2>
       <p>Nueve categorías en tres familias, un mismo criterio: la señal solo se enciende cuando compensa de verdad.</p>
     </div>
+    <button class="faq__toggle" type="button" data-reveal="catMore" aria-expanded="false" data-abrir="Ver las nueve categorías" data-cerrar="Ocultar las categorías">Ver las nueve categorías</button>
 
+    <div id="catMore" hidden>
     <div class="cat-group">
       <p class="cat-group__title">Vivienda y suministros</p>
       <div class="cat-acc">
@@ -828,6 +829,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           <p>Avisa cuando llevas tiempo sin revisarlas, para que nada se quede pagando solo y sin usarse.</p></details>
       </div>
     </div>
+    </div>
   </section>
 
   <section class="preview" id="vista-previa">
@@ -835,7 +837,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       <h2>Así es tu panel</h2>
       <p>Esto es exactamente lo que verías al registrarte — con datos de ejemplo, para que veas por lo que vas a pagar.</p>
     </div>
-    <div class="preview-mock">
+    <button class="faq__toggle" type="button" data-reveal="previewMock" aria-expanded="false" data-abrir="Ver un ejemplo de panel" data-cerrar="Ocultar el ejemplo">Ver un ejemplo de panel</button>
+    <div class="preview-mock" id="previewMock" hidden>
       <span class="preview-mock__tag">Ejemplo ilustrativo, no tus datos reales</span>
       <div class="preview-mock__totals">
         <div>
@@ -969,7 +972,36 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   </div>
 
   <main class="wrap dashboard-main">
-    <section id="resumen" class="dash-section">
+    <section id="primerUso" class="resumen-card primer-uso is-hidden" aria-labelledby="primerUsoTitulo">
+      <h2 id="primerUsoTitulo">¿Qué quieres vigilar primero?</h2>
+      <p>Elige una y la añadimos juntos. El resto podrás verlo después.</p>
+      <div class="field">
+        <label for="primerUsoCat">Empezar por</label>
+        <div class="field__control">
+          <select id="primerUsoCat">
+            <option value="hipoteca">Mi hipoteca</option>
+            <option value="luz">La luz</option>
+            <option value="gas">El gas</option>
+            <option value="seguros">Un seguro</option>
+            <option value="telco">Telefonía y fibra</option>
+            <option value="gasolina">La gasolina</option>
+            <option value="comisiones_bancarias">Comisiones bancarias</option>
+            <option value="suscripciones">Una suscripción</option>
+            <option value="comisiones_inversion">Fondos o plan de pensiones</option>
+          </select>
+        </div>
+      </div>
+      <button class="add-btn" id="primerUsoEmpezar" type="button">Empezar</button>
+      <p class="primer-uso__skip"><a href="#" id="primerUsoSaltar">Prefiero explorar por mi cuenta</a></p>
+    </section>
+
+    <div id="primerUsoBanner" class="primer-uso__banner is-hidden">
+      <p><strong>Vamos a añadir tu primera vigilancia:</strong> <span id="primerUsoBannerCat"></span>. Rellena el formulario y guárdala; al hacerlo verás tu panel completo.</p>
+      <button class="add-btn" id="primerUsoListo" type="button">Listo, ver mi panel</button>
+      <a href="#" id="primerUsoSaltar2">Prefiero explorar por mi cuenta</a>
+    </div>
+
+    <section id="resumen" class="dash-section is-active">
     <div class="section-head">
       <h2>Tu panel</h2>
       <p>Todo lo que Faro vigila para ti, en un único sitio.</p>
@@ -1123,7 +1155,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     <section id="vigilancias" class="dash-section">
     <div class="section-head">
       <h2>Añade el resto</h2>
-      <p>La hipoteca de arriba ya cuenta en el resumen. Añade lo demás aquí.</p>
+      <p>La hipoteca (pestaña Hipoteca) ya cuenta en el resumen. Añade lo demás aquí.</p>
     </div>
 
     <div class="panel__grid">
@@ -1184,6 +1216,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
 
         <div class="cat-fields" data-cat-fields="luz" style="display:none;">
           <p class="tipo-vigilancia tipo-vigilancia--oficial"><span class="tipo-vigilancia__dot"></span>Con dato oficial en directo: Faro compara esto contra el PVPC de Red Eléctrica de España, en tiempo real.</p>
+          <div class="foto-factura">
+            <input type="file" accept="image/*" id="lFoto" hidden>
+            <button type="button" class="foto-factura__btn" id="lFotoBtn">Subir foto de la factura</button>
+            <p class="hint" id="lFotoAviso">Rellena los campos de abajo por ti. Solo lee el importe y los kWh y no guarda la foto. Puedes corregir lo que lea, o escribirlo tú directamente.</p>
+          </div>
           <div class="field-row">
             <div class="field">
               <label for="lImporte">Importe de tu última factura</label>
@@ -1213,6 +1250,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
         <div class="cat-fields" data-cat-fields="gas" style="display:none;">
           <p class="tipo-vigilancia tipo-vigilancia--oficial"><span class="tipo-vigilancia__dot"></span>Con dato oficial: Faro compara esto contra la tarifa regulada TUR de gas.</p>
           <p class="hint">Se revisa cada trimestre. No hay API pública para este dato: lo curamos desde el BOE.</p>
+          <div class="foto-factura">
+            <input type="file" accept="image/*" id="gasFoto" hidden>
+            <button type="button" class="foto-factura__btn" id="gasFotoBtn">Subir foto de la factura</button>
+            <p class="hint" id="gasFotoAviso">Rellena los campos de abajo por ti. Solo lee el importe y los kWh y no guarda la foto. Puedes corregir lo que lea, o escribirlo tú directamente.</p>
+          </div>
           <div class="field-row">
             <div class="field">
               <label for="gasImporte">Importe de tu última factura</label>
@@ -1385,6 +1427,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
           <div class="field">
             <label for="tFecha">Fin de permanencia (opcional)</label>
             <div class="field__control"><input type="date" id="tFecha"></div>
+            <p class="hint">La permanencia es el periodo mínimo de contrato pactado con tu operadora, durante el cual cambiarte puede tener penalización.</p>
           </div>
           <div class="field">
             <label for="tAlternativa">Alternativa que conoces (opcional)</label>
@@ -1795,13 +1838,23 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
 
   // Alta simulada -> revela el panel (esto es lo que en producción pasaría
   // tras crear la cuenta y completar el pago en Stripe Checkout).
+  // Única puerta entre la web pública y el panel: nunca se ven a la vez la
+  // cabecera pública (.nav + #pageSubnav) y la del panel.
+  function mostrarVista(panel){
+    document.querySelector('.nav').classList.toggle('is-hidden', panel);
+    $('pageSubnav').classList.toggle('is-hidden', panel);
+    $('publicView').classList.toggle('is-hidden', panel);
+    $('dashboardView').classList.toggle('is-hidden', !panel);
+  }
+  window.__mostrarVista = mostrarVista;
+
   const form = $('signupForm');
   form.addEventListener('submit', function(e){
     e.preventDefault();
     const nombre = ($('nameInput') && $('nameInput').value.trim()) || '';
     const email = ($('emailInput') && $('emailInput').value.trim()) || '';
-    $('publicView').classList.add('is-hidden');
-    $('dashboardView').classList.remove('is-hidden');
+    mostrarVista(true);
+    if (window.__primerUso) window.__primerUso.alEntrar();
     $('dashboardGreeting').textContent = nombre ? `Hola, ${nombre}` : 'Hola';
     window.scrollTo(0, 0);
     if (typeof window.__updateSummary === 'function') window.__updateSummary();
@@ -1819,11 +1872,22 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   const logoutBtn = $('logoutBtn');
   if (logoutBtn){
     logoutBtn.addEventListener('click', () => {
-      $('dashboardView').classList.add('is-hidden');
-      $('publicView').classList.remove('is-hidden');
+      mostrarVista(false);
+      if (window.__primerUso) window.__primerUso.alSalir();
       window.scrollTo(0, 0);
     });
   }
+
+  // ----- Revelado progresivo de la portada: categorías y ejemplo de panel -----
+  document.querySelectorAll('[data-reveal]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const destino = $(btn.dataset.reveal);
+      const abierto = !destino.hidden;
+      destino.hidden = abierto;
+      btn.setAttribute('aria-expanded', String(!abierto));
+      btn.textContent = abierto ? btn.dataset.abrir : btn.dataset.cerrar;
+    });
+  });
 
   // ----- FAQ: 3 preguntas visibles + "ver todas" (el resto está en #faqMore) -----
   const faqToggle = $('faqToggle');
@@ -2087,6 +2151,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // activa. Espejo de accionNivel2Para() del backend.
   const MOTIVO_A_TIPO = {
     comision_alta: 'revisar_comision_gestion',
+    // Comisiones bancarias usa el motor genérico de gastos: cualquiera de sus
+    // señales (accionNivel2Para en el backend) deja preparada la reclamación.
+    alternativa_mas_barata: 'reclamar_comision',
+    renovacion_proxima: 'reclamar_comision',
+    renovacion_reciente: 'reclamar_comision',
   };
   function wireNivel2(entry, datosRedaccion){
     if (entry.estado !== 'senal' || !entry.motivo) return;
@@ -2118,7 +2187,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // Categorías con flujo de Nivel 2/3 cableado. renderAutorizaciones filtra
   // además por permiteAutorizacionGeneral, así que luz/gas solo aparecen si hay
   // un socio energético (SOCIOS_ENERGIA) configurado.
-  const AUTORIZACIONES_ACTIVAS = ['suscripciones', 'comisiones_inversion', 'luz', 'gas'];
+  const AUTORIZACIONES_ACTIVAS = ['suscripciones', 'comisiones_bancarias', 'comisiones_inversion', 'luz', 'gas'];
 
   function renderAutorizaciones(){
     const cont = document.getElementById('autorizacionesList');
@@ -2743,10 +2812,11 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   }
 
   function renderWatchList(){
+    if (window.__primerUso) window.__primerUso.alGuardar();
     const list = $('watchList');
     list.innerHTML = '';
     if (vigilancias.length === 0){
-      list.innerHTML = '<p class="watch-empty">Todavía no has añadido nada aquí. La hipoteca de arriba ya cuenta en el resumen.</p>';
+      list.innerHTML = '<p class="watch-empty">Todavía no has añadido nada aquí. La hipoteca (pestaña Hipoteca) ya cuenta en el resumen.</p>';
     }
     vigilancias.forEach((v) => {
       const card = document.createElement('div');
@@ -3295,6 +3365,70 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
     document.querySelectorAll('#sExtrasIncluidos input, #sExtrasNoUsados input').forEach((el) => { el.checked = false; });
   }
 
+  // ----- Foto de factura (luz y gas): ayuda a rellenar importe y kWh. Lo leído va a
+  // los campos editables y NUNCA se guarda hasta que el usuario pulsa "Añadir". -----
+  function reducirImagen(file, maxLado){
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const esc = Math.min(1, maxLado / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * esc); c.height = Math.round(img.height * esc);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', 0.85).split(',')[1]);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('imagen')); };
+      img.src = url;
+    });
+  }
+
+  function wireFotoFactura({ fotoId, btnId, avisoId, importeId, kwhId }){
+    const foto = $(fotoId), btn = $(btnId), aviso = $(avisoId);
+    const importeEl = $(importeId), kwhEl = $(kwhId);
+    const textoInicial = aviso.textContent;
+    const quitarMarca = (el) => el.addEventListener('input', () => el.classList.remove('is-leido'));
+    quitarMarca(importeEl); quitarMarca(kwhEl);
+    btn.addEventListener('click', () => {
+      if (!API_BASE_URL || !currentUserId){
+        aviso.textContent = 'La lectura de fotos no está disponible ahora mismo. Escribe el importe y los kWh a mano — los dos vienen en tu factura.';
+        return;
+      }
+      foto.click();
+    });
+    foto.addEventListener('change', async () => {
+      const file = foto.files && foto.files[0];
+      if (!file) return;
+      const textoBtn = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Leyendo la factura…';
+      aviso.textContent = 'Un momento, estamos leyendo el importe y los kWh…';
+      try {
+        const imagenBase64 = await reducirImagen(file, 1600);
+        const resp = await fetch(`${API_BASE_URL}/api/factura/leer`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: currentUserId, imagenBase64, mediaType: 'image/jpeg' }),
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || 'error');
+        let leidos = 0;
+        [[importeEl, data.importe], [kwhEl, data.kwh]].forEach(([el, v]) => {
+          if (typeof v === 'number'){ el.value = String(v); el.classList.add('is-leido'); leidos++; }
+        });
+        aviso.textContent = data.aviso || (leidos ? 'Revisa que los datos coinciden con tu factura antes de continuar.' : 'No hemos podido leer la factura. Rellena los datos a mano.');
+      } catch (err){
+        aviso.textContent = (err && err.message && err.message !== 'error' && err.message !== 'imagen')
+          ? `${err.message}. Puedes escribir el importe y los kWh a mano.`
+          : 'No hemos podido leer la foto. Prueba con otra o escribe el importe y los kWh a mano.';
+      } finally {
+        btn.disabled = false; btn.textContent = textoBtn;
+        foto.value = '';
+      }
+    });
+  }
+  wireFotoFactura({ fotoId: 'lFoto', btnId: 'lFotoBtn', avisoId: 'lFotoAviso', importeId: 'lImporte', kwhId: 'lKwh' });
+  wireFotoFactura({ fotoId: 'gasFoto', btnId: 'gasFotoBtn', avisoId: 'gasFotoAviso', importeId: 'gasImporte', kwhId: 'gasKwh' });
+
   async function turGasHoy(){
     if (!API_BASE_URL) return null;
     try {
@@ -3394,7 +3528,9 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       });
     }
     watchIdCounter++;
-    vigilancias.push({ id: 'w' + watchIdCounter, nombre, categoria: activeCategory, ...lectura, ...extraEntry });
+    const entryGasto = { id: 'w' + watchIdCounter, nombre, categoria: activeCategory, ...lectura, ...extraEntry };
+    if (activeCategory === 'comisiones_bancarias') wireNivel2(entryGasto, { nombre });
+    vigilancias.push(entryGasto);
     renderWatchList();
     sincronizarGastoConBackend(activeCategory, {
       nombre, costeActual: coste, periodo, fechaReferencia: fecha,
@@ -3409,18 +3545,69 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
 
   // ----- Subnav del panel: resalta la sección visible mientras se hace scroll -----
   const subnavLinks = document.querySelectorAll('.dash-subnav__link');
-  if (subnavLinks.length && 'IntersectionObserver' in window){
+  function mostrarSeccionPanel(id){
     const secciones = document.querySelectorAll('.dash-section');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        subnavLinks.forEach((link) => {
-          link.classList.toggle('is-active', link.getAttribute('href') === '#' + entry.target.id);
-        });
-      });
-    }, { rootMargin: '-140px 0px -60% 0px', threshold: 0 });
-    secciones.forEach((s) => observer.observe(s));
+    if (![...secciones].some((s) => s.id === id)) id = 'resumen';
+    secciones.forEach((s) => s.classList.toggle('is-active', s.id === id));
+    subnavLinks.forEach((l) => l.classList.toggle('is-active', l.getAttribute('href') === '#' + id));
+    window.scrollTo(0, 0);
+    if (id === 'resumen' && typeof window.__updateSummary === 'function') window.__updateSummary();
   }
+  window.__mostrarSeccionPanel = mostrarSeccionPanel;
+  subnavLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      mostrarSeccionPanel(link.getAttribute('href').slice(1));
+    });
+  });
+
+  // ----- Primer uso guiado: una pregunta antes del panel completo -----
+  // Solo tras crear la cuenta y solo si no hay ninguna vigilancia; siempre se puede saltar.
+  const dashboardEl = $('dashboardView');
+  let modoGuiado = false;
+  function terminarPrimerUso(destino){
+    modoGuiado = false;
+    dashboardEl.classList.remove('dashboard--guiado');
+    $('primerUso').classList.add('is-hidden');
+    $('primerUsoBanner').classList.add('is-hidden');
+    mostrarSeccionPanel(destino || 'resumen');
+  }
+  function iniciarPrimerUso(){
+    modoGuiado = true;
+    dashboardEl.classList.add('dashboard--guiado');
+    document.querySelectorAll('.dash-section').forEach((s) => s.classList.remove('is-active'));
+    $('primerUsoBanner').classList.add('is-hidden');
+    $('primerUso').classList.remove('is-hidden');
+    window.scrollTo(0, 0);
+  }
+  $('primerUsoEmpezar').addEventListener('click', () => {
+    const cat = $('primerUsoCat').value;
+    $('primerUso').classList.add('is-hidden');
+    $('primerUsoBanner').classList.remove('is-hidden');
+    $('primerUsoBannerCat').textContent = $('primerUsoCat').selectedOptions[0].textContent;
+    $('primerUsoListo').style.display = cat === 'hipoteca' ? '' : 'none';
+    if (cat === 'hipoteca'){
+      mostrarSeccionPanel('hipoteca');
+    } else {
+      const tab = document.querySelector(`.tab[data-cat="${cat}"]`);
+      if (tab) tab.click();
+      mostrarSeccionPanel('vigilancias');
+    }
+  });
+  $('primerUsoListo').addEventListener('click', () => terminarPrimerUso('resumen'));
+  ['primerUsoSaltar', 'primerUsoSaltar2'].forEach((id) => {
+    $(id).addEventListener('click', (e) => { e.preventDefault(); terminarPrimerUso('resumen'); });
+  });
+  window.__primerUso = {
+    // Devuelve true si arrancó el flujo guiado (usuario sin ninguna vigilancia).
+    alEntrar(){
+      if (vigilancias.length === 0){ iniciarPrimerUso(); return true; }
+      terminarPrimerUso('resumen');
+      return false;
+    },
+    alSalir(){ terminarPrimerUso('resumen'); },
+    alGuardar(){ if (modoGuiado && vigilancias.length > 0) terminarPrimerUso('resumen'); },
+  };
 
   // ----- Invitar a un amigo -----
   const copyBtn = $('copyReferralBtn');

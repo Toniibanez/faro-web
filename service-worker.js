@@ -2,7 +2,7 @@
 // (incluso sin cobertura) y siga funcionando offline una vez visitada.
 // Sube CACHE_NAME cada vez que despliegues cambios importantes para invalidar la caché vieja.
 
-const CACHE_NAME = 'faro-v3';
+const CACHE_NAME = 'faro-v4';
 const ASSETS = [
   './',
   './index.html',
