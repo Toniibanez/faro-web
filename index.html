@@ -2349,6 +2349,24 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
   // calcularEstadoConReferenciaMercado() en src/calculoGastos.js. Solo se
   // consulta cuando el usuario no trajo ya su propia alternativa y nada más
   // (extras, fecha) dio señal; nunca la sustituye, solo rellena el hueco. -----
+  const FUENTES_CONOCIDAS = ['Kelisto', 'Rastreator', 'Roams', 'Selectra', 'Xataka Móvil', 'ADSLZone', 'Acierto', 'ICEA', 'UNESPA'];
+  const MESES_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  function fuenteCortaDemo(fuente, fecha){
+    const texto = String(fuente || '');
+    const encontradas = FUENTES_CONOCIDAS
+      .map((n) => ({ n, i: texto.toLowerCase().indexOf(n.toLowerCase()) }))
+      .filter((x) => x.i >= 0).sort((a, b) => a.i - b.i).map((x) => x.n);
+    const lista = encontradas.length > 1
+      ? `${encontradas.slice(0, -1).join(', ')} y ${encontradas[encontradas.length - 1]}`
+      : encontradas[0] || (texto.length > 50 ? `${texto.slice(0, 50).trim()}…` : texto);
+    const m = /^(\d{4})-(\d{2})/.exec(fecha || '');
+    return m ? `según ${lista}, ${MESES_ES[Number(m[2]) - 1]} de ${m[1]}` : `según ${lista}`;
+  }
+  function perfilCortoDemo(perfil){
+    const primera = String(perfil || '').split(/\.\s/)[0].replace(/\.$/, '');
+    return primera.split(', ').slice(0, 2).join(', ');
+  }
+
   function calcularEstadoConReferenciaMercadoDemo({ costeActual, periodo, referencia }){
     if (!referencia) return null;
     const costeMensual = periodo === 'anual' ? costeActual / 12 : costeActual;
@@ -2357,14 +2375,14 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       if (diferencia < 3) return null;
       return {
         estado: 'senal', motivo: 'por_encima_de_referencia_investigada', ahorroMensual: Math.round(diferencia * 100) / 100,
-        detalle: `Pagas ${eurLocal.format(Math.round(costeMensual))}/mes. La referencia de mercado investigada este mes ronda los ${eurLocal.format(Math.round(referencia.valor))}/mes para una oferta similar (${referencia.fuente}) — unos ${eurLocal.format(Math.round(diferencia))}/mes de diferencia.`,
+        detalle: `Pagas ${eurLocal.format(Math.round(costeMensual))}/mes. La referencia de mercado investigada este mes ronda los ${eurLocal.format(Math.round(referencia.valor))}/mes para una oferta similar (${fuenteCortaDemo(referencia.fuente, referencia.fecha)}) — unos ${eurLocal.format(Math.round(diferencia))}/mes de diferencia.`,
       };
     }
     if (referencia.tipo === 'rango'){
       if (costeMensual <= referencia.max) return null;
       return {
         estado: 'senal', motivo: 'por_encima_de_rango_investigado',
-        detalle: `Pagas ${eurLocal.format(Math.round(costeMensual))}/mes. Para un perfil similar al tuyo${referencia.perfil ? ` (${referencia.perfil})` : ''}, la referencia de mercado investigada este mes ronda entre ${eurLocal.format(Math.round(referencia.min))} y ${eurLocal.format(Math.round(referencia.max))}/mes (${referencia.fuente}). Estás por encima de ese rango — puede merecer la pena pedir otras ofertas.`,
+        detalle: `Pagas ${eurLocal.format(Math.round(costeMensual))}/mes. Para un perfil similar al tuyo${referencia.perfil ? ` (${perfilCortoDemo(referencia.perfil)})` : ''}, la referencia de mercado investigada este mes ronda entre ${eurLocal.format(Math.round(referencia.min))} y ${eurLocal.format(Math.round(referencia.max))}/mes (${fuenteCortaDemo(referencia.fuente, referencia.fecha)}). Estás por encima de ese rango — puede merecer la pena pedir otras ofertas.`,
       };
     }
     return null;
@@ -2388,8 +2406,8 @@ footer{border-top:1px solid var(--line);padding:32px 0 60px;}
       if (!resp.ok) return null; // 404 = sin referencia revisada todavía, no es un error
       const fila = await resp.json();
       return categoria === 'telco'
-        ? { tipo: 'unico', valor: fila.valor_min, fuente: fila.fuente }
-        : { tipo: 'rango', min: fila.valor_min, max: fila.valor_max, perfil: fila.perfil_descripcion, fuente: fila.fuente };
+        ? { tipo: 'unico', valor: fila.valor_min, fuente: fila.fuente, fecha: fila.fecha_investigacion }
+        : { tipo: 'rango', min: fila.valor_min, max: fila.valor_max, perfil: fila.perfil_descripcion, fuente: fila.fuente, fecha: fila.fecha_investigacion };
     } catch (err) { return null; }
   }
 
